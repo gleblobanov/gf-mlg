@@ -4,8 +4,6 @@ abstract DocumentPlan = open DocumentPlanResource in {
 
 cat
     Message ;
-    Nucleus ;
-    Satellite ;
     -- Constituent ;
     Constituents ;
     -- Title ;
@@ -14,17 +12,10 @@ cat
 
 
 fun
-
-  NucleusDP : DocumentPlan -> Nucleus ;
-  NucleusM  : Message      -> Nucleus ;
-
-  SatelliteDP : DiscourseRelation -> DocumentPlan -> Satellite ;
-  SatelliteM  : DiscourseRelation -> Message      -> Satellite ;
-
-  ConstituentsNS : Nucleus -> Satellite -> Constituents ;
+  
+  ConstituentsNclStl : DocumentPlan -> DiscourseRelation -> DocumentPlan -> Constituents ;
 
   DocumentPlanCnsts : Constituents -> DocumentPlan ;
-
 
 cat
     City ;
