@@ -1,32 +1,32 @@
-concrete DocumentPlanEng of DocumentPlan = open DocumentPlanResource, GrammarEng, ResEng in {
+concrete DocumentPlanEng of DocumentPlan = GrammarEng ** open DocumentPlanResource, Structural, Prelude in {
 
 lincat
-  Message = {s : Str} ;
-  DocumentPlan = { s : Str ; cnsts : Constituents } ;
-  DiscourseRelation = DiscRel ;
-  Constituents = { s : Str ; ncl : DocumentPlan ; dr : DiscRel ; stl : DocumentPlan } ;
-
+  DR = DiscRel ;
+  TS = DiscRel => PConj ;
+  
 lin
 
-  ConstituentsNclStl ncl' dr' stl' = { s = ncl'.s ++ verbalizeDR dr' ++ stl'.s ;
-                                 ncl = ncl'; dr = dr' ; stl = stl' } ;
-  DocumentPlanCnsts cnsts' = { s = cnsts'.s ; cnsts = cnsts' } ;
+  TNclStl t1 dr t2 = { s = toUpperFirst (t1.s) ++ "." ++ toUpperFirst ((ts dr).s) ++ toLowerFirst t2.s } ;  
 
 
-lincat
+  Msg2Text u = { s = toUpperFirst u.s ++ "." }
+
+  Elbr = Elaboration ;
+  Exmp = Exemplification ;
+  Cntr = Contrast ;
+  Sqnc = NarrativeSequence ;
+  Empt = Empty ;
+
+  ts = table { Elaboration => namely_PConj ;
+               Exemplification => for_example_PConj ; 
+               Contrast => but_PConj ;
+               NarrativeSequence => and_PConj ; 
+               Empty => NoPConj ;
+  }
+
+  namely_PConj = PConjConj (mkConj "namely") ;
+  for_example_PConj = PConjConj (mkConj "for example") ;
+  and_PConj = PConjConj and_Conj ;
   
-  City = PN ;
-  Temperature = Digits ;
-  
-
-lin
-    
-  Kaliningrad = {s = table {Nom => "Kaliningrad"; Gen => "Kaliningrad's"}; g = Neutr} ;
-  Gothenburg  = {s = table {Nom => "Gothenburg"; Gen => "Gothenburg's"}; g = Neutr} ;
-
-  MessageCityTemperature city temp = {s = "In" ++ city.s ! Nom ++ "the temperature is" ++ "C."} ;
-
-
-
--- lin MessageCity cit temp = mkS cit temp ; 
+ 
 }

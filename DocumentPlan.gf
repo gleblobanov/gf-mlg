@@ -1,30 +1,26 @@
-abstract DocumentPlan = open DocumentPlanResource in {
+abstract DocumentPlan = Grammar ** open DocumentPlanResource in {
 
--- flags startcat = Phrase ;
+  cat
 
-cat
-    Message ;
-    -- Constituent ;
-    Constituents ;
-    -- Title ;
-    DocumentPlan ;
-    DiscourseRelation ;
+    DR ;
+
+    TS ; -- A table of transition signals
+
+  fun 
 
 
-fun
-  
-  ConstituentsNclStl : DocumentPlan -> DiscourseRelation -> DocumentPlan -> Constituents ;
+    TNclStl : Text -> DR -> Text -> Text ;
 
-  DocumentPlanCnsts : Constituents -> DocumentPlan ;
+    Utt2Text : Utt -> Text ;
 
-cat
-    City ;
-    -- Date ;
-    Temperature ;
 
-fun Kaliningrad, Gothenburg : City ;
-
-fun MessageCityTemperature : City -> Temperature -> Message ;
+    ts : TS ;
      
+    Elbr : DR ;
+    Exmp : DR ;
+    Cntr : DR ;
+    Sqnc : DR ;
+    Empt : DR ;
+
 
 }
