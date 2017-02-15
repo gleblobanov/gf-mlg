@@ -45,7 +45,7 @@ extractOntology r = Ontology {
   time = GTimeVal $ GString $ show $ GInt $ DS.time $ DS.currently r,
   precipIntensity = GPrecipIntensityVal $ GFloat $ DS.precipIntensity $ DS.currently r,
   precipProbability = GPrecipProbabilityVal $ GFloat $ DS.precipProbability $ DS.currently r,
-  temperature = GTemperatureVal $ GFloat $ DS.temperature $ DS.currently r,
+  temperature = GTemperatureVal $ GFloat $ f2c $ DS.temperature $ DS.currently r,
   apparentTemperature = GApparentTemperatureVal $ GFloat $ DS.apparentTemperature $ DS.currently r,
   dewPoint = GDewPointVal $ GFloat $ DS.dewPoint $ DS.currently r,
   humidity = GHumidiyVal $ GFloat $ DS.humidity $ DS.currently r,
@@ -104,7 +104,7 @@ showData o = GJoint $ (GJCNuc (GNuc' $ temperaturePerception o)
 
 
 f2c :: Double -> Double
-f2c f = (f - 32 ) / 1.8
+f2c f = (fromIntegral (floor  $ (f - 32 ) / 1.8 * 100))/100
 
 
 main :: IO ()
