@@ -6,6 +6,7 @@ concrete RSTEng of RST = open Prelude, ParadigmsEng, SyntaxEng, ResEng in {
     Span = Phr ;
     Nucleus = S ;
     NucleusList = S ;
+    JointNucleusList = S ;
     Satellite = S ;
     SatelliteList = S ;
     Schema = S ;
@@ -23,7 +24,12 @@ concrete RSTEng of RST = open Prelude, ParadigmsEng, SyntaxEng, ResEng in {
 
 
     BNuc n = n ;
-    CNuc n nl = lin S { s = n.s ++ nl.s } ;
+    CNuc n nl = lin S { s = n.s  ++ nl.s } ;
+
+
+    JBNuc n = n ;
+    JCNuc n nl = lin S { s = n.s ++ "\n" ++ nl.s } ;
+
 
     BSat s = s ;
     CSat s' sl = lin S { s = s'.s ++ sl.s } ;
@@ -38,7 +44,7 @@ concrete RSTEng of RST = open Prelude, ParadigmsEng, SyntaxEng, ResEng in {
     Background   n sl = lin S { s = n.s ++ sl.s } ;
 
     VolitionalCause      n sl = lin S { s = n.s ++ sl.s } ;
-    NonVolitionalCause   n sl = lin S { s = n.s ++ "because" ++  sl.s } ;
+    NonVolitionalCause   n sl = lin S { s = n.s ++ because_Subj.s ++ sl.s } ;
     VolitionalResult     n sl = lin S { s = n.s ++ sl.s } ;
     NonVolitionalResult  n sl = lin S { s = n.s ++ sl.s } ;
     Purpose              n sl = lin S { s = n.s ++ sl.s } ;

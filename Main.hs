@@ -13,7 +13,8 @@ import PGF
 import qualified DarkSky as DS
 import Numeric
 
-languageName = "WeatherEng"
+langEng = "WeatherEng"
+langRus = "WeatherRus"
 
 
 data Ontology = Ontology {
@@ -64,11 +65,41 @@ getTempPerception o | temp <= 0  = GFreezing
                       where (GTemperatureVal (GFloat temp)) = temperature o
 
 
-t :: Ontology -> GSchema
-t o = GNonVolitionalCause (GNuc' n) (GBSat $ GSat s)
+temperaturePerception :: Ontology -> GSchema
+temperaturePerception o = GNonVolitionalCause (GNuc' n) (GBSat $ GSat s)
   where
     n = GCircumstance (GNuc $ getTempPerception o) (GBSat (GSat $ GInCity (city o)))
-    s = GTempIs (temperature o)
+    s = GTemperatureIs (temperature o)
+
+
+showData :: Ontology -> GSchema
+showData o = GJoint $ (GJCNuc (GNuc' $ temperaturePerception o)
+                       (GJCNuc nApparentTemperature
+                        (GJCNuc nLatitude
+                         (GJCNuc nLongitude
+                          (GJCNuc nPrecipIntensity
+                           (GJCNuc nPrecipProbability
+                            (GJCNuc nDewPoint
+                             (GJCNuc nHumidity
+                              (GJCNuc nWindSpeed
+                               (GJCNuc nWindBearing
+                                (GJCNuc nCloudCover
+                                 (GJCNuc nPressure
+                                  (GJBNuc nOzone)))))))))))))
+  where nTemperature = GNuc $ GTemperatureIs $ temperature o
+        nApparentTemperature = GNuc $ GApparentTemperatureIs $ apparentTemperature o
+        nLatitude = GNuc $ GLatitudeIs $ latitude o
+        nLongitude = GNuc $ GLongitudeIs $ longitude o
+        nPrecipIntensity = GNuc $ GPrecipIntensityIs $ precipIntensity o
+        nPrecipProbability = GNuc $ GPrecipProbabilityIs $ precipProbability o
+        nDewPoint = GNuc $ GDewPointIs $ dewPoint o
+        nHumidity = GNuc $ GHumidityIs $ humidity o
+        nWindSpeed = GNuc $ GWindSpeedIs $ windSpeed o
+        nWindBearing = GNuc $ GWindBearingIs $ windBearing o
+        nCloudCover = GNuc $ GCloudCoverIs $ cloudCover o
+        nPressure = GNuc $ GPressureIs $ pressure o
+        nOzone = GNuc $ GOzoneIs $ ozone o
+
 
 
 
@@ -85,7 +116,12 @@ main = do
       response = decodeJSON json :: DS.Response
       o = extractOntology response
   gr <- readPGF "Weather.pgf"
-  let out = case readLanguage languageName of
-        Just lng -> linearize gr lng (gf (t o))
-        Nothing  -> languageName ++ " is not found."
-  putStrLn out
+  genOut o gr langEng
+  genOut o gr langRus
+
+  
+genOut o gr lang = let out = case readLanguage lang of
+                         Just lng -> linearize gr lng (gf (showData o))
+                         Nothing  -> lang ++ " is not found."
+                   in putStrLn out
+

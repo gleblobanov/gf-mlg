@@ -56,6 +56,11 @@ data GDewPoint = GDewPointVal GFloat
 data GHumidiy = GHumidiyVal GFloat 
   deriving Show
 
+data GJointNucleusList =
+   GJBNuc GNucleus 
+ | GJCNuc GNucleus GJointNucleusList 
+  deriving Show
+
 data GLatitude = GLatitudeVal GFloat 
   deriving Show
 
@@ -108,7 +113,7 @@ data GSchema =
  | GEvaluation GNucleus GSatelliteList 
  | GEvidence GNucleus GSatelliteList 
  | GInterpretation GNucleus GSatelliteList 
- | GJoint GNucleusList 
+ | GJoint GJointNucleusList 
  | GJustify GNucleus GSatelliteList 
  | GMotivation GNucleus GSatelliteList 
  | GNonVolitionalCause GNucleus GSatelliteList 
@@ -124,14 +129,26 @@ data GSchema =
   deriving Show
 
 data GSpan =
-   GBoiling 
+   GApparentTemperatureIs GApparentTemperature 
+ | GBoiling 
  | GChilly 
  | GCityTemp GCity GTemperature 
+ | GCloudCoverIs GCloudCover 
+ | GDewPointIs GDewPoint 
  | GFreezing 
  | GHot 
+ | GHumidityIs GHumidiy 
  | GInCity GCity 
- | GTempIs GTemperature 
+ | GLatitudeIs GLatitude 
+ | GLongitudeIs GLongitude 
+ | GOzoneIs GOzone 
+ | GPrecipIntensityIs GPrecipIntensity 
+ | GPrecipProbabilityIs GPrecipProbability 
+ | GPressureIs GPressure 
+ | GTemperatureIs GTemperature 
  | GWarm 
+ | GWindBearingIs GWindBearing 
+ | GWindSpeedIs GWindSpeed 
   deriving Show
 
 data GTemperature = GTemperatureVal GFloat 
@@ -199,6 +216,18 @@ instance Gf GHumidiy where
 
 
       _ -> error ("no Humidiy " ++ show t)
+
+instance Gf GJointNucleusList where
+  gf (GJBNuc x1) = mkApp (mkCId "JBNuc") [gf x1]
+  gf (GJCNuc x1 x2) = mkApp (mkCId "JCNuc") [gf x1, gf x2]
+
+  fg t =
+    case unApp t of
+      Just (i,[x1]) | i == mkCId "JBNuc" -> GJBNuc (fg x1)
+      Just (i,[x1,x2]) | i == mkCId "JCNuc" -> GJCNuc (fg x1) (fg x2)
+
+
+      _ -> error ("no JointNucleusList " ++ show t)
 
 instance Gf GLatitude where
   gf (GLatitudeVal x1) = mkApp (mkCId "LatitudeVal") [gf x1]
@@ -369,25 +398,49 @@ instance Gf GSchema where
       _ -> error ("no Schema " ++ show t)
 
 instance Gf GSpan where
+  gf (GApparentTemperatureIs x1) = mkApp (mkCId "ApparentTemperatureIs") [gf x1]
   gf GBoiling = mkApp (mkCId "Boiling") []
   gf GChilly = mkApp (mkCId "Chilly") []
   gf (GCityTemp x1 x2) = mkApp (mkCId "CityTemp") [gf x1, gf x2]
+  gf (GCloudCoverIs x1) = mkApp (mkCId "CloudCoverIs") [gf x1]
+  gf (GDewPointIs x1) = mkApp (mkCId "DewPointIs") [gf x1]
   gf GFreezing = mkApp (mkCId "Freezing") []
   gf GHot = mkApp (mkCId "Hot") []
+  gf (GHumidityIs x1) = mkApp (mkCId "HumidityIs") [gf x1]
   gf (GInCity x1) = mkApp (mkCId "InCity") [gf x1]
-  gf (GTempIs x1) = mkApp (mkCId "TempIs") [gf x1]
+  gf (GLatitudeIs x1) = mkApp (mkCId "LatitudeIs") [gf x1]
+  gf (GLongitudeIs x1) = mkApp (mkCId "LongitudeIs") [gf x1]
+  gf (GOzoneIs x1) = mkApp (mkCId "OzoneIs") [gf x1]
+  gf (GPrecipIntensityIs x1) = mkApp (mkCId "PrecipIntensityIs") [gf x1]
+  gf (GPrecipProbabilityIs x1) = mkApp (mkCId "PrecipProbabilityIs") [gf x1]
+  gf (GPressureIs x1) = mkApp (mkCId "PressureIs") [gf x1]
+  gf (GTemperatureIs x1) = mkApp (mkCId "TemperatureIs") [gf x1]
   gf GWarm = mkApp (mkCId "Warm") []
+  gf (GWindBearingIs x1) = mkApp (mkCId "WindBearingIs") [gf x1]
+  gf (GWindSpeedIs x1) = mkApp (mkCId "WindSpeedIs") [gf x1]
 
   fg t =
     case unApp t of
+      Just (i,[x1]) | i == mkCId "ApparentTemperatureIs" -> GApparentTemperatureIs (fg x1)
       Just (i,[]) | i == mkCId "Boiling" -> GBoiling 
       Just (i,[]) | i == mkCId "Chilly" -> GChilly 
       Just (i,[x1,x2]) | i == mkCId "CityTemp" -> GCityTemp (fg x1) (fg x2)
+      Just (i,[x1]) | i == mkCId "CloudCoverIs" -> GCloudCoverIs (fg x1)
+      Just (i,[x1]) | i == mkCId "DewPointIs" -> GDewPointIs (fg x1)
       Just (i,[]) | i == mkCId "Freezing" -> GFreezing 
       Just (i,[]) | i == mkCId "Hot" -> GHot 
+      Just (i,[x1]) | i == mkCId "HumidityIs" -> GHumidityIs (fg x1)
       Just (i,[x1]) | i == mkCId "InCity" -> GInCity (fg x1)
-      Just (i,[x1]) | i == mkCId "TempIs" -> GTempIs (fg x1)
+      Just (i,[x1]) | i == mkCId "LatitudeIs" -> GLatitudeIs (fg x1)
+      Just (i,[x1]) | i == mkCId "LongitudeIs" -> GLongitudeIs (fg x1)
+      Just (i,[x1]) | i == mkCId "OzoneIs" -> GOzoneIs (fg x1)
+      Just (i,[x1]) | i == mkCId "PrecipIntensityIs" -> GPrecipIntensityIs (fg x1)
+      Just (i,[x1]) | i == mkCId "PrecipProbabilityIs" -> GPrecipProbabilityIs (fg x1)
+      Just (i,[x1]) | i == mkCId "PressureIs" -> GPressureIs (fg x1)
+      Just (i,[x1]) | i == mkCId "TemperatureIs" -> GTemperatureIs (fg x1)
       Just (i,[]) | i == mkCId "Warm" -> GWarm 
+      Just (i,[x1]) | i == mkCId "WindBearingIs" -> GWindBearingIs (fg x1)
+      Just (i,[x1]) | i == mkCId "WindSpeedIs" -> GWindSpeedIs (fg x1)
 
 
       _ -> error ("no Span " ++ show t)

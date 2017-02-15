@@ -3,6 +3,7 @@ abstract RST = {
   cat Span ;      -- A text span
       Nucleus ;   -- Nucleus of a schema
       NucleusList ;
+      JointNucleusList ;
       Satellite ; -- Satellite of a schema
       SatelliteList ;
       Schema ;
@@ -20,6 +21,9 @@ abstract RST = {
 
     BNuc : Nucleus -> NucleusList ;
     CNuc : Nucleus -> NucleusList -> NucleusList ;
+
+    JBNuc : Nucleus -> JointNucleusList ;
+    JCNuc : Nucleus -> JointNucleusList -> JointNucleusList ;
 
     BSat : Satellite -> SatelliteList ;
     CSat : Satellite -> SatelliteList -> SatelliteList ;
@@ -59,7 +63,7 @@ abstract RST = {
 
     Contrast : Nucleus -> Nucleus  -> Schema ;
 
-    Joint    : NucleusList -> Schema ;
+    Joint    : JointNucleusList -> Schema ;
     Sequence : NucleusList -> Schema ;
     
     
