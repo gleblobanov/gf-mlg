@@ -30,17 +30,17 @@ abstract Ontology = {
     TimeVal     :  String -> Time ;
     TimezoneVal :  String -> Timezone ;
 
-    ClearDay :          Icon ;
-    ClearNight :        Icon ;
-    Rain :              Icon ;
-    Snow :              Icon ;
-    Sleet :             Icon ;
-    Wind :              Icon ;
-    Fog :               Icon ;
-    Cloudy :            Icon ;
-    PartlyCloudyDay :   Icon ;
-    PartlyCloudyNight : Icon ;
-    IconNone :          Icon ;
+    IconClearDay :          Icon ;
+    IconClearNight :        Icon ;
+    IconRain :              Icon ;
+    IconSnow :              Icon ;
+    IconSleet :             Icon ;
+    IconWind :              Icon ;
+    IconFog :               Icon ;
+    IconCloudy :            Icon ;
+    IconPartlyCloudyDay :   Icon ;
+    IconPartlyCloudyNight : Icon ;
+    IconNone :              Icon ;
 
    
 
@@ -118,6 +118,7 @@ abstract Ontology = {
     ComfortableHumid :            HumidityType ; 
     VeryComfortableHumid :        HumidityType ;
     ScarcelyUncomfortableDry :    HumidityType ;
+    HumidityNone :                HumidityType;
     
     
   {- Clouds -}

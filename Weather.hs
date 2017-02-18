@@ -69,12 +69,27 @@ data GHumidity = GHumidityVal GFloat
 data GHumidityType =
    GComfortableHumid 
  | GExtremelyUncomfortableHumid 
+ | GHumidityNone 
  | GQuiteUncomfortableHumid 
  | GScarcelyUncomfortableDry 
  | GScarcelyUncomfortableHumid 
  | GSeverelyUncomofortableHumid 
  | GSomewhatUncomfortableHumid 
  | GVeryComfortableHumid 
+  deriving Show
+
+data GIcon =
+   GIconClearDay 
+ | GIconClearNight 
+ | GIconCloudy 
+ | GIconFog 
+ | GIconNone 
+ | GIconPartlyCloudyDay 
+ | GIconPartlyCloudyNight 
+ | GIconRain 
+ | GIconSleet 
+ | GIconSnow 
+ | GIconWind 
   deriving Show
 
 data GJointNucleusList =
@@ -263,8 +278,6 @@ data GWindSpeedType =
 data GYear = GYearVal GString 
   deriving Show
 
-data GIcon
-
 
 instance Gf GApparentTemperature where
   gf (GApparentTemperatureVal x1) = mkApp (mkCId "ApparentTemperatureVal") [gf x1]
@@ -345,6 +358,7 @@ instance Gf GHumidity where
 instance Gf GHumidityType where
   gf GComfortableHumid = mkApp (mkCId "ComfortableHumid") []
   gf GExtremelyUncomfortableHumid = mkApp (mkCId "ExtremelyUncomfortableHumid") []
+  gf GHumidityNone = mkApp (mkCId "HumidityNone") []
   gf GQuiteUncomfortableHumid = mkApp (mkCId "QuiteUncomfortableHumid") []
   gf GScarcelyUncomfortableDry = mkApp (mkCId "ScarcelyUncomfortableDry") []
   gf GScarcelyUncomfortableHumid = mkApp (mkCId "ScarcelyUncomfortableHumid") []
@@ -356,6 +370,7 @@ instance Gf GHumidityType where
     case unApp t of
       Just (i,[]) | i == mkCId "ComfortableHumid" -> GComfortableHumid 
       Just (i,[]) | i == mkCId "ExtremelyUncomfortableHumid" -> GExtremelyUncomfortableHumid 
+      Just (i,[]) | i == mkCId "HumidityNone" -> GHumidityNone 
       Just (i,[]) | i == mkCId "QuiteUncomfortableHumid" -> GQuiteUncomfortableHumid 
       Just (i,[]) | i == mkCId "ScarcelyUncomfortableDry" -> GScarcelyUncomfortableDry 
       Just (i,[]) | i == mkCId "ScarcelyUncomfortableHumid" -> GScarcelyUncomfortableHumid 
@@ -365,6 +380,36 @@ instance Gf GHumidityType where
 
 
       _ -> error ("no HumidityType " ++ show t)
+
+instance Gf GIcon where
+  gf GIconClearDay = mkApp (mkCId "IconClearDay") []
+  gf GIconClearNight = mkApp (mkCId "IconClearNight") []
+  gf GIconCloudy = mkApp (mkCId "IconCloudy") []
+  gf GIconFog = mkApp (mkCId "IconFog") []
+  gf GIconNone = mkApp (mkCId "IconNone") []
+  gf GIconPartlyCloudyDay = mkApp (mkCId "IconPartlyCloudyDay") []
+  gf GIconPartlyCloudyNight = mkApp (mkCId "IconPartlyCloudyNight") []
+  gf GIconRain = mkApp (mkCId "IconRain") []
+  gf GIconSleet = mkApp (mkCId "IconSleet") []
+  gf GIconSnow = mkApp (mkCId "IconSnow") []
+  gf GIconWind = mkApp (mkCId "IconWind") []
+
+  fg t =
+    case unApp t of
+      Just (i,[]) | i == mkCId "IconClearDay" -> GIconClearDay 
+      Just (i,[]) | i == mkCId "IconClearNight" -> GIconClearNight 
+      Just (i,[]) | i == mkCId "IconCloudy" -> GIconCloudy 
+      Just (i,[]) | i == mkCId "IconFog" -> GIconFog 
+      Just (i,[]) | i == mkCId "IconNone" -> GIconNone 
+      Just (i,[]) | i == mkCId "IconPartlyCloudyDay" -> GIconPartlyCloudyDay 
+      Just (i,[]) | i == mkCId "IconPartlyCloudyNight" -> GIconPartlyCloudyNight 
+      Just (i,[]) | i == mkCId "IconRain" -> GIconRain 
+      Just (i,[]) | i == mkCId "IconSleet" -> GIconSleet 
+      Just (i,[]) | i == mkCId "IconSnow" -> GIconSnow 
+      Just (i,[]) | i == mkCId "IconWind" -> GIconWind 
+
+
+      _ -> error ("no Icon " ++ show t)
 
 instance Gf GJointNucleusList where
   gf (GJBNuc x1) = mkApp (mkCId "JBNuc") [gf x1]
@@ -809,13 +854,5 @@ instance Gf GYear where
 
 
       _ -> error ("no Year " ++ show t)
-
-instance Show GIcon
-
-instance Gf GIcon where
-  gf _ = undefined
-  fg _ = undefined
-
-
 
 
