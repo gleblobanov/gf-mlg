@@ -1,6 +1,8 @@
 concrete WeatherEng of Weather = RSTEng ** open LexiconEng, ConstructorsEng, Prelude, ParadigmsEng, SyntaxEng, ResEng in {
 
 lincat
+
+   
     Latitude = NP ;
     Longitude = NP ;
     City = PN ;
@@ -21,7 +23,23 @@ lincat
     Ozone = NP ;
 
 
+    TempKind = AP ;
+
+    Clothes = NP ;
+
+
 lin
+
+  -- WhatToWear _ cl = lin Schema (Joint (BNuc (Nuc (mkPhr (mkImp
+  --                                                          wear_V2 cl)
+  --                                                   ))));
+
+  -- Hat = lin NP (SyntaxEng.mkNP myhat_N);
+  -- Shorts = lin NP (SyntaxEng.mkNP shorts_N) ;
+
+  -- Freezing = lin NP (SyntaxEng.mkAP freezing_A) ;
+  -- Hot = lin NP (SyntaxEng.mkAP hot_A) ;
+
 
   CityVal v = mkPN "Gothenburg" ;
   LatitudeVal v = lin NP {s = \\_ => v.s; a = AgP3Sg Neutr} ;
@@ -50,6 +68,8 @@ lin
           (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det temperature_N) temp))) ;
 
 
+
+  
   InCity city = mkPhr (mkUtt (ConstructorsEng.mkAdv in_Prep (SyntaxEng.mkNP city))) ;
 
   TemperatureIs v              = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det temperature_N) v)) ;
@@ -66,17 +86,20 @@ lin
   PressureIs v          = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det pressure_N) v)) ;
   OzoneIs v             = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det ozone_N) v)) ;
 
-  Freezing = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP freezing_A))) ;
-  Chilly = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP chilly_A))) ;
-  Warm = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP warm_A))) ; 
-  Hot = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP hot_A))) ;  
-  Boiling = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP boiling_A))) ;
+  -- Freezing = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP freezing_A))) ;
+  -- Chilly = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP chilly_A))) ;
+  -- Warm = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP warm_A))) ; 
+  -- Hot = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP hot_A))) ;  
+  -- Boiling = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP boiling_A))) ;
 
 
 
 
 oper
 
+  wear_V2 = mkV2 (mkV "wear") ;
+  shorts_N = mkN "shorts" ;
+     
   apparent_A = mkA "apparent" ;
   freezing_A = mkA "freezing" ;
   chilly_A   = mkA "chilly" ;

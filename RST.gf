@@ -6,10 +6,13 @@ abstract RST = {
       JointNucleusList ;
       Satellite ; -- Satellite of a schema
       SatelliteList ;
-      Schema ;
 
+
+      Schema ;
       
   fun
+
+
 
     Nuc0 : Nucleus ;
     Nuc' : Schema -> Nucleus   ;
