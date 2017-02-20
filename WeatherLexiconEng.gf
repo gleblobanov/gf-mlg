@@ -1,4 +1,4 @@
-resource WeatherLexiconEng = {
+resource WeatherLexiconEng = open ParadigmsEng in {
 
   oper
 
@@ -6,6 +6,8 @@ resource WeatherLexiconEng = {
     sleet_V = mkV "sleet" ;
     feel_like_V2 = mkV2 (mkV "feel like") ;
 
+    atmospheric_A    = mkA "atmospheric" ;
+    columnar_A      = mkA "columnar" ;
     apparent_A      = mkA "apparent" ;
     freezing_A      = mkA "freezing" ;
     chilly_A        = mkA "chilly" ;
@@ -26,6 +28,7 @@ resource WeatherLexiconEng = {
     light_A         = mkA "light" ;
     gentle_A        = mkA "gentle" ;
     fresh_A         = mkA "fresh" ;
+    relative_A      = mkA "relative" ;
 
     partly_AdA    = mkAdA "partly" ;
     extremely_AdA = mkAdA "extremely" ;
@@ -33,7 +36,8 @@ resource WeatherLexiconEng = {
     somewhat_AdA  = mkAdA "somewhat" ;
     scarcely_AdA  = mkAdA "scarcely" ;
 
-    precipitation_N = mkN "precipitation" "precipitation"
+    density_N       = mkN "density" ;
+    precipitation_N = mkN "precipitation" ;
     breeze_N        = mkN "breeze" ;
     gale_N          = mkN "gale" ;
     storm_N         = mkN "storm" ;
@@ -58,6 +62,10 @@ resource WeatherLexiconEng = {
     Friday_N        = mkN "Friday" ;
     Saturday_N      = mkN "Saturday" ;
     Sunday_N        = mkN "Sunday" ;
+    level_N         = mkN "level" ;
   
     Gothenburg_PN = mkPN "Gothenburg" ;
+
+
+    of_Prep = mkPrep "of" ;
 } 

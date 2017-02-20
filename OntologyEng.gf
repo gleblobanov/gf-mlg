@@ -112,7 +112,7 @@ concrete OntologyEng of Ontology = concrete WeatherEng of Weather = RSTEng ** op
 
     DewPoint = NP ;
     Humidiy = NP ;
-    HumitityType = NP ;
+    HumitityType = P ;
 
   lin
 
@@ -155,7 +155,7 @@ concrete OntologyEng of Ontology = concrete WeatherEng of Weather = RSTEng ** op
   
     WindSpeed = NP ;
     WindSpeedType = VP ;
-    WindBearing = NP ;
+    WindBearing = AdV ;
     WindBearingType = NP ;
 
     WindSpeedVal v = lin NP {s = \\_ => v.s ++ "km/h"; a = AgP3Sg Neutr} ;

@@ -1,10 +1,9 @@
-concrete WeatherEng of Weather = RSTEng ** open WeatherExtraEng, LexiconEng, ConstructorsEng, Prelude, ParadigmsEng, SyntaxEng, ResEng in {
+concrete WeatherEng of Weather = RSTEng ** open WeatherLexiconEng , WeatherExtraEng, LexiconEng, ConstructorsEng, Prelude, ParadigmsEng, SyntaxEng, ResEng in {
 
 
   lin
 
-    InfoLocation city weekday datetime icon =
-      mkPhr (mkS (mkAdv on_Prep time) (mkS (mkAdv in_Prep city) (mkS presentTense simultaneousAnt positivePol (mkCl icon)))) ;
+    InfoLocation city dateTime icon = mkPhr (mkS (ConstructorsEng.mkAdv on_Prep dateTime) (mkS (ConstructorsEng.mkAdv in_Prep city) (mkS presentTense simultaneousAnt positivePol (mkCl icon)))) ;
       
 
     InfoTemperature tempType temp appTemp =
@@ -13,61 +12,36 @@ concrete WeatherEng of Weather = RSTEng ** open WeatherExtraEng, LexiconEng, Con
                                 (mkS presentTense simultaneousAnt positivePol (mkCl feel_like_V2 appTemp))))) ;
     
 
-    InfoPrecipNo = mkPhr (mkS (mkS presentTense simultaneousAnt negativePol (mkCl (mkVP (mkNP precipitation_N))))) ; 
+    InfoPrecipNo = mkPhr (mkS presentTense simultaneousAnt negativePol (mkCl (mkVP (SyntaxEng.mkNP precipitation_N)))) ; 
 
 
     InfoPrecipType precipIntencity precipType
       = mkPhr (mkS and_Conj (mkListS (mkS presentTense simultaneousAnt positivePol (mkCl precipType)) 
-                                (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP (mkCN preciptitation_N (mkNP intencity_N))) precipIntencity))))) ;
+                                (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP (mkCN precipitation_N (SyntaxEng.mkNP intensity_N))) precipIntencity)))) ;
 
 
-    InfoPrecipProbaility precipProbability = mkPhr ()  ;
+    InfoPrecipProbaility precipProbability =
+      mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP (mkCN probability_N (SyntaxEng.mkAdv of_Prep precipitation_N))) precipProbability))  ;
 
-    -- It is comfortably humid: relative humidity is 34% and the dew point is 34 C ;
-    InfoDewPointHumidity : Humidity -> DewPoint -> HumidityType -> Span ;
-
-    -- The sky is half cloudy.
-    InfoSky  : CloudCover -> Span ;
-
-    -- There is calm .  
-    InfoWind : WindSpeed -> WindSpeedType -> Span ;
-    -- There is NNE strong gale (13 km/h).
-    InfoWindBearing : WindSpeed -> WindSpeedType -> WindBearing -> Span ;
-
-    -- The sea-level air pressure is 3 millibars.
-    InfoPressure : Pressure -> Span ;
-
-
-    -- The columnar density of total atmospheric ozon is 3.3 DU.
-    InfoOzone       : Ozone -> Span ;    
+    InfoDewPointHumidity humidity dewPoint humidityType =
+      mkPhr (colon (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP humidity_N) (mkVP humidityType)))
+               (mkS and_Conj (mkListS (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det (mkCN relative_A humidity_N)) humidity))
+                                (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det dew_point_N) dewPoint))))) ;
+    
+    InfoSky cloudCoverType = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det sky_N) cloudCoverType))  ;
 
 
 
-
-  -- CityTemp city temp
-  --   = mkPhr (mkS (ConstructorsEng.mkAdv in_Prep (SyntaxEng.mkNP city))
-  --         (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det temperature_N) temp))) ;
-
+    InfoWind = mkPhr (mkS presentTense simultaneousAnt negativePol (mkCl wind_N)) ;
+    InfoWindBearing windSpeed windSpeedType windBearing =
+      mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkVP windBearing windSpeedType))) ;
 
 
-  
-  -- InCity city = mkPhr (mkUtt (ConstructorsEng.mkAdv in_Prep (SyntaxEng.mkNP city))) ;
+    InfoPressure pressure =
+      mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det (mkCN sea_N (SyntaxEng.mkNP (mkCN level_N (SyntaxEng.mkNP (mkCN air_N (SyntaxEng.mkNP pressure_N))))))) pressure)) ;
 
-  -- TemperatureIs v              = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det temperature_N) v)) ;
-  -- ApparentTemperatureIs v      = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det (mkCN apparent_A temperature_N)) v)) ;
-  -- LatitudeIs v          = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det latitude_N) v)) ;
-  -- LongitudeIs v         = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det longitude_N) v)) ;
-  -- PrecipIntensityIs v   = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det (mkCN precipitation_N (SyntaxEng.mkNP intensity_N))) v)) ;
-  -- PrecipProbabilityIs v = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det (mkCN precipitation_N (SyntaxEng.mkNP probability_N))) v)) ;
-  -- DewPointIs v          = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det (mkCN dew_point_N)) v)) ;
-  -- HumidityIs v           = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det humidity_N) v)) ;
-  -- WindSpeedIs v         = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det (mkCN wind_N (SyntaxEng.mkNP speed_N))) v)) ;
-  -- WindBearingIs v       = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det (mkCN wind_N (SyntaxEng.mkNP bearing_N))) v)) ;
-  -- CloudCoverIs v        = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det (mkCN cloud_N (SyntaxEng.mkNP cover_N))) v)) ;
-  -- PressureIs v          = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det pressure_N) v)) ;
-  -- OzoneIs v             = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det ozone_N) v)) ;
-
-
+    InfoOzone ozone =
+      mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxEng.mkNP theSg_Det (mkCN (mkCN columnar_A density_N) (SyntaxEng.mkAdv of_Prep (SyntaxEng.mkNP (mkCN atmospheric_A ozone_N))))) ozone)) ;
 
 
 }

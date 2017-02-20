@@ -10,6 +10,7 @@ abstract Ontology = {
     Longitude ;
 
     Day ;
+    Weekday ;
     Month ;
     Year ;
     Time ;

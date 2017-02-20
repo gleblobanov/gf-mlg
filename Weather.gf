@@ -5,13 +5,13 @@ abstract Weather = RST, Ontology ** {
 
 
     -- It is a clear day in Gothenburg on Friday, 13 June 2017. 
-    InfoLocation    : City -> WeekDay -> Day -> Month -> Year -> Time -> Icon -> Span;
+    InfoLocation    : City -> Time -> Icon -> Span;
 
     -- It is cold: the temperature is 19 C and it feels like 23 C.
     InfoTemperature : TempType -> Temperature -> ApparentTemperature -> Span ;
 
     -- There is no precipitation 
-    InfoPrecipNo   : Span ;
+    InfoPrecipNo : Span ;
 
 
     -- It is raining, and the precipitation intesity is 22 mm/h.
@@ -26,8 +26,8 @@ abstract Weather = RST, Ontology ** {
     -- The sky is half cloudy.
     InfoSky  : CloudCover -> Span ;
 
-    -- There is calm .  
-    InfoWind : WindSpeed -> WindSpeedType -> Span ;
+    -- There is no wind.  
+    InfoWind : Span ;
     -- There is NNE strong gale (13 km/h).
     InfoWindBearing : WindSpeed -> WindSpeedType -> WindBearing -> Span ;
 
