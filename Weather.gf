@@ -4,22 +4,23 @@ abstract Weather = RST, Ontology ** {
   fun
 
 
-    -- Friday, 13 June 2017 is clear and warm in Gothenburg. 
-    InfoLocation    : City -> Day -> Month -> Year -> Time -> Icon -> TempType -> Span;
+    -- It is a clear day in Gothenburg on Friday, 13 June 2017. 
+    InfoLocation    : City -> WeekDay -> Day -> Month -> Year -> Time -> Icon -> Span;
 
-    -- The temperature is 19 C and it feels like 23 C.
-    InfoTemperature : Temperature -> ApparentTemperature -> Span ;
+    -- It is cold: the temperature is 19 C and it feels like 23 C.
+    InfoTemperature : TempType -> Temperature -> ApparentTemperature -> Span ;
 
     -- There is no precipitation 
-    InfoPrecipNo   : PrecipIntensity -> Span ;
+    InfoPrecipNo   : Span ;
 
-    -- It is raining with low precipitation intesity (22 inches per hour).
+
+    -- It is raining, and the precipitation intesity is 22 mm/h.
     InfoPrecipType : PrecipIntensity -> PrecipType -> Span ;
 
     -- The probability of precipitation is low.
     InfoPrecipProbaility : PrecipProbability -> Span ;
 
-    -- It is comfortable: relative humidity is 34% and the dew point is 34 C ;
+    -- It is comfortably humid: relative humidity is 34% and the dew point is 34 C ;
     InfoDewPointHumidity : Humidity -> DewPoint -> HumidityType -> Span ;
 
     -- The sky is half cloudy.
@@ -38,37 +39,4 @@ abstract Weather = RST, Ontology ** {
     InfoOzone       : Ozone -> Span ;    
 
     
-
-   
-    
-    mkCityTemp : City -> Temperature -> Span ;
-
-     
-    
-    AppTemp : ApparentTemperature -> Span ;
-
-    InCity : City -> Span ;
-
-    TemperatureIs :         Temperature -> Span ;
-    ApparentTemperatureIs : ApparentTemperature -> Span ;
-    LatitudeIs :            Latitude -> Span ;
-    LongitudeIs :           Longitude -> Span ;
-    PrecipIntensityIs :     PrecipIntensity -> Span ;
-    PrecipProbabilityIs :   PrecipProbability -> Span ;
-    DewPointIs :            DewPoint -> Span ;
-    HumidityIs :            Humidity -> Span ;
-    WindSpeedIs :           WindSpeed -> Span ;
-    WindBearingIs :         WindBearing -> Span ;
-    CloudCoverIs :          CloudCover -> Span ;
-    PressureIs :            Pressure -> Span ;
-    OzoneIs :               Ozone -> Span ;
-
-
-
-
-    WearClothes : TempType -> Span ;
-
-    TempTypeIs : TempType -> Span ;
-
-
 }

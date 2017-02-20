@@ -96,7 +96,7 @@ getIcon r | v == "clear-day" =           GIconClearDay
   where v = DS.icon $ DS.currently r
 
 
-getPrecipIntensity r = GPrecipIntensityVal $ GFloat $ DS.precipIntensity $ DS.currently r
+getPrecipIntensity r = GPrecipIntensityVal $ GFloat $ inch2mm $ DS.precipIntensity $ DS.currently r
 
 getPrecipProbability r = GPrecipProbabilityVal $ GFloat $ DS.precipProbability $ DS.currently r
 
@@ -177,7 +177,7 @@ getWindBearingType r | 348.75 <= v && v <= 11.25 = GN
                      | 326.25 <= v && v <= 348.75 = GNNW
   where v = DS.windBearing $ DS.currently r
 
-getCloudCover r = GCloudCoverVal $ GFloat $ DS.cloudCover $ DS.currently r
+getCloudCover r = GCloudCoverVal $ GFloat $ 10 * $ DS.cloudCover $ DS.currently r
 
 getCloudCoverType r | v <= 0.1  = GClear
                     | v <= 0.5  = GScattered
@@ -196,3 +196,5 @@ f2c f = (fromIntegral (floor  $ (f - 32 ) / 1.8 * 100))/100
 m2km :: Double -> Double
 m2km m = m * 1.6
 
+inch2mm :: Double -> Double
+inch2mm i = i * 25.4

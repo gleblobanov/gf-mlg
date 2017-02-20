@@ -30,6 +30,14 @@ abstract Ontology = {
     TimeVal     :  String -> Time ;
     TimezoneVal :  String -> Timezone ;
 
+    Monday :    Weekday ;
+    Tuesday :   Weekday ;
+    Wednesday : Weekday ;
+    Thursday :  Weekday ;
+    Friday :    Weekday ;
+    Saturday :  Weekday ;
+    Sunday :    Weekday ;
+    
     IconClearDay :          Icon ;
     IconClearNight :        Icon ;
     IconRain :              Icon ;
@@ -75,7 +83,6 @@ abstract Ontology = {
   cat 
 
     PrecipIntensity ;
-    Icon ;
     PrecipType ;
     PrecipProbability ;
     
@@ -118,7 +125,7 @@ abstract Ontology = {
     ComfortableHumid :            HumidityType ; 
     VeryComfortableHumid :        HumidityType ;
     ScarcelyUncomfortableDry :    HumidityType ;
-    HumidityNone :                HumidityType;
+    HumidityNone :                HumidityType ;
     
     
   {- Clouds -}
@@ -155,7 +162,7 @@ abstract Ontology = {
     Calm :           WindSpeedType ;
     LightAir :       WindSpeedType ;
     LightBreeze :    WindSpeedType ;
-    GengleBreeze :   WindSpeedType ;
+    GentleBreeze :   WindSpeedType ;
     ModerateBreeze : WindSpeedType ;
     FreshBreeze :    WindSpeedType ;
     StrongBreeze :   WindSpeedType ;
