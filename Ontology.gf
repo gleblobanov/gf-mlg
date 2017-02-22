@@ -26,7 +26,6 @@ abstract Ontology = {
     LongitudeVal : Float -> Longitude ;
 
     DayVal :       String -> Day ; 
-    MonthVal :     String -> Month ;
     YearVal :      String -> Year ;
     TimeVal     :  String -> Time ;
     TimezoneVal :  String -> Timezone ;
@@ -39,6 +38,20 @@ abstract Ontology = {
     Saturday :  Weekday ;
     Sunday :    Weekday ;
     
+    January :   Month ;
+    February :  Month ;
+    March :     Month ;
+    April :     Month ;
+    May :       Month ;
+    June :      Month ;
+    July :      Month ;
+    August :    Month ;
+    September : Month ;
+    October :   Month ;
+    November :  Month ;
+    December :  Month ;
+    MonthNone : Month ;
+
     IconClearDay :          Icon ;
     IconClearNight :        Icon ;
     IconRain :              Icon ;
@@ -86,6 +99,7 @@ abstract Ontology = {
     PrecipIntensity ;
     PrecipType ;
     PrecipProbability ;
+    PrecipProbabilityType ;
     
   fun
 
@@ -98,11 +112,11 @@ abstract Ontology = {
     PrecipNone : PrecipType ;
 
 
-    VeryHigh : PrecipProbability ;
-    High :     PrecipProbability ;
-    Moderate : PrecipProbability ;
-    Low :      PrecipProbability ;
-    VeryLow :  PrecipProbability ;
+    VeryHigh : PrecipProbabilityType ;
+    High :     PrecipProbabilityType ;
+    Moderate : PrecipProbabilityType ;
+    Low :      PrecipProbabilityType ;
+    VeryLow :  PrecipProbabilityType ;
 
 
   {- Humidity -}

@@ -4,9 +4,10 @@ import qualified DarkSky as DS
 
 import Weather
 import Numeric
+import Data.Time.Clock
 import Data.Time.Clock.POSIX
-import Data.Time.Calendar
-
+import Data.Time.LocalTime
+import Data.Time.Format
 
 data Ontology = Ontology {
   latitude :: GLatitude,
@@ -14,11 +15,13 @@ data Ontology = Ontology {
   city :: GCity,
   time :: GTime,
   day :: GDay,
+  weekday :: GWeekday,
   month :: GMonth,
   year :: GYear,
   timezone :: GTimezone,
   precipIntensity :: GPrecipIntensity,
   precipProbability :: GPrecipProbability,
+  precipProbabilityType :: GPrecipProbabilityType,
   precipType :: GPrecipType,
   icon :: GIcon,
   temperature :: GTemperature,
@@ -44,11 +47,13 @@ extractOntology r = Ontology {
   city = getCity r,
   time = getTime r,
   day = getDay r,
+  weekday = getWeekday r,
   month = getMonth r,
   year = getYear r,
   timezone = getTimezone r,
   precipIntensity = getPrecipIntensity r,
   precipProbability = getPrecipProbability r,
+  precipProbabilityType = getPrecipProbabilityType r,
   precipType = getPrecipType r,
   icon = getIcon r,
   temperature = getTemperature r,
@@ -72,15 +77,61 @@ getLongitude r = GLongitudeVal $ GFloat $ DS.longitude r
 
 getTimezone r = GTimezoneVal $ GString $ DS.timezone r
 
-getDay r = $ posixSecondsToUTCTime $ DS.time r
+getWeekday r = weekday
+  where utctime = posixSecondsToUTCTime $ fromIntegral $ DS.time $ DS.currently r
+        tz      = hoursToTimeZone 1
+        ztime   = utcToZonedTime tz utctime
+        weekday' = formatTime defaultTimeLocale "%u" ztime
+        weekday = case weekday' of
+          "1" -> GMonday
+          "2" -> GTuesday
+          "3" -> GWednesday
+          "4" -> GThursday
+          "5" -> GFriday
+          "6" -> GSaturday
+          "7" -> GSunday
 
-getMonth r = undefined
 
-getYear r = undefined
+getDay r = GDayVal $ GString day
+  where utctime = posixSecondsToUTCTime $ fromIntegral $ DS.time $ DS.currently r
+        tz      = hoursToTimeZone 1
+        ztime   = utcToZonedTime tz utctime
+        day     = formatTime defaultTimeLocale "%e" ztime
+
+getMonth r = month
+  where utctime = posixSecondsToUTCTime $ fromIntegral $ DS.time $ DS.currently r
+        tz      = hoursToTimeZone 1
+        ztime   = utcToZonedTime tz utctime
+        month'  = formatTime defaultTimeLocale "%m" ztime
+        month = case month' of
+          "01"  -> GJanuary
+          "02"  -> GFebruary
+          "03"  -> GMarch
+          "04"  -> GApril
+          "05"  -> GMay
+          "06"  -> GJune
+          "07"  -> GJuly
+          "08"  -> GAugust
+          "09"  -> GSeptember
+          "10"  -> GOctober
+          "11"  -> GNovember
+          "12"  -> GDecember
+          _     -> GMonthNone
+
+
+getYear r = GYearVal $ GString year
+  where utctime = posixSecondsToUTCTime $ fromIntegral $ DS.time $ DS.currently r
+        tz      = hoursToTimeZone 1
+        ztime   = utcToZonedTime tz utctime
+        year    = formatTime defaultTimeLocale "%Y" ztime
 
 getCity r = GGothenburg
 
-getTime r = GTimeVal $ GString $ show $ GInt $ DS.time $ DS.currently r
+getTime r = GTimeVal $ GString time
+  where utctime = posixSecondsToUTCTime $ fromIntegral $ DS.time $ DS.currently r
+        tz      = hoursToTimeZone 1
+        ztime   = utcToZonedTime tz utctime
+        time    = formatTime defaultTimeLocale "%R" ztime
 
 getIcon r | v == "clear-day" =           GIconClearDay
           | v == "clear-night" =         GIconClearNight
@@ -100,6 +151,15 @@ getPrecipIntensity r = GPrecipIntensityVal $ GFloat $ inch2mm $ DS.precipIntensi
 
 getPrecipProbability r = GPrecipProbabilityVal $ GFloat $ DS.precipProbability $ DS.currently r
 
+getPrecipProbabilityType r | v <= 0.2  = GVeryLow
+                           | v <= 0.4  = GLow
+                           | v <= 0.6  = GModerate
+                           | v <= 0.8  = GHigh
+                           | otherwise = GVeryHigh
+  where v = DS.precipProbability $ DS.currently r
+
+
+
 getPrecipType r | v == "rain"  = GRain
                 | v == "snow"  = GSnow
                 | v == "sleet" = GSleet
@@ -109,7 +169,7 @@ getPrecipType r | v == "rain"  = GRain
 getTemperature r = GTemperatureVal $ GFloat $ f2c $ DS.temperature $ DS.currently r
 
 getApparentTemperature r =
-  GApparentTemperatureVal $ GFloat $ DS.apparentTemperature $ DS.currently r
+  GApparentTemperatureVal $ GFloat $ f2c $ DS.apparentTemperature $ DS.currently r
 
 getTempType r | v >= 40   = GExtremelyHot
               | v >= 35   = GVeryHot
@@ -144,7 +204,7 @@ getWindSpeed r = GWindSpeedVal $ GFloat $ DS.windSpeed $ DS.currently r
 getWindSpeedType r | v <= 2 =    GCalm
                    | v <= 6 =    GLightAir
                    | v <= 11 =   GLightBreeze
-                   | v <= 19 =   GGengleBreeze
+                   | v <= 19 =   GGentleBreeze
                    | v <= 30 =   GModerateBreeze
                    | v <= 39 =   GFreshBreeze
                    | v <= 50 =   GStrongBreeze
@@ -177,7 +237,7 @@ getWindBearingType r | 348.75 <= v && v <= 11.25 = GN
                      | 326.25 <= v && v <= 348.75 = GNNW
   where v = DS.windBearing $ DS.currently r
 
-getCloudCover r = GCloudCoverVal $ GFloat $ 10 * $ DS.cloudCover $ DS.currently r
+getCloudCover r = GCloudCoverVal $ GFloat $ (10 *) $ DS.cloudCover $ DS.currently r
 
 getCloudCoverType r | v <= 0.1  = GClear
                     | v <= 0.5  = GScattered
@@ -194,7 +254,7 @@ f2c :: Double -> Double
 f2c f = (fromIntegral (floor  $ (f - 32 ) / 1.8 * 100))/100
 
 m2km :: Double -> Double
-m2km m = m * 1.6
+m2km m = (fromIntegral (floor  $ m * 1.6 * 100))/100
 
 inch2mm :: Double -> Double
-inch2mm i = i * 25.4
+inch2mm i = (fromIntegral (floor  $ i * 25.4 * 100))/100

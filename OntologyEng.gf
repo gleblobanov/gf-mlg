@@ -11,6 +11,7 @@ concrete OntologyEng of Ontology = open WeatherExtraEng, WeatherLexiconEng, Synt
     Longitude = NP ;
 
     Day = NP ;
+    Weekday = NP ;
     Month = NP ;
     Year = NP ;
     Time = NP ;
@@ -18,7 +19,6 @@ concrete OntologyEng of Ontology = open WeatherExtraEng, WeatherLexiconEng, Synt
 
     Icon = VP ;
     
-    Weekday = NP ;
 
 
   lin
@@ -29,25 +29,38 @@ concrete OntologyEng of Ontology = open WeatherExtraEng, WeatherLexiconEng, Synt
     LongitudeVal v = mkValueNP v.s;
 
     DayVal v      = mkValueNP v.s ;
-    MonthVal v    = mkValueNP v.s ;
     YearVal v     = mkValueNP v.s ;
     TimeVal v     = mkValueNP v.s ;
     TimezoneVal v = mkValueNP v.s ;
 
-    Monday    = mkNP Monday_N ;
-    Tuesday   = mkNP Tuesday_N ;
-    Wednesday = mkNP Wednesday_N ;
-    Thursday  = mkNP Thursday_N ;
-    Friday    = mkNP Friday_N ;
-    Saturday  = mkNP Saturday_N ;
-    Sunday    = mkNP Sunday_N ;
+    Monday    = mkNP Monday_PN ;
+    Tuesday   = mkNP Tuesday_PN ;
+    Wednesday = mkNP Wednesday_PN ;
+    Thursday  = mkNP Thursday_PN ;
+    Friday    = mkNP Friday_PN ;
+    Saturday  = mkNP Saturday_PN ;
+    Sunday    = mkNP Sunday_PN ;
+
+    January   = mkNP January_PN ;
+    February  = mkNP February_PN ;
+    March     = mkNP March_PN ;
+    April     = mkNP April_PN ;
+    May       = mkNP May_PN ;
+    June      = mkNP June_PN ;
+    July      = mkNP July_PN ;
+    August    = mkNP August_PN ;
+    September = mkNP September_PN ;
+    October   = mkNP October_PN ;
+    November  = mkNP November_PN ;
+    December  = mkNP December_PN ;
+    MonthNone = mkNP empty_N ;
     
     IconClearDay   = mkVP (mkNP a_Det (mkCN clear_A day_N)) ;
     IconClearNight = mkVP (mkNP a_Det (mkCN clear_A night_N)) ;
-    IconRain = mkVP rain_V0 ;
-    IconSnow = mkVP snow_V ;
-    IconSleet = mkVP sleet_V ;
---    IconWind = mkVP windy_A ;
+    IconRain = progressiveVP (mkVP rain_V0) ;
+    IconSnow = progressiveVP (mkVP snow_V) ;
+    IconSleet = progressiveVP (mkVP sleet_V) ;
+    IconWind = mkVP windy_A ;
     IconFog = mkVP foggy_A ;
     IconCloudy = mkVP cloudy_A ;
     IconPartlyCloudyDay = mkVP (mkNP a_Det (mkCN (mkAP partly_AdA cloudy_A) day_N)) ;
@@ -85,17 +98,18 @@ concrete OntologyEng of Ontology = open WeatherExtraEng, WeatherLexiconEng, Synt
     
     PrecipIntensity = NP ;
     PrecipType = VP ;
-    PrecipProbability = AP ;
+    PrecipProbability = NP ;
+    PrecipProbabilityType = AP ;
 
   lin
     
-    --PrecipIntensityVal v = lin NP {s = \\_ => v.s ++ "mm/h"; a = AgP3Sg Neutr} ;
-    --PrecipProbabilityVal v = lin NP {s = \\_ => v.s ++ "%" ; a = AgP3Sg Neutr} ;
+    PrecipIntensityVal v = mkUnitNP v.s "mm/h";
+    PrecipProbabilityVal v = mkUnitNP v.s "%";
 
 
-    Rain = mkVP rain_V0 ;
-    Snow = mkVP snow_V ;
-    Sleet = mkVP sleet_V ;
+    Rain = progressiveVP (mkVP rain_V0) ;
+    Snow = progressiveVP (mkVP snow_V) ;
+    Sleet = (mkVP sleet_V) ;
     PrecipNone = mkVP unknown_A ;
 
 
@@ -124,7 +138,7 @@ concrete OntologyEng of Ontology = open WeatherExtraEng, WeatherLexiconEng, Synt
    QuiteUncomfortableHumid = mkAP quite_Adv uncomfortable_A ; 
    SomewhatUncomfortableHumid = mkAP somewhat_AdA uncomfortable_A ;
    ScarcelyUncomfortableHumid = mkAP scarcely_AdA uncomfortable_A;
---   ComfortableHumid =  mkAP comfortable_A; 
+   ComfortableHumid =  mkAP comfortable_A; 
    VeryComfortableHumid = mkAP very_AdA uncomfortable_A;
    ScarcelyUncomfortableDry = mkAP quite_Adv uncomfortable_A;
    HumidityNone = mkAP quite_Adv uncomfortable_A;
@@ -155,43 +169,43 @@ concrete OntologyEng of Ontology = open WeatherExtraEng, WeatherLexiconEng, Synt
     WindSpeed = NP ;
     WindSpeedType = VP ;
     WindBearing = NP ;
-    WindBearingType = AdV ;
+    WindBearingType = Adv ;
 
   lin
     WindSpeedVal v = mkUnitNP v.s "km/h" ;
     WindBearingVal v = mkValueNP v.s ;
 
-    -- Calm           = mkVP calm_A ;
+    Calm           = mkVP calm_A ;
     LightAir       = mkVP (mkCN light_A air_N) ;
     LightBreeze    = mkVP (mkCN light_A breeze_N) ;
     GentleBreeze   = mkVP (mkCN gentle_A breeze_N);
     ModerateBreeze = mkVP (mkCN moderate_A breeze_N);
     FreshBreeze    = mkVP (mkCN fresh_A breeze_N);
---    StrongBreeze   = mkVP (mkCN strong_A breeze_N);
+    StrongBreeze   = mkVP (mkCN strong_A breeze_N);
     ModerateGale   = mkVP (mkCN moderate_A gale_N);
     FreshGale      = mkVP (mkCN fresh_A gale_N);
---    StrongGale     = mkVP (mkCN strong_A gale_N);
---    WholeGale      = mkVP (mkCN whole_A gale_N);
+    StrongGale     = mkVP (mkCN strong_A gale_N);
+    WholeGale      = mkVP (mkCN whole_A gale_N);
     Storm          = mkVP storm_N;
     Hurricane      = mkVP hurricane_N;
 
     
-    N   = mkAdV "N" ;
-    NNE = mkAdV "NNE" ;
-    NE  = mkAdV "NE" ;
-    ENE = mkAdV "ENE" ;
-    E   = mkAdV "E" ;
-    ESE = mkAdV "ESE" ;
-    SE  = mkAdV "SE" ;
-    SSE = mkAdV "SSE" ;
-    S   = mkAdV "S" ;
-    SSW = mkAdV "SSW" ;
-    SW  = mkAdV "SW" ;
-    WSW = mkAdV "WSW" ;
-    W   = mkAdV "W" ;
-    WNW = mkAdV "WNW" ;
-    NW  = mkAdV "NW" ;
-    NNW = mkAdV "NNW" ;
+    N   = mkAdv "N" ;
+    NNE = mkAdv "NNE" ;
+    NE  = mkAdv "NE" ;
+    ENE = mkAdv "ENE" ;
+    E   = mkAdv "E" ;
+    ESE = mkAdv "ESE" ;
+    SE  = mkAdv "SE" ;
+    SSE = mkAdv "SSE" ;
+    S   = mkAdv "S" ;
+    SSW = mkAdv "SSW" ;
+    SW  = mkAdv "SW" ;
+    WSW = mkAdv "WSW" ;
+    W   = mkAdv "W" ;
+    WNW = mkAdv "WNW" ;
+    NW  = mkAdv "NW" ;
+    NNW = mkAdv "NNW" ;
 
 
 

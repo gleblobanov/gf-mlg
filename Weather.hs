@@ -92,29 +92,29 @@ data GIcon =
  | GIconWind 
   deriving Show
 
-data GJointNucleusList =
-   GJBNuc GNucleus 
- | GJCNuc GNucleus GJointNucleusList 
-  deriving Show
-
 data GLatitude = GLatitudeVal GFloat 
   deriving Show
 
 data GLongitude = GLongitudeVal GFloat 
   deriving Show
 
-data GMonth = GMonthVal GString 
+data GMonth =
+   GApril 
+ | GAugust 
+ | GDecember 
+ | GFebruary 
+ | GJanuary 
+ | GJuly 
+ | GJune 
+ | GMarch 
+ | GMay 
+ | GMonthNone 
+ | GNovember 
+ | GOctober 
+ | GSeptember 
   deriving Show
 
-data GNucleus =
-   GNuc GSpan 
- | GNuc' GSchema 
- | GNuc0 
-  deriving Show
-
-data GNucleusList =
-   GBNuc GNucleus 
- | GCNuc GNucleus GNucleusList 
+data GNucleus = GInfoLocation GCity GDay GMonth GYear GWeekday GTime GIcon 
   deriving Show
 
 data GOzone = GOzoneVal GFloat 
@@ -123,11 +123,13 @@ data GOzone = GOzoneVal GFloat
 data GPrecipIntensity = GPrecipIntensityVal GFloat 
   deriving Show
 
-data GPrecipProbability =
+data GPrecipProbability = GPrecipProbabilityVal GFloat 
+  deriving Show
+
+data GPrecipProbabilityType =
    GHigh 
  | GLow 
  | GModerate 
- | GPrecipProbabilityVal GFloat 
  | GVeryHigh 
  | GVeryLow 
   deriving Show
@@ -143,9 +145,16 @@ data GPressure = GPressureVal GFloat
   deriving Show
 
 data GSatellite =
-   GSat GSpan 
- | GSat' GSchema 
- | GSat0 
+   GInfoDewPointHumidity GHumidity GDewPoint GHumidityType 
+ | GInfoOzone GOzone 
+ | GInfoPrecipNo 
+ | GInfoPrecipProbaility GPrecipProbabilityType 
+ | GInfoPrecipType GPrecipIntensity GPrecipType 
+ | GInfoPressure GPressure 
+ | GInfoSky GCloudCoverType 
+ | GInfoTemperature GTempType GTemperature GApparentTemperature 
+ | GInfoWindBearing GWindSpeed GWindSpeedType GWindBearingType 
+ | GInfoWindNo 
   deriving Show
 
 data GSatelliteList =
@@ -153,63 +162,7 @@ data GSatelliteList =
  | GCSat GSatellite GSatelliteList 
   deriving Show
 
-data GSchema =
-   GAntithesis GNucleus GSatelliteList 
- | GBackground GNucleus GSatelliteList 
- | GCircumstance GNucleus GSatelliteList 
- | GConcession GNucleus GSatelliteList 
- | GCondition GNucleus GSatelliteList 
- | GContrast GNucleus GNucleus 
- | GElaboration GNucleus GSatelliteList 
- | GEnablement GNucleus GSatelliteList 
- | GEvaluation GNucleus GSatelliteList 
- | GEvidence GNucleus GSatelliteList 
- | GInterpretation GNucleus GSatelliteList 
- | GJoint GJointNucleusList 
- | GJustify GNucleus GSatelliteList 
- | GMotivation GNucleus GSatelliteList 
- | GNonVolitionalCause GNucleus GSatelliteList 
- | GNonVolitionalResult GNucleus GSatelliteList 
- | GOtherwise GNucleus GSatelliteList 
- | GPurpose GNucleus GSatelliteList 
- | GRestatement GNucleus GSatelliteList 
- | GSequence GNucleusList 
- | GSolutionhood GNucleus GSatelliteList 
- | GSummary GNucleus GSatelliteList 
- | GVolitionalCause GNucleus GSatelliteList 
- | GVolitionalResult GNucleus GSatelliteList 
-  deriving Show
-
-data GSpan =
-   GAppTemp GApparentTemperature 
- | GApparentTemperatureIs GApparentTemperature 
- | GCloudCoverIs GCloudCover 
- | GDewPointIs GDewPoint 
- | GHumidityIs GHumidity 
- | GInCity GCity 
- | GInfoDewPointHumidity GHumidity GDewPoint GHumidityType 
- | GInfoLocation GCity GDay GMonth GYear GTime GIcon GTempType 
- | GInfoOzone GOzone 
- | GInfoPrecipNo GPrecipIntensity 
- | GInfoPrecipProbaility GPrecipProbability 
- | GInfoPrecipType GPrecipIntensity GPrecipType 
- | GInfoPressure GPressure 
- | GInfoSky GCloudCover 
- | GInfoTemperature GTemperature GApparentTemperature 
- | GInfoWind GWindSpeed GWindSpeedType 
- | GInfoWindBearing GWindSpeed GWindSpeedType GWindBearing 
- | GLatitudeIs GLatitude 
- | GLongitudeIs GLongitude 
- | GOzoneIs GOzone 
- | GPrecipIntensityIs GPrecipIntensity 
- | GPrecipProbabilityIs GPrecipProbability 
- | GPressureIs GPressure 
- | GTempTypeIs GTempType 
- | GTemperatureIs GTemperature 
- | GWearClothes GTempType 
- | GWindBearingIs GWindBearing 
- | GWindSpeedIs GWindSpeed 
- | GmkCityTemp GCity GTemperature 
+data GSchema = GBackground GNucleus GSatelliteList 
   deriving Show
 
 data GTempType =
@@ -232,6 +185,16 @@ data GTime = GTimeVal GString
   deriving Show
 
 data GTimezone = GTimezoneVal GString 
+  deriving Show
+
+data GWeekday =
+   GFriday 
+ | GMonday 
+ | GSaturday 
+ | GSunday 
+ | GThursday 
+ | GTuesday 
+ | GWednesday 
   deriving Show
 
 data GWindBearing = GWindBearingVal GFloat 
@@ -263,7 +226,7 @@ data GWindSpeedType =
    GCalm 
  | GFreshBreeze 
  | GFreshGale 
- | GGengleBreeze 
+ | GGentleBreeze 
  | GHurricane 
  | GLightAir 
  | GLightBreeze 
@@ -411,18 +374,6 @@ instance Gf GIcon where
 
       _ -> error ("no Icon " ++ show t)
 
-instance Gf GJointNucleusList where
-  gf (GJBNuc x1) = mkApp (mkCId "JBNuc") [gf x1]
-  gf (GJCNuc x1 x2) = mkApp (mkCId "JCNuc") [gf x1, gf x2]
-
-  fg t =
-    case unApp t of
-      Just (i,[x1]) | i == mkCId "JBNuc" -> GJBNuc (fg x1)
-      Just (i,[x1,x2]) | i == mkCId "JCNuc" -> GJCNuc (fg x1) (fg x2)
-
-
-      _ -> error ("no JointNucleusList " ++ show t)
-
 instance Gf GLatitude where
   gf (GLatitudeVal x1) = mkApp (mkCId "LatitudeVal") [gf x1]
 
@@ -444,40 +395,48 @@ instance Gf GLongitude where
       _ -> error ("no Longitude " ++ show t)
 
 instance Gf GMonth where
-  gf (GMonthVal x1) = mkApp (mkCId "MonthVal") [gf x1]
+  gf GApril = mkApp (mkCId "April") []
+  gf GAugust = mkApp (mkCId "August") []
+  gf GDecember = mkApp (mkCId "December") []
+  gf GFebruary = mkApp (mkCId "February") []
+  gf GJanuary = mkApp (mkCId "January") []
+  gf GJuly = mkApp (mkCId "July") []
+  gf GJune = mkApp (mkCId "June") []
+  gf GMarch = mkApp (mkCId "March") []
+  gf GMay = mkApp (mkCId "May") []
+  gf GMonthNone = mkApp (mkCId "MonthNone") []
+  gf GNovember = mkApp (mkCId "November") []
+  gf GOctober = mkApp (mkCId "October") []
+  gf GSeptember = mkApp (mkCId "September") []
 
   fg t =
     case unApp t of
-      Just (i,[x1]) | i == mkCId "MonthVal" -> GMonthVal (fg x1)
+      Just (i,[]) | i == mkCId "April" -> GApril 
+      Just (i,[]) | i == mkCId "August" -> GAugust 
+      Just (i,[]) | i == mkCId "December" -> GDecember 
+      Just (i,[]) | i == mkCId "February" -> GFebruary 
+      Just (i,[]) | i == mkCId "January" -> GJanuary 
+      Just (i,[]) | i == mkCId "July" -> GJuly 
+      Just (i,[]) | i == mkCId "June" -> GJune 
+      Just (i,[]) | i == mkCId "March" -> GMarch 
+      Just (i,[]) | i == mkCId "May" -> GMay 
+      Just (i,[]) | i == mkCId "MonthNone" -> GMonthNone 
+      Just (i,[]) | i == mkCId "November" -> GNovember 
+      Just (i,[]) | i == mkCId "October" -> GOctober 
+      Just (i,[]) | i == mkCId "September" -> GSeptember 
 
 
       _ -> error ("no Month " ++ show t)
 
 instance Gf GNucleus where
-  gf (GNuc x1) = mkApp (mkCId "Nuc") [gf x1]
-  gf (GNuc' x1) = mkApp (mkCId "Nuc'") [gf x1]
-  gf GNuc0 = mkApp (mkCId "Nuc0") []
+  gf (GInfoLocation x1 x2 x3 x4 x5 x6 x7) = mkApp (mkCId "InfoLocation") [gf x1, gf x2, gf x3, gf x4, gf x5, gf x6, gf x7]
 
   fg t =
     case unApp t of
-      Just (i,[x1]) | i == mkCId "Nuc" -> GNuc (fg x1)
-      Just (i,[x1]) | i == mkCId "Nuc'" -> GNuc' (fg x1)
-      Just (i,[]) | i == mkCId "Nuc0" -> GNuc0 
+      Just (i,[x1,x2,x3,x4,x5,x6,x7]) | i == mkCId "InfoLocation" -> GInfoLocation (fg x1) (fg x2) (fg x3) (fg x4) (fg x5) (fg x6) (fg x7)
 
 
       _ -> error ("no Nucleus " ++ show t)
-
-instance Gf GNucleusList where
-  gf (GBNuc x1) = mkApp (mkCId "BNuc") [gf x1]
-  gf (GCNuc x1 x2) = mkApp (mkCId "CNuc") [gf x1, gf x2]
-
-  fg t =
-    case unApp t of
-      Just (i,[x1]) | i == mkCId "BNuc" -> GBNuc (fg x1)
-      Just (i,[x1,x2]) | i == mkCId "CNuc" -> GCNuc (fg x1) (fg x2)
-
-
-      _ -> error ("no NucleusList " ++ show t)
 
 instance Gf GOzone where
   gf (GOzoneVal x1) = mkApp (mkCId "OzoneVal") [gf x1]
@@ -500,10 +459,19 @@ instance Gf GPrecipIntensity where
       _ -> error ("no PrecipIntensity " ++ show t)
 
 instance Gf GPrecipProbability where
+  gf (GPrecipProbabilityVal x1) = mkApp (mkCId "PrecipProbabilityVal") [gf x1]
+
+  fg t =
+    case unApp t of
+      Just (i,[x1]) | i == mkCId "PrecipProbabilityVal" -> GPrecipProbabilityVal (fg x1)
+
+
+      _ -> error ("no PrecipProbability " ++ show t)
+
+instance Gf GPrecipProbabilityType where
   gf GHigh = mkApp (mkCId "High") []
   gf GLow = mkApp (mkCId "Low") []
   gf GModerate = mkApp (mkCId "Moderate") []
-  gf (GPrecipProbabilityVal x1) = mkApp (mkCId "PrecipProbabilityVal") [gf x1]
   gf GVeryHigh = mkApp (mkCId "VeryHigh") []
   gf GVeryLow = mkApp (mkCId "VeryLow") []
 
@@ -512,12 +480,11 @@ instance Gf GPrecipProbability where
       Just (i,[]) | i == mkCId "High" -> GHigh 
       Just (i,[]) | i == mkCId "Low" -> GLow 
       Just (i,[]) | i == mkCId "Moderate" -> GModerate 
-      Just (i,[x1]) | i == mkCId "PrecipProbabilityVal" -> GPrecipProbabilityVal (fg x1)
       Just (i,[]) | i == mkCId "VeryHigh" -> GVeryHigh 
       Just (i,[]) | i == mkCId "VeryLow" -> GVeryLow 
 
 
-      _ -> error ("no PrecipProbability " ++ show t)
+      _ -> error ("no PrecipProbabilityType " ++ show t)
 
 instance Gf GPrecipType where
   gf GPrecipNone = mkApp (mkCId "PrecipNone") []
@@ -546,15 +513,29 @@ instance Gf GPressure where
       _ -> error ("no Pressure " ++ show t)
 
 instance Gf GSatellite where
-  gf (GSat x1) = mkApp (mkCId "Sat") [gf x1]
-  gf (GSat' x1) = mkApp (mkCId "Sat'") [gf x1]
-  gf GSat0 = mkApp (mkCId "Sat0") []
+  gf (GInfoDewPointHumidity x1 x2 x3) = mkApp (mkCId "InfoDewPointHumidity") [gf x1, gf x2, gf x3]
+  gf (GInfoOzone x1) = mkApp (mkCId "InfoOzone") [gf x1]
+  gf GInfoPrecipNo = mkApp (mkCId "InfoPrecipNo") []
+  gf (GInfoPrecipProbaility x1) = mkApp (mkCId "InfoPrecipProbaility") [gf x1]
+  gf (GInfoPrecipType x1 x2) = mkApp (mkCId "InfoPrecipType") [gf x1, gf x2]
+  gf (GInfoPressure x1) = mkApp (mkCId "InfoPressure") [gf x1]
+  gf (GInfoSky x1) = mkApp (mkCId "InfoSky") [gf x1]
+  gf (GInfoTemperature x1 x2 x3) = mkApp (mkCId "InfoTemperature") [gf x1, gf x2, gf x3]
+  gf (GInfoWindBearing x1 x2 x3) = mkApp (mkCId "InfoWindBearing") [gf x1, gf x2, gf x3]
+  gf GInfoWindNo = mkApp (mkCId "InfoWindNo") []
 
   fg t =
     case unApp t of
-      Just (i,[x1]) | i == mkCId "Sat" -> GSat (fg x1)
-      Just (i,[x1]) | i == mkCId "Sat'" -> GSat' (fg x1)
-      Just (i,[]) | i == mkCId "Sat0" -> GSat0 
+      Just (i,[x1,x2,x3]) | i == mkCId "InfoDewPointHumidity" -> GInfoDewPointHumidity (fg x1) (fg x2) (fg x3)
+      Just (i,[x1]) | i == mkCId "InfoOzone" -> GInfoOzone (fg x1)
+      Just (i,[]) | i == mkCId "InfoPrecipNo" -> GInfoPrecipNo 
+      Just (i,[x1]) | i == mkCId "InfoPrecipProbaility" -> GInfoPrecipProbaility (fg x1)
+      Just (i,[x1,x2]) | i == mkCId "InfoPrecipType" -> GInfoPrecipType (fg x1) (fg x2)
+      Just (i,[x1]) | i == mkCId "InfoPressure" -> GInfoPressure (fg x1)
+      Just (i,[x1]) | i == mkCId "InfoSky" -> GInfoSky (fg x1)
+      Just (i,[x1,x2,x3]) | i == mkCId "InfoTemperature" -> GInfoTemperature (fg x1) (fg x2) (fg x3)
+      Just (i,[x1,x2,x3]) | i == mkCId "InfoWindBearing" -> GInfoWindBearing (fg x1) (fg x2) (fg x3)
+      Just (i,[]) | i == mkCId "InfoWindNo" -> GInfoWindNo 
 
 
       _ -> error ("no Satellite " ++ show t)
@@ -572,126 +553,14 @@ instance Gf GSatelliteList where
       _ -> error ("no SatelliteList " ++ show t)
 
 instance Gf GSchema where
-  gf (GAntithesis x1 x2) = mkApp (mkCId "Antithesis") [gf x1, gf x2]
   gf (GBackground x1 x2) = mkApp (mkCId "Background") [gf x1, gf x2]
-  gf (GCircumstance x1 x2) = mkApp (mkCId "Circumstance") [gf x1, gf x2]
-  gf (GConcession x1 x2) = mkApp (mkCId "Concession") [gf x1, gf x2]
-  gf (GCondition x1 x2) = mkApp (mkCId "Condition") [gf x1, gf x2]
-  gf (GContrast x1 x2) = mkApp (mkCId "Contrast") [gf x1, gf x2]
-  gf (GElaboration x1 x2) = mkApp (mkCId "Elaboration") [gf x1, gf x2]
-  gf (GEnablement x1 x2) = mkApp (mkCId "Enablement") [gf x1, gf x2]
-  gf (GEvaluation x1 x2) = mkApp (mkCId "Evaluation") [gf x1, gf x2]
-  gf (GEvidence x1 x2) = mkApp (mkCId "Evidence") [gf x1, gf x2]
-  gf (GInterpretation x1 x2) = mkApp (mkCId "Interpretation") [gf x1, gf x2]
-  gf (GJoint x1) = mkApp (mkCId "Joint") [gf x1]
-  gf (GJustify x1 x2) = mkApp (mkCId "Justify") [gf x1, gf x2]
-  gf (GMotivation x1 x2) = mkApp (mkCId "Motivation") [gf x1, gf x2]
-  gf (GNonVolitionalCause x1 x2) = mkApp (mkCId "NonVolitionalCause") [gf x1, gf x2]
-  gf (GNonVolitionalResult x1 x2) = mkApp (mkCId "NonVolitionalResult") [gf x1, gf x2]
-  gf (GOtherwise x1 x2) = mkApp (mkCId "Otherwise") [gf x1, gf x2]
-  gf (GPurpose x1 x2) = mkApp (mkCId "Purpose") [gf x1, gf x2]
-  gf (GRestatement x1 x2) = mkApp (mkCId "Restatement") [gf x1, gf x2]
-  gf (GSequence x1) = mkApp (mkCId "Sequence") [gf x1]
-  gf (GSolutionhood x1 x2) = mkApp (mkCId "Solutionhood") [gf x1, gf x2]
-  gf (GSummary x1 x2) = mkApp (mkCId "Summary") [gf x1, gf x2]
-  gf (GVolitionalCause x1 x2) = mkApp (mkCId "VolitionalCause") [gf x1, gf x2]
-  gf (GVolitionalResult x1 x2) = mkApp (mkCId "VolitionalResult") [gf x1, gf x2]
 
   fg t =
     case unApp t of
-      Just (i,[x1,x2]) | i == mkCId "Antithesis" -> GAntithesis (fg x1) (fg x2)
       Just (i,[x1,x2]) | i == mkCId "Background" -> GBackground (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "Circumstance" -> GCircumstance (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "Concession" -> GConcession (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "Condition" -> GCondition (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "Contrast" -> GContrast (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "Elaboration" -> GElaboration (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "Enablement" -> GEnablement (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "Evaluation" -> GEvaluation (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "Evidence" -> GEvidence (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "Interpretation" -> GInterpretation (fg x1) (fg x2)
-      Just (i,[x1]) | i == mkCId "Joint" -> GJoint (fg x1)
-      Just (i,[x1,x2]) | i == mkCId "Justify" -> GJustify (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "Motivation" -> GMotivation (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "NonVolitionalCause" -> GNonVolitionalCause (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "NonVolitionalResult" -> GNonVolitionalResult (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "Otherwise" -> GOtherwise (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "Purpose" -> GPurpose (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "Restatement" -> GRestatement (fg x1) (fg x2)
-      Just (i,[x1]) | i == mkCId "Sequence" -> GSequence (fg x1)
-      Just (i,[x1,x2]) | i == mkCId "Solutionhood" -> GSolutionhood (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "Summary" -> GSummary (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "VolitionalCause" -> GVolitionalCause (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "VolitionalResult" -> GVolitionalResult (fg x1) (fg x2)
 
 
       _ -> error ("no Schema " ++ show t)
-
-instance Gf GSpan where
-  gf (GAppTemp x1) = mkApp (mkCId "AppTemp") [gf x1]
-  gf (GApparentTemperatureIs x1) = mkApp (mkCId "ApparentTemperatureIs") [gf x1]
-  gf (GCloudCoverIs x1) = mkApp (mkCId "CloudCoverIs") [gf x1]
-  gf (GDewPointIs x1) = mkApp (mkCId "DewPointIs") [gf x1]
-  gf (GHumidityIs x1) = mkApp (mkCId "HumidityIs") [gf x1]
-  gf (GInCity x1) = mkApp (mkCId "InCity") [gf x1]
-  gf (GInfoDewPointHumidity x1 x2 x3) = mkApp (mkCId "InfoDewPointHumidity") [gf x1, gf x2, gf x3]
-  gf (GInfoLocation x1 x2 x3 x4 x5 x6 x7) = mkApp (mkCId "InfoLocation") [gf x1, gf x2, gf x3, gf x4, gf x5, gf x6, gf x7]
-  gf (GInfoOzone x1) = mkApp (mkCId "InfoOzone") [gf x1]
-  gf (GInfoPrecipNo x1) = mkApp (mkCId "InfoPrecipNo") [gf x1]
-  gf (GInfoPrecipProbaility x1) = mkApp (mkCId "InfoPrecipProbaility") [gf x1]
-  gf (GInfoPrecipType x1 x2) = mkApp (mkCId "InfoPrecipType") [gf x1, gf x2]
-  gf (GInfoPressure x1) = mkApp (mkCId "InfoPressure") [gf x1]
-  gf (GInfoSky x1) = mkApp (mkCId "InfoSky") [gf x1]
-  gf (GInfoTemperature x1 x2) = mkApp (mkCId "InfoTemperature") [gf x1, gf x2]
-  gf (GInfoWind x1 x2) = mkApp (mkCId "InfoWind") [gf x1, gf x2]
-  gf (GInfoWindBearing x1 x2 x3) = mkApp (mkCId "InfoWindBearing") [gf x1, gf x2, gf x3]
-  gf (GLatitudeIs x1) = mkApp (mkCId "LatitudeIs") [gf x1]
-  gf (GLongitudeIs x1) = mkApp (mkCId "LongitudeIs") [gf x1]
-  gf (GOzoneIs x1) = mkApp (mkCId "OzoneIs") [gf x1]
-  gf (GPrecipIntensityIs x1) = mkApp (mkCId "PrecipIntensityIs") [gf x1]
-  gf (GPrecipProbabilityIs x1) = mkApp (mkCId "PrecipProbabilityIs") [gf x1]
-  gf (GPressureIs x1) = mkApp (mkCId "PressureIs") [gf x1]
-  gf (GTempTypeIs x1) = mkApp (mkCId "TempTypeIs") [gf x1]
-  gf (GTemperatureIs x1) = mkApp (mkCId "TemperatureIs") [gf x1]
-  gf (GWearClothes x1) = mkApp (mkCId "WearClothes") [gf x1]
-  gf (GWindBearingIs x1) = mkApp (mkCId "WindBearingIs") [gf x1]
-  gf (GWindSpeedIs x1) = mkApp (mkCId "WindSpeedIs") [gf x1]
-  gf (GmkCityTemp x1 x2) = mkApp (mkCId "mkCityTemp") [gf x1, gf x2]
-
-  fg t =
-    case unApp t of
-      Just (i,[x1]) | i == mkCId "AppTemp" -> GAppTemp (fg x1)
-      Just (i,[x1]) | i == mkCId "ApparentTemperatureIs" -> GApparentTemperatureIs (fg x1)
-      Just (i,[x1]) | i == mkCId "CloudCoverIs" -> GCloudCoverIs (fg x1)
-      Just (i,[x1]) | i == mkCId "DewPointIs" -> GDewPointIs (fg x1)
-      Just (i,[x1]) | i == mkCId "HumidityIs" -> GHumidityIs (fg x1)
-      Just (i,[x1]) | i == mkCId "InCity" -> GInCity (fg x1)
-      Just (i,[x1,x2,x3]) | i == mkCId "InfoDewPointHumidity" -> GInfoDewPointHumidity (fg x1) (fg x2) (fg x3)
-      Just (i,[x1,x2,x3,x4,x5,x6,x7]) | i == mkCId "InfoLocation" -> GInfoLocation (fg x1) (fg x2) (fg x3) (fg x4) (fg x5) (fg x6) (fg x7)
-      Just (i,[x1]) | i == mkCId "InfoOzone" -> GInfoOzone (fg x1)
-      Just (i,[x1]) | i == mkCId "InfoPrecipNo" -> GInfoPrecipNo (fg x1)
-      Just (i,[x1]) | i == mkCId "InfoPrecipProbaility" -> GInfoPrecipProbaility (fg x1)
-      Just (i,[x1,x2]) | i == mkCId "InfoPrecipType" -> GInfoPrecipType (fg x1) (fg x2)
-      Just (i,[x1]) | i == mkCId "InfoPressure" -> GInfoPressure (fg x1)
-      Just (i,[x1]) | i == mkCId "InfoSky" -> GInfoSky (fg x1)
-      Just (i,[x1,x2]) | i == mkCId "InfoTemperature" -> GInfoTemperature (fg x1) (fg x2)
-      Just (i,[x1,x2]) | i == mkCId "InfoWind" -> GInfoWind (fg x1) (fg x2)
-      Just (i,[x1,x2,x3]) | i == mkCId "InfoWindBearing" -> GInfoWindBearing (fg x1) (fg x2) (fg x3)
-      Just (i,[x1]) | i == mkCId "LatitudeIs" -> GLatitudeIs (fg x1)
-      Just (i,[x1]) | i == mkCId "LongitudeIs" -> GLongitudeIs (fg x1)
-      Just (i,[x1]) | i == mkCId "OzoneIs" -> GOzoneIs (fg x1)
-      Just (i,[x1]) | i == mkCId "PrecipIntensityIs" -> GPrecipIntensityIs (fg x1)
-      Just (i,[x1]) | i == mkCId "PrecipProbabilityIs" -> GPrecipProbabilityIs (fg x1)
-      Just (i,[x1]) | i == mkCId "PressureIs" -> GPressureIs (fg x1)
-      Just (i,[x1]) | i == mkCId "TempTypeIs" -> GTempTypeIs (fg x1)
-      Just (i,[x1]) | i == mkCId "TemperatureIs" -> GTemperatureIs (fg x1)
-      Just (i,[x1]) | i == mkCId "WearClothes" -> GWearClothes (fg x1)
-      Just (i,[x1]) | i == mkCId "WindBearingIs" -> GWindBearingIs (fg x1)
-      Just (i,[x1]) | i == mkCId "WindSpeedIs" -> GWindSpeedIs (fg x1)
-      Just (i,[x1,x2]) | i == mkCId "mkCityTemp" -> GmkCityTemp (fg x1) (fg x2)
-
-
-      _ -> error ("no Span " ++ show t)
 
 instance Gf GTempType where
   gf GCold = mkApp (mkCId "Cold") []
@@ -750,6 +619,28 @@ instance Gf GTimezone where
 
 
       _ -> error ("no Timezone " ++ show t)
+
+instance Gf GWeekday where
+  gf GFriday = mkApp (mkCId "Friday") []
+  gf GMonday = mkApp (mkCId "Monday") []
+  gf GSaturday = mkApp (mkCId "Saturday") []
+  gf GSunday = mkApp (mkCId "Sunday") []
+  gf GThursday = mkApp (mkCId "Thursday") []
+  gf GTuesday = mkApp (mkCId "Tuesday") []
+  gf GWednesday = mkApp (mkCId "Wednesday") []
+
+  fg t =
+    case unApp t of
+      Just (i,[]) | i == mkCId "Friday" -> GFriday 
+      Just (i,[]) | i == mkCId "Monday" -> GMonday 
+      Just (i,[]) | i == mkCId "Saturday" -> GSaturday 
+      Just (i,[]) | i == mkCId "Sunday" -> GSunday 
+      Just (i,[]) | i == mkCId "Thursday" -> GThursday 
+      Just (i,[]) | i == mkCId "Tuesday" -> GTuesday 
+      Just (i,[]) | i == mkCId "Wednesday" -> GWednesday 
+
+
+      _ -> error ("no Weekday " ++ show t)
 
 instance Gf GWindBearing where
   gf (GWindBearingVal x1) = mkApp (mkCId "WindBearingVal") [gf x1]
@@ -815,7 +706,7 @@ instance Gf GWindSpeedType where
   gf GCalm = mkApp (mkCId "Calm") []
   gf GFreshBreeze = mkApp (mkCId "FreshBreeze") []
   gf GFreshGale = mkApp (mkCId "FreshGale") []
-  gf GGengleBreeze = mkApp (mkCId "GengleBreeze") []
+  gf GGentleBreeze = mkApp (mkCId "GentleBreeze") []
   gf GHurricane = mkApp (mkCId "Hurricane") []
   gf GLightAir = mkApp (mkCId "LightAir") []
   gf GLightBreeze = mkApp (mkCId "LightBreeze") []
@@ -831,7 +722,7 @@ instance Gf GWindSpeedType where
       Just (i,[]) | i == mkCId "Calm" -> GCalm 
       Just (i,[]) | i == mkCId "FreshBreeze" -> GFreshBreeze 
       Just (i,[]) | i == mkCId "FreshGale" -> GFreshGale 
-      Just (i,[]) | i == mkCId "GengleBreeze" -> GGengleBreeze 
+      Just (i,[]) | i == mkCId "GentleBreeze" -> GGentleBreeze 
       Just (i,[]) | i == mkCId "Hurricane" -> GHurricane 
       Just (i,[]) | i == mkCId "LightAir" -> GLightAir 
       Just (i,[]) | i == mkCId "LightBreeze" -> GLightBreeze 

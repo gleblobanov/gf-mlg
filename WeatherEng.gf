@@ -3,8 +3,8 @@ concrete WeatherEng of Weather = RSTEng, OntologyEng ** open WeatherLexiconEng, 
 
   lin
 
-    InfoLocation city dateTime icon = mkPhr (mkS (mkAdv on_Prep dateTime) (mkS (mkAdv in_Prep city) (mkS presentTense simultaneousAnt positivePol (mkCl icon)))) ;
-      
+    InfoLocation city day month year weekday time icon = mkPhr (mkS (mkAdv empty_Conj (mkAdv on_Prep (mkNP comma_Conj weekday (mkNP empty_Conj day (mkNP empty_Conj month year)))) (mkAdv at_Prep time)) (mkS (mkAdv in_Prep city) (mkS presentTense simultaneousAnt positivePol (mkCl icon)))) ;
+
 
     InfoTemperature tempType temp appTemp =
       mkPhr (colon (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP tempType)))
@@ -12,7 +12,7 @@ concrete WeatherEng of Weather = RSTEng, OntologyEng ** open WeatherLexiconEng, 
                                 (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP it_Pron) feel_like_V2 appTemp))))) ;
     
 
-    InfoPrecipNo = mkPhr (mkS presentTense simultaneousAnt negativePol (mkCl (mkVP (mkNP precipitation_N)))) ; 
+    InfoPrecipNo = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP no_Quant precipitation_N))) ; 
 
 
     InfoPrecipType precipIntencity precipType
@@ -28,13 +28,13 @@ concrete WeatherEng of Weather = RSTEng, OntologyEng ** open WeatherLexiconEng, 
                (mkS and_Conj (mkListS (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP theSg_Det (mkCN relative_A humidity_N)) humidity))
                                 (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP theSg_Det dew_point_N) dewPoint))))) ;
     
-    InfoSky cloudCoverType = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP theSg_Det sky_N) cloudCoverType))  ;
+    InfoSky cloudCoverType = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP theSg_Det sky_N) (mkVP cloudCoverType)))  ;
+ 
 
 
-
-    InfoWind = mkPhr (mkS presentTense simultaneousAnt negativePol (mkCl wind_N)) ;
-    InfoWindBearing windSpeed windSpeedType windBearing =
-      mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl windBearing windSpeedType)) ;
+    InfoWindNo = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP no_Quant wind_N))) ;
+    InfoWindBearing windSpeed windSpeedType windBearingType =
+      mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkWind windSpeedType windBearingType))) ;
 
 
     InfoPressure pressure =
@@ -43,5 +43,7 @@ concrete WeatherEng of Weather = RSTEng, OntologyEng ** open WeatherLexiconEng, 
     InfoOzone ozone =
       mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP theSg_Det (mkCN (mkCN columnar_A density_N) (mkAdv of_Prep (mkNP (mkCN atmospheric_A ozone_N))))) ozone)) ;
 
+  oper
+    mkWind : VP -> Adv -> VP = \ v, a -> mkVP v a ;
 
 }

@@ -4,9 +4,17 @@ resource WeatherLexiconEng = open LexiconEng, ParadigmsEng in {
 
     snow_V = mkV "snow" ;
     sleet_V = mkV "sleet" ;
-    feel_like_V2 = mkV2 (mkV "feel like") ;
+    feel_like_V2 = mkV2 feel_V like_Prep ;
+    feel_V = mkV "feel" ;
+    rain_V0         = LexiconEng.rain_V0 ;
 
-    atmospheric_A    = mkA "atmospheric" ;
+    strong_A        = mkA "strong" ;
+    calm_A          = mkA "calm" ;
+    whole_A         = mkA "whole" ;
+    cold_A          = LexiconEng.cold_A ;
+    hot_A           = LexiconEng.hot_A ;
+    warm_A          = LexiconEng.warm_A ;
+    atmospheric_A   = mkA "atmospheric" ;
     columnar_A      = mkA "columnar" ;
     apparent_A      = mkA "apparent" ;
     freezing_A      = mkA "freezing" ;
@@ -22,6 +30,7 @@ resource WeatherLexiconEng = open LexiconEng, ParadigmsEng in {
     low_A           = mkA "low" ;
     moderate_A      = mkA "moderate" ;
     uncomfortable_A = mkA "uncomfortable" ;
+    comfortable_A   = mkA "comfortable" ;
     scattered_A     = mkA "scattered" ;
     broken_A        = mkA "broken" ;
     overcast_A      = mkA "overcast" ;
@@ -29,6 +38,7 @@ resource WeatherLexiconEng = open LexiconEng, ParadigmsEng in {
     gentle_A        = mkA "gentle" ;
     fresh_A         = mkA "fresh" ;
     relative_A      = mkA "relative" ;
+    windy_A         = mkA "windy" ;
 
     partly_AdA    = mkAdA "partly" ;
     extremely_AdA = mkAdA "extremely" ;
@@ -55,27 +65,43 @@ resource WeatherLexiconEng = open LexiconEng, ParadigmsEng in {
     cover_N         = mkN "cover" ;
     pressure_N      = mkN "pressue"  ;
     ozone_N         = mkN "ozone" ;
-    Monday_N        = mkN "Monday" ;
-    Tuesday_N       = mkN "Tuesday" ;
-    Wednesday_N     = mkN "Wednesday" ;
-    Thursday_N      = mkN "Thursday" ;
-    Friday_N        = mkN "Friday" ;
-    Saturday_N      = mkN "Saturday" ;
-    Sunday_N        = mkN "Sunday" ;
+
+    Monday_PN        = mkPN "Monday" ;
+    Tuesday_PN       = mkPN "Tuesday" ;
+    Wednesday_PN     = mkPN "Wednesday" ;
+    Thursday_PN      = mkPN "Thursday" ;
+    Friday_PN        = mkPN "Friday" ;
+    Saturday_PN      = mkPN "Saturday" ;
+    Sunday_PN        = mkPN "Sunday" ;
+
+    January_PN   = mkPN "January" ;
+    February_PN  = mkPN "February" ;
+    March_PN     = mkPN "March" ;
+    April_PN     = mkPN "April" ;
+    May_PN       = mkPN "May" ;
+    June_PN      = mkPN "June" ;
+    July_PN      = mkPN "July" ;
+    August_PN    = mkPN "August" ;
+    September_PN = mkPN "September" ;
+    October_PN   = mkPN "October" ;
+    November_PN  = mkPN "November" ;
+    December_PN  = mkPN "December" ;
+ 
+    Gothenburg_PN = mkPN "Gothenburg" ;
+
     level_N         = mkN "level" ;
-    
     sea_N           = LexiconEng.sea_N ;
     sky_N           = LexiconEng.sky_N ;
     wind_N          = LexiconEng.wind_N ;
-    cold_A          = LexiconEng.cold_A ;
-    hot_A           = LexiconEng.hot_A ;
-    warm_A          = LexiconEng.warm_A ;
     day_N           = LexiconEng.day_N ;
     night_N         = LexiconEng.night_N ;
-    rain_V0         = LexiconEng.rain_V0 ;
-  
-    Gothenburg_PN = mkPN "Gothenburg" ;
 
+    empty_N = mkN "" ;
 
     of_Prep = mkPrep "of" ;
+    at_Prep = mkPrep "at" ;
+    like_Prep = mkPrep "like" ;
+
+    empty_Conj = mkConj "" ;
+    comma_Conj = mkConj "," ;
 } 
