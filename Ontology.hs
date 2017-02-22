@@ -185,7 +185,7 @@ getTempType r | v >= 40   = GExtremelyHot
 
 getDewPoint r = GDewPointVal $ GFloat $ DS.dewPoint $ DS.currently r
 
-getHumidity r = GHumidityVal $ GFloat $ DS.humidity $ DS.currently r
+getHumidity r = GHumidityVal $ GFloat $ (100 *) $ DS.humidity $ DS.currently r
 
 getHumidityType r | 26 <= d            && 73 <= h            = GSeverelyUncomofortableHumid
                   | 24 <= d && d <= 26 && 62 <= h && h <= 72 = GExtremelyUncomfortableHumid

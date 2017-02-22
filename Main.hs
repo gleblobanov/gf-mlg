@@ -43,10 +43,11 @@ generateText o gr lang goal = let out = case readLanguage lang of
 
 prettify :: String -> String
 prettify s = s1
-  where s1 = replace " ." "." s2
-        s2 = replace " ," "," s3
-        s3 = replace " :" ":" s4
-        s4 = unwords $ map capitalize $ segment s
+  where s1 = replace " %" "%" s2
+        s2 = replace " ." "." s3
+        s3 = replace " ," "," s4
+        s4 = replace " :" ":" s5
+        s5 = unwords $ map capitalize $ segment s
 
 capitalize :: String -> String
 capitalize [] = []

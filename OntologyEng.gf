@@ -77,8 +77,8 @@ concrete OntologyEng of Ontology = open WeatherExtraEng, WeatherLexiconEng, Synt
 
   lin
 
-    TemperatureVal v = mkUnitNP v.s "C" ;
-    ApparentTemperatureVal v = mkUnitNP v.s "C" ;
+    TemperatureVal v = mkUnitNP v.s "\176C" ;
+    ApparentTemperatureVal v = mkUnitNP v.s "\176C" ;
 
     ExtremelyHot = mkAP extremely_AdA hot_A ;
     VeryHot = mkAP very_AdA hot_A ;
@@ -130,7 +130,7 @@ concrete OntologyEng of Ontology = open WeatherExtraEng, WeatherLexiconEng, Synt
 
   lin
 
-   DewPointVal v = mkUnitNP v.s "C";
+   DewPointVal v = mkUnitNP v.s "\176C";
    HumidityVal v = mkUnitNP v.s "%";
 
    SeverelyUncomofortableHumid = mkAP severely_AdA uncomfortable_A ;
