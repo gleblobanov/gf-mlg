@@ -1,4 +1,4 @@
-resource WeatherLexiconEng = open ParadigmsEng in {
+resource WeatherLexiconEng = open LexiconEng, ParadigmsEng in {
 
   oper
 
@@ -15,7 +15,7 @@ resource WeatherLexiconEng = open ParadigmsEng in {
     cloudy_A        = mkA "cloudy" ;
     foggy_A         = mkA "foggy" ;
     clear_A         = mkA "clear" ;
-    unkown_A        = mkA "unkown" ;
+    unknown_A       = mkA "unknown" ;
     mild_A          = mkA "mild" ;
     cool_A          = mkA "cool" ;
     high_A          = mkA "high" ;
@@ -63,6 +63,16 @@ resource WeatherLexiconEng = open ParadigmsEng in {
     Saturday_N      = mkN "Saturday" ;
     Sunday_N        = mkN "Sunday" ;
     level_N         = mkN "level" ;
+    
+    sea_N           = LexiconEng.sea_N ;
+    sky_N           = LexiconEng.sky_N ;
+    wind_N          = LexiconEng.wind_N ;
+    cold_A          = LexiconEng.cold_A ;
+    hot_A           = LexiconEng.hot_A ;
+    warm_A          = LexiconEng.warm_A ;
+    day_N           = LexiconEng.day_N ;
+    night_N         = LexiconEng.night_N ;
+    rain_V0         = LexiconEng.rain_V0 ;
   
     Gothenburg_PN = mkPN "Gothenburg" ;
 

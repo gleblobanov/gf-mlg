@@ -1,4 +1,4 @@
-concrete OntologyEng of Ontology = concrete WeatherEng of Weather = RSTEng ** open WeatherLexiconEng, LexiconEng, ConstructorsEng, Prelude, ParadigmsEng, SyntaxEng, ResEng in {
+concrete OntologyEng of Ontology = open WeatherExtraEng, WeatherLexiconEng, SyntaxEng, ParadigmsEng in {
 
 
   {- Location & Time & Icon -}
@@ -14,25 +14,25 @@ concrete OntologyEng of Ontology = concrete WeatherEng of Weather = RSTEng ** op
     Month = NP ;
     Year = NP ;
     Time = NP ;
-    DateTime = NP ;
-    TimeZone = NP ;
+    Timezone = NP ;
 
     Icon = VP ;
+    
+    Weekday = NP ;
 
 
   lin
 
     Gothenburg = mkNP Gothenburg_PN ; 
     
-    LatitudeVal v  = lin NP {s = \\_ => v.s; a = AgP3Sg Neutr} ;
-    LongitudeVal v = lin NP {s = \\_ => v.s; a = AgP3Sg Neutr} ;
+    LatitudeVal v  = mkValueNP v.s;
+    LongitudeVal v = mkValueNP v.s;
 
-    DayVal v      = lin NP {s     = \\_ => v.s; a = AgP3Sg Neutr} ;
-    MonthVal v    = lin NP {s     = \\_ => v.s; a = AgP3Sg Neutr} ;
-    YearVal v     = lin NP {s = \\_ => v.s; a = AgP3Sg Neutr} ;
-    TimeVal v     = lin NP {s = \\_ => v.s; a = AgP3Sg Neutr} ;
-    DateTimeVal v = lin NP {s = \\_ => v.s; a = AgP3Sg Neutr} ;
-    TimezoneVal v = lin NP {s = \\_ => v.s; a = AgP3Sg Neutr} ;
+    DayVal v      = mkValueNP v.s ;
+    MonthVal v    = mkValueNP v.s ;
+    YearVal v     = mkValueNP v.s ;
+    TimeVal v     = mkValueNP v.s ;
+    TimezoneVal v = mkValueNP v.s ;
 
     Monday    = mkNP Monday_N ;
     Tuesday   = mkNP Tuesday_N ;
@@ -47,12 +47,12 @@ concrete OntologyEng of Ontology = concrete WeatherEng of Weather = RSTEng ** op
     IconRain = mkVP rain_V0 ;
     IconSnow = mkVP snow_V ;
     IconSleet = mkVP sleet_V ;
-    IconWind = mkVP windy_A ;
+--    IconWind = mkVP windy_A ;
     IconFog = mkVP foggy_A ;
     IconCloudy = mkVP cloudy_A ;
     IconPartlyCloudyDay = mkVP (mkNP a_Det (mkCN (mkAP partly_AdA cloudy_A) day_N)) ;
     IconPartlyCloudyNight = mkVP (mkNP a_Det (mkCN (mkAP partly_AdA cloudy_A) day_N)) ;
-    IconNone = mkVP unkown_A ;
+    IconNone = mkVP unknown_A ;
 
   {- Temperature -}
 
@@ -60,12 +60,12 @@ concrete OntologyEng of Ontology = concrete WeatherEng of Weather = RSTEng ** op
 
     Temperature = NP ;
     ApparentTemperature = NP ;
-    TempKind = AP ;
+    TempType = AP ;
 
   lin
 
-    TemperatureVal v = lin NP {s = \\_ => v.s ++ "C"; a = AgP3Sg Neutr} ;
-    ApparentTemperatureVal v = lin NP {s = \\_ => v.s ++ "C"; a = AgP3Sg Neutr} ;
+    TemperatureVal v = mkUnitNP v.s "C" ;
+    ApparentTemperatureVal v = mkUnitNP v.s "C" ;
 
     ExtremelyHot = mkAP extremely_AdA hot_A ;
     VeryHot = mkAP very_AdA hot_A ;
@@ -89,14 +89,14 @@ concrete OntologyEng of Ontology = concrete WeatherEng of Weather = RSTEng ** op
 
   lin
     
-    PrecipIntensityVal v = lin NP {s = \\_ => v.s ++ "mm/h"; a = AgP3Sg Neutr} ;
-    PrecipProbabilityVal v = lin NP {s = \\_ => v.s ++ "%" ; a = AgP3Sg Neutr} ;
+    --PrecipIntensityVal v = lin NP {s = \\_ => v.s ++ "mm/h"; a = AgP3Sg Neutr} ;
+    --PrecipProbabilityVal v = lin NP {s = \\_ => v.s ++ "%" ; a = AgP3Sg Neutr} ;
 
 
     Rain = mkVP rain_V0 ;
     Snow = mkVP snow_V ;
     Sleet = mkVP sleet_V ;
-    PrecipNone = mkVP unkown_A ;
+    PrecipNone = mkVP unknown_A ;
 
 
     VeryHigh = mkAP very_AdA high_A ;
@@ -111,21 +111,20 @@ concrete OntologyEng of Ontology = concrete WeatherEng of Weather = RSTEng ** op
   lincat
 
     DewPoint = NP ;
-    Humidiy = NP ;
-    HumitityType = P ;
+    Humidity = NP ;
+    HumidityType = AP ;
 
   lin
 
-   DewPointVal v = lin NP {s = \\_ => v.s ++ "C"; a = AgP3Sg Neutr} ;
-   HumidiyVal v = lin NP {s = \\_ => v.s ++ "%"; a = AgP3Sg Neutr} ;
+   DewPointVal v = mkUnitNP v.s "C";
+   HumidityVal v = mkUnitNP v.s "%";
 
-   
    SeverelyUncomofortableHumid = mkAP severely_AdA uncomfortable_A ;
    ExtremelyUncomfortableHumid = mkAP extremely_AdA uncomfortable_A ;
    QuiteUncomfortableHumid = mkAP quite_Adv uncomfortable_A ; 
    SomewhatUncomfortableHumid = mkAP somewhat_AdA uncomfortable_A ;
    ScarcelyUncomfortableHumid = mkAP scarcely_AdA uncomfortable_A;
-   ComfortableHumid =  mkAP comfortable_A; 
+--   ComfortableHumid =  mkAP comfortable_A; 
    VeryComfortableHumid = mkAP very_AdA uncomfortable_A;
    ScarcelyUncomfortableDry = mkAP quite_Adv uncomfortable_A;
    HumidityNone = mkAP quite_Adv uncomfortable_A;
@@ -140,7 +139,7 @@ concrete OntologyEng of Ontology = concrete WeatherEng of Weather = RSTEng ** op
 
   lin 
 
-    CloudCoverVal v = lin NP {s = \\_ => v.s ++ "%"; a = AgP3Sg Neutr} ;
+    CloudCoverVal v = mkUnitNP v.s "%";
 
     Clear = mkAP clear_A ;
     Scattered = mkAP scattered_A ;
@@ -155,23 +154,24 @@ concrete OntologyEng of Ontology = concrete WeatherEng of Weather = RSTEng ** op
   
     WindSpeed = NP ;
     WindSpeedType = VP ;
-    WindBearing = AdV ;
-    WindBearingType = NP ;
+    WindBearing = NP ;
+    WindBearingType = AdV ;
 
-    WindSpeedVal v = lin NP {s = \\_ => v.s ++ "km/h"; a = AgP3Sg Neutr} ;
-    WindBearingVal v = lin NP {s = \\_ => v.s ++ ""; a = AgP3Sg Neutr} ;
+  lin
+    WindSpeedVal v = mkUnitNP v.s "km/h" ;
+    WindBearingVal v = mkValueNP v.s ;
 
-    Calm           = mkVP calmA ;
+    -- Calm           = mkVP calm_A ;
     LightAir       = mkVP (mkCN light_A air_N) ;
     LightBreeze    = mkVP (mkCN light_A breeze_N) ;
     GentleBreeze   = mkVP (mkCN gentle_A breeze_N);
     ModerateBreeze = mkVP (mkCN moderate_A breeze_N);
     FreshBreeze    = mkVP (mkCN fresh_A breeze_N);
-    StrongBreeze   = mkVP (mkCN strong_A breeze_N);
+--    StrongBreeze   = mkVP (mkCN strong_A breeze_N);
     ModerateGale   = mkVP (mkCN moderate_A gale_N);
     FreshGale      = mkVP (mkCN fresh_A gale_N);
-    StrongGale     = mkVP (mkCN strong_A gale_N);
-    WholeGale      = mkVP (mkCN whole_A gale_N);
+--    StrongGale     = mkVP (mkCN strong_A gale_N);
+--    WholeGale      = mkVP (mkCN whole_A gale_N);
     Storm          = mkVP storm_N;
     Hurricane      = mkVP hurricane_N;
 
@@ -201,11 +201,9 @@ concrete OntologyEng of Ontology = concrete WeatherEng of Weather = RSTEng ** op
 
     Pressure = NP ;
 
-
   lin
+    PressureVal v = mkUnitNP v.s "mbar";
 
-    PressureVal v = lin NP {s = \\_ => v.s ++ "mbar"; a = AgP3Sg Neutr} ;
-  
   
  {- Ozone -}
 
@@ -215,6 +213,6 @@ concrete OntologyEng of Ontology = concrete WeatherEng of Weather = RSTEng ** op
 
   lin
 
-    OzoneVal v = lin NP {s = \\_ => v.s ++ "DU"; a = AgP3Sg Neutr} ;
+    OzoneVal v = mkUnitNP v.s "DU";
 
 }
