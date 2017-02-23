@@ -44,7 +44,9 @@ instance Gf GFloat where
 data GApparentTemperature = GApparentTemperatureVal GFloat 
   deriving Show
 
-data GCity = GGothenburg 
+data GCity =
+   GGothenburg 
+ | GOsaka 
   deriving Show
 
 data GCloudCover = GCloudCoverVal GFloat 
@@ -259,10 +261,12 @@ instance Gf GApparentTemperature where
 
 instance Gf GCity where
   gf GGothenburg = mkApp (mkCId "Gothenburg") []
+  gf GOsaka = mkApp (mkCId "Osaka") []
 
   fg t =
     case unApp t of
       Just (i,[]) | i == mkCId "Gothenburg" -> GGothenburg 
+      Just (i,[]) | i == mkCId "Osaka" -> GOsaka 
 
 
       _ -> error ("no City " ++ show t)

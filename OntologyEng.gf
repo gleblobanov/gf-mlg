@@ -24,6 +24,7 @@ concrete OntologyEng of Ontology = open WeatherExtraEng, WeatherLexiconEng, Synt
   lin
 
     Gothenburg = mkNP Gothenburg_PN ; 
+    Osaka      = mkNP Osaka_PN ;
     
     LatitudeVal v  = mkValueNP v.s;
     LongitudeVal v = mkValueNP v.s;

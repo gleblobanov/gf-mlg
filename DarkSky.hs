@@ -45,14 +45,13 @@ instance FromJSON DarkSky.Response
 instance FromJSON DataPoint
 
 
+request city = "GET https://api.darksky.net/forecast/a270ce9fa3ff87b86cc329482c80e63f/"++ city ++"/?exclude=minutely,hourly,daily,alerts,flags"
 
-request = "GET https://api.darksky.net/forecast/a270ce9fa3ff87b86cc329482c80e63f/57.6962901,11.978816/?exclude=minutely,hourly,daily,alerts,flags"
 
-
-getResponse :: IO (Maybe DarkSky.Response)
-getResponse =  do req <- parseRequest request
-                  mgr <- getGlobalManager
-                  resp <- httpLbs req mgr
-                  let json =  (responseBody resp)
-                      response = Data.Aeson.decode json :: Maybe DarkSky.Response
-                  return response
+getResponse :: String -> IO (Maybe DarkSky.Response)
+getResponse city =  do req <- parseRequest $ request city
+                       mgr <- getGlobalManager
+                       resp <- httpLbs req mgr
+                       let json =  (responseBody resp)
+                           response = Data.Aeson.decode json :: Maybe DarkSky.Response
+                       return response

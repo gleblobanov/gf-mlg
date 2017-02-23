@@ -20,7 +20,8 @@ abstract Ontology = {
 
   fun
 
-    Gothenburg :   City ;
+    Osaka      : City ;
+    Gothenburg : City ;
 
     LatitudeVal  : Float -> Latitude ;
     LongitudeVal : Float -> Longitude ;

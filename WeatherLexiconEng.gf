@@ -88,6 +88,7 @@ resource WeatherLexiconEng = open LexiconEng, ParadigmsEng in {
     December_PN  = mkPN "December" ;
  
     Gothenburg_PN = mkPN "Gothenburg" ;
+    Osaka_PN      = mkPN "Osaka" ;
 
     level_N         = mkN "level" ;
     sea_N           = LexiconEng.sea_N ;

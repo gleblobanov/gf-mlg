@@ -41,12 +41,13 @@ data Ontology = Ontology {
   pressure :: Maybe GPressure,
   ozone :: Maybe GOzone }
 
+type City = String
 
-extractOntology :: DS.Response -> Ontology
-extractOntology r = Ontology {
+extractOntology :: DS.Response -> City-> Ontology
+extractOntology r c = Ontology {
   latitude = getLatitude r,
   longitude = getLongitude r,
-  city = getCity r,
+  city = getCity c,
   time = getTime r,
   day = getDay r,
   weekday = getWeekday r,
@@ -135,7 +136,13 @@ makeZTime v = ztime
         ztime   = utcToZonedTime tz utctime
 
 
-getCity r = Just GGothenburg
+getCity c = Just $ case c of
+  "Gothenburg" -> GGothenburg
+  "Osaka"      -> GOsaka
+
+gothenburg = "57.6962901,11.978816"
+osaka = "34.678395,135.4601305"
+
 
 getIcon :: DS.Response -> Maybe GIcon
 getIcon r = applyToDataPointField r DS.currently DS.icon op
@@ -247,7 +254,7 @@ getWindSpeedType r = applyToDataPointField r DS.currently DS.windBearing op
 getWindBearing r = applyToDataPointField r DS.currently DS.windBearing (GWindBearingVal . GFloat)
 
 getWindBearingType r = applyToDataPointField r DS.currently DS.windBearing op
-  where op v | 348.75 <= v && v <= 11.25 = GN
+  where op v | 348.75 <= v || v <= 11.25 = GN
              | 11.25 <= v && v <= 33.75 = GNNE
              | 33.75 <= v && v <= 56.25 = GNE
              | 56.25 <= v && v <=78.75  = GENE
