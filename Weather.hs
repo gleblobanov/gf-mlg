@@ -114,7 +114,9 @@ data GMonth =
  | GSeptember 
   deriving Show
 
-data GNucleus = GInfoLocation GCity GDay GMonth GYear GWeekday GTime GIcon 
+data GNucleus =
+   GEmptyNucleus 
+ | GInfoLocation GCity GDay GMonth GYear GWeekday GTime GIcon 
   deriving Show
 
 data GOzone = GOzoneVal GFloat 
@@ -145,7 +147,8 @@ data GPressure = GPressureVal GFloat
   deriving Show
 
 data GSatellite =
-   GInfoDewPointHumidity GHumidity GDewPoint GHumidityType 
+   GEmptySatellite 
+ | GInfoDewPointHumidity GHumidity GDewPoint GHumidityType 
  | GInfoOzone GOzone 
  | GInfoPrecipNo 
  | GInfoPrecipProbaility GPrecipProbabilityType 
@@ -162,7 +165,9 @@ data GSatelliteList =
  | GCSat GSatellite GSatelliteList 
   deriving Show
 
-data GSchema = GBackground GNucleus GSatelliteList 
+data GSchema =
+   GBackground GNucleus GSatelliteList 
+ | GEmptySchema 
   deriving Show
 
 data GTempType =
@@ -429,10 +434,12 @@ instance Gf GMonth where
       _ -> error ("no Month " ++ show t)
 
 instance Gf GNucleus where
+  gf GEmptyNucleus = mkApp (mkCId "EmptyNucleus") []
   gf (GInfoLocation x1 x2 x3 x4 x5 x6 x7) = mkApp (mkCId "InfoLocation") [gf x1, gf x2, gf x3, gf x4, gf x5, gf x6, gf x7]
 
   fg t =
     case unApp t of
+      Just (i,[]) | i == mkCId "EmptyNucleus" -> GEmptyNucleus 
       Just (i,[x1,x2,x3,x4,x5,x6,x7]) | i == mkCId "InfoLocation" -> GInfoLocation (fg x1) (fg x2) (fg x3) (fg x4) (fg x5) (fg x6) (fg x7)
 
 
@@ -513,6 +520,7 @@ instance Gf GPressure where
       _ -> error ("no Pressure " ++ show t)
 
 instance Gf GSatellite where
+  gf GEmptySatellite = mkApp (mkCId "EmptySatellite") []
   gf (GInfoDewPointHumidity x1 x2 x3) = mkApp (mkCId "InfoDewPointHumidity") [gf x1, gf x2, gf x3]
   gf (GInfoOzone x1) = mkApp (mkCId "InfoOzone") [gf x1]
   gf GInfoPrecipNo = mkApp (mkCId "InfoPrecipNo") []
@@ -526,6 +534,7 @@ instance Gf GSatellite where
 
   fg t =
     case unApp t of
+      Just (i,[]) | i == mkCId "EmptySatellite" -> GEmptySatellite 
       Just (i,[x1,x2,x3]) | i == mkCId "InfoDewPointHumidity" -> GInfoDewPointHumidity (fg x1) (fg x2) (fg x3)
       Just (i,[x1]) | i == mkCId "InfoOzone" -> GInfoOzone (fg x1)
       Just (i,[]) | i == mkCId "InfoPrecipNo" -> GInfoPrecipNo 
@@ -554,10 +563,12 @@ instance Gf GSatelliteList where
 
 instance Gf GSchema where
   gf (GBackground x1 x2) = mkApp (mkCId "Background") [gf x1, gf x2]
+  gf GEmptySchema = mkApp (mkCId "EmptySchema") []
 
   fg t =
     case unApp t of
       Just (i,[x1,x2]) | i == mkCId "Background" -> GBackground (fg x1) (fg x2)
+      Just (i,[]) | i == mkCId "EmptySchema" -> GEmptySchema 
 
 
       _ -> error ("no Schema " ++ show t)

@@ -10,5 +10,9 @@ abstract RST = {
     CSat : Satellite -> SatelliteList -> SatelliteList ;
 
     Background : Nucleus -> SatelliteList -> Schema ;
+    EmptySchema : Schema ;
+
+    EmptySatellite : Satellite ;
+    EmptyNucleus   : Nucleus ;
 
 }

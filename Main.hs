@@ -23,11 +23,12 @@ russian = "WeatherRus"
 
 main :: IO ()
 main = do
-  response <- getResponse
-  let o = extractOntology response
-  gr <- readPGF "Weather.pgf"
-  generateText o gr english summariseDay
-  generateText o gr russian summariseDay
+  responseMaybe <- getResponse
+  maybe (putStrLn "Error") gen responseMaybe
+  where gen response = do let o = extractOntology response
+                          gr <- readPGF "Weather.pgf"
+                          generateText o gr english summariseDay
+                          generateText o gr russian summariseDay
 
 
 generateText :: Ontology ->

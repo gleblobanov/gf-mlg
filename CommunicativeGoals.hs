@@ -2,7 +2,7 @@ module CommunicativeGoals where
 
 import Weather
 import Ontology as O
-
+import Data.Maybe
 
 sats2satList :: [GSatellite] -> GSatelliteList
 sats2satList [s]    = GBSat s
@@ -34,7 +34,22 @@ summariseDay o = GBackground infoLocation satellites
         pressure = O.pressure o
         ozone = O.ozone o
 
-        infoLocation = GInfoLocation city day month year weekday time icon
+        infoLocation = if isJust city &&
+                          isJust day &&
+                          isJust month &&
+                          isJust year &&
+                          isJust weekday &&
+                          isJust time &&
+                          isJust icon
+                       then GInfoLocation
+                            (fromJust city)
+                            (fromJust day)
+                            (fromJust month)
+                            (fromJust year)
+                            (fromJust weekday)
+                            (fromJust time)
+                            (fromJust icon)
+                       else GEmptyNucleus
         satellites = sats2satList [infoTemperature,
                                    infoPrecipType,
                                    infoPrecipProbability,
@@ -43,13 +58,38 @@ summariseDay o = GBackground infoLocation satellites
                                    infoWindBearing,
                                    infoPressure,
                                    infoOzone]
-
-        infoTemperature = GInfoTemperature tempType temperature apparentTemperature
-        infoPrecipType = GInfoPrecipType precipIntensity precipType
-        infoPrecipProbability = GInfoPrecipProbaility precipProbabilityType
-        infoDewPointHumidity = GInfoDewPointHumidity humidity dewPoint humidityType
-        infoSky = GInfoSky cloudCoverType
-        infoWindBearing = GInfoWindBearing windSpeed windSpeedType windBearingType
-        infoPressure = GInfoPressure pressure
-        infoOzone = GInfoOzone ozone
+        infoTemperature = if isJust tempType &&
+                             isJust temperature &&
+                             isJust apparentTemperature
+                          then GInfoTemperature
+                               (fromJust tempType)
+                               (fromJust temperature)
+                               (fromJust apparentTemperature)
+                          else GEmptySatellite
+        infoPrecipType = if isJust precipIntensity &&
+                            isJust precipType
+                         then GInfoPrecipType
+                              (fromJust precipIntensity)
+                              (fromJust precipType)
+                         else GEmptySatellite
+        infoPrecipProbability = maybe GEmptySatellite GInfoPrecipProbaility precipProbabilityType
+        infoDewPointHumidity = if isJust humidity &&
+                                  isJust dewPoint &&
+                                  isJust humidityType
+                               then GInfoDewPointHumidity
+                                    (fromJust humidity)
+                                    (fromJust dewPoint)
+                                    (fromJust humidityType)
+                               else GEmptySatellite
+        infoSky = maybe GEmptySatellite GInfoSky cloudCoverType
+        infoWindBearing = if isJust windSpeed &&
+                             isJust windSpeedType &&
+                             isJust windBearingType
+                          then GInfoWindBearing
+                               (fromJust windSpeed)
+                               (fromJust windSpeedType)
+                               (fromJust windBearingType)
+                          else GEmptySatellite
+        infoPressure = maybe GEmptySatellite GInfoPressure pressure
+        infoOzone = maybe GEmptySatellite GInfoOzone ozone
 
