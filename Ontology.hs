@@ -179,12 +179,12 @@ getPrecipType r = applyToDataPointField r DS.currently DS.precipType op
              | otherwise    = GPrecipNone
 
 getTemperature r = applyToDataPointField r DS.currently DS.temperature op
-  where op v = GTemperatureVal $ GFloat v
+  where op v = GTemperatureVal $ GFloat $ f2c v
 
 
 getApparentTemperature r = applyToDataPointField r DS.currently DS.apparentTemperature op
   where op v = GApparentTemperatureVal $ GFloat $ f2c v
-
+        
 
 getTempType r = applyToDataPointField r DS.currently DS.apparentTemperature op
   where op v | v' >= 40   = GExtremelyHot
