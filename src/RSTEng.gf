@@ -16,5 +16,5 @@ concrete RSTEng of RST = open Prelude, ParadigmsEng, SyntaxEng, ResEng in {
     EmptySchema = emptyText ;
 
     EmptySatellite = lin Phr { s = "" } ;
-    EmptyNucleus = lin Phr { s = "" } ;
+    EmptyNucleus = lin Phr { s = "<>" } ;
 }

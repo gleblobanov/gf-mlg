@@ -10,7 +10,8 @@ concrete WeatherEng of Weather = RSTEng, OntologyEng ** open WeatherLexiconEng, 
       mkPhr (colon (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP tempType)))
                (mkS and_Conj (mkListS (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP theSg_Det temperature_N) temp))
                                 (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP it_Pron) feel_like_V2 appTemp))))) ;
-    
+
+
 
     InfoPrecipNo = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP no_Quant precipitation_N))) ; 
 

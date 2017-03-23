@@ -1,5 +1,6 @@
 abstract Weather = RST, Ontology ** {
 
+
   flags
     startcat = Schema ;
 

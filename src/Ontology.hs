@@ -10,6 +10,7 @@ import Data.Time.Clock
 import Data.Time.Clock.POSIX
 import Data.Time.LocalTime
 import Data.Time.Format
+import PGF
 
 data Ontology = Ontology {
   latitude :: Maybe GLatitude,
@@ -42,6 +43,7 @@ data Ontology = Ontology {
   ozone :: Maybe GOzone }
 
 type City = String
+
 
 extractOntology :: DS.Response -> City-> Ontology
 extractOntology r c = Ontology {
@@ -302,3 +304,127 @@ applyToDataPointField r f1 f2 op = let datapointMaybe = f1 r in case datapointMa
 
 applyToResponseField :: DS.Response -> (DS.Response -> Maybe a) -> (a -> b) -> Maybe b
 applyToResponseField r f op = let m = f r in liftM op m
+
+ontologyApplyRules :: Ontology -> Ontology
+ontologyApplyRules (Ontology
+  latitude
+  longitude
+  city
+  time
+  day
+  weekday
+  month
+  year
+  timezone
+  precipIntensity
+  precipProbability
+  precipProbabilityType
+  precipType
+  icon
+  temperature
+  apparentTemperature
+  tempType
+  dewPoint
+  humidity
+  humidityType
+  windSpeed
+  windSpeedType
+  windBearingType
+  windBearing
+  cloudCover
+  cloudCoverType
+  pressure
+  ozone) = Ontology
+  latitude
+  longitude
+  city
+  time
+  day
+  weekday
+  month
+  year
+  timezone
+  (precipIntecityRule precipIntensity)
+  precipProbability
+  precipProbabilityType
+  precipType
+  icon
+  temperature
+  apparentTemperature
+  tempType
+  dewPoint
+  humidity
+  humidityType
+  windSpeed
+  windSpeedType
+  windBearingType
+  windBearing
+  cloudCover
+  cloudCoverType
+  pressure
+  ozone
+
+precipIntecityRule :: Maybe GPrecipIntensity -> Maybe GPrecipIntensity
+precipIntensityRule (Just (GPrecipIntensityVal (GFloat 0))) = Nothing
+precipIntecityRule _ = Nothing
+
+
+ontologyToList :: Ontology -> [(CId, Maybe Expr)]
+ontologyToList (Ontology
+  latitude
+  longitude
+  city
+  time
+  day
+  weekday
+  month
+  year
+  timezone
+  precipIntensity
+  precipProbability
+  precipProbabilityType
+  precipType
+  icon
+  temperature
+  apparentTemperature
+  tempType
+  dewPoint
+  humidity
+  humidityType
+  windSpeed
+  windSpeedType
+  windBearingType
+  windBearing
+  cloudCover
+  cloudCoverType
+  pressure
+  ozone) =[
+  (mkCId "Latitude", Nothing),
+  (mkCId "Longitude", Nothing),
+  toCIdExpr "City" city,
+  toCIdExpr "Time" time,
+  toCIdExpr "Day" day,
+  toCIdExpr "Weekday" weekday,
+  toCIdExpr "Month" month,
+  toCIdExpr "Year" year,
+  toCIdExpr "Icon" icon,
+  toCIdExpr "PrecipIntensity" precipIntensity,
+  toCIdExpr "PrecipType" precipType,
+  toCIdExpr "PrecipProbabilityType" precipProbabilityType,
+  toCIdExpr "Temperature" temperature,
+  toCIdExpr "ApparentTemperature" apparentTemperature,
+  toCIdExpr "TempType" tempType,
+  toCIdExpr "DewPoint" dewPoint,
+  toCIdExpr "Humidity" humidity,
+  toCIdExpr "HumidityType" humidityType,
+  toCIdExpr "WindSpeed" windSpeed,
+  toCIdExpr "WindSpeedType" windSpeedType,
+  (mkCId "WindSpeedType", Nothing),
+  toCIdExpr "WindBearingType" windBearingType,
+  toCIdExpr "CloudCoverType" cloudCoverType,
+  toCIdExpr "Pressure" pressure,
+  toCIdExpr "Ozone" ozone
+  ]
+
+toCIdExpr :: Gf a => String -> Maybe a -> (CId, Maybe Expr)
+toCIdExpr s a = (mkCId s, liftM gf a)
