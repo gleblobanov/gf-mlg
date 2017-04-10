@@ -344,7 +344,7 @@ ontologyApplyRules (Ontology
   month
   year
   timezone
-  (precipIntecityRule precipIntensity)
+  (precipIntensityRule precipIntensity)
   precipProbability
   precipProbabilityType
   precipType
@@ -364,9 +364,9 @@ ontologyApplyRules (Ontology
   pressure
   ozone
 
-precipIntecityRule :: Maybe GPrecipIntensity -> Maybe GPrecipIntensity
+precipIntensityRule :: Maybe GPrecipIntensity -> Maybe GPrecipIntensity
 precipIntensityRule (Just (GPrecipIntensityVal (GFloat 0))) = Nothing
-precipIntecityRule _ = Nothing
+precipIntensityRule v = v
 
 
 ontologyToList :: Ontology -> [(CId, Maybe Expr)]

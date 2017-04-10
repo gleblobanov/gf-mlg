@@ -57,6 +57,7 @@ generateText stdGen o gr lang goal =
         -- Just lng -> showExpr [] $ head exps
         Nothing  -> lang ++ " is not found."
       ont  = (ontologyToList . ontologyApplyRules) o
+      -- ont  = (ontologyToList . id) o
       exps = generateFromOntology stdGen gr (startCat gr) ont
   in putStrLn $ prettify out
 
