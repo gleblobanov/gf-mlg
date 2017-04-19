@@ -1,4 +1,4 @@
-abstract Ontology = {
+abstract Messages = {
 
 
   {- Location & Time & Icon -}

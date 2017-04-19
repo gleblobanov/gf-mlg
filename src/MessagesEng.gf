@@ -1,4 +1,4 @@
-concrete OntologyEng of Ontology = open WeatherExtraEng, WeatherLexiconEng, SyntaxEng, ParadigmsEng in {
+concrete MessagesEng of Messages = open WeatherExtraEng, WeatherLexiconEng, SyntaxEng, ParadigmsEng in {
 
 
   {- Location & Time & Icon -}

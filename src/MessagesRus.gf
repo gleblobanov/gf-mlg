@@ -1,4 +1,4 @@
-concrete OntologyRus of Ontology = open WeatherExtraRus, WeatherLexiconRus, SyntaxRus in {
+concrete MessagesRus of Messages = open WeatherExtraRus, WeatherLexiconRus, SyntaxRus in {
 
 
   {- Location & Time & Icon -}

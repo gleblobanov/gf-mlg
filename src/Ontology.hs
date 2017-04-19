@@ -186,7 +186,6 @@ getTemperature r = applyToDataPointField r DS.currently DS.temperature op
 
 getApparentTemperature r = applyToDataPointField r DS.currently DS.apparentTemperature op
   where op v = GApparentTemperatureVal $ GFloat $ f2c v
-        
 
 getTempType r = applyToDataPointField r DS.currently DS.apparentTemperature op
   where op v | v' >= 40   = GExtremelyHot
@@ -344,29 +343,57 @@ ontologyApplyRules (Ontology
   month
   year
   timezone
-  (precipIntensityRule precipIntensity)
-  precipProbability
-  precipProbabilityType
-  precipType
+  (infoPrecipType precipIntensity precipIntensity precipType)
+  (infoPrecipProbability precipProbability precipProbability precipProbabilityType)
+  (infoPrecipProbability precipProbabilityType precipProbability precipProbabilityType)
+  (infoPrecipType precipType precipIntensity precipType)
   icon
-  temperature
-  apparentTemperature
-  tempType
-  dewPoint
-  humidity
-  humidityType
-  windSpeed
-  windSpeedType
-  windBearingType
+  (infoTemperature temperature tempType temperature apparentTemperature)
+  (infoTemperature apparentTemperature tempType temperature apparentTemperature)
+  (infoTemperature tempType tempType temperature apparentTemperature)
+  (infoDewPointHumidity dewPoint humidity dewPoint humidityType)
+  (infoDewPointHumidity humidity humidity dewPoint humidityType)
+  (infoDewPointHumidity humidityType humidity dewPoint humidityType)
+  (infoWindBearing windSpeed windSpeed windSpeedType windBearingType)
+  (infoWindBearing windSpeedType windSpeed windSpeedType windBearingType)
+  (infoWindBearing windBearingType windSpeed windSpeedType windBearingType)
   windBearing
   cloudCover
   cloudCoverType
   pressure
   ozone
 
-precipIntensityRule :: Maybe GPrecipIntensity -> Maybe GPrecipIntensity
-precipIntensityRule (Just (GPrecipIntensityVal (GFloat 0))) = Nothing
-precipIntensityRule v = v
+infoPrecipType :: Maybe a -> Maybe GPrecipIntensity -> Maybe GPrecipType -> Maybe a
+infoPrecipType _ Nothing _ = Nothing
+infoPrecipType _ _ Nothing = Nothing
+infoPrecipType a _ _ = a
+
+
+infoTemperature :: Maybe a -> Maybe GTempType -> Maybe GTemperature -> Maybe GApparentTemperature -> Maybe a
+infoTemperature _ Nothing _ _ = Nothing
+infoTemperature _ _ Nothing _ = Nothing
+infoTemperature _ _ _ Nothing = Nothing
+infoTemperature a _ _ _       = a
+
+
+infoPrecipProbability :: Maybe a -> Maybe GPrecipProbability -> Maybe GPrecipProbabilityType -> Maybe a
+infoPrecipProbability _ Nothing _ = Nothing
+infoPrecipProbability _ _ Nothing = Nothing
+infoPrecipProbability a _ _       = a
+
+
+infoDewPointHumidity :: Maybe a -> Maybe GHumidity -> Maybe GDewPoint -> Maybe GHumidityType -> Maybe a
+infoDewPointHumidity _ Nothing _ _ = Nothing
+infoDewPointHumidity _ _ Nothing _ = Nothing
+infoDewPointHumidity _ _ _ Nothing = Nothing
+infoDewPointHumidity a _ _ _       = a
+
+
+infoWindBearing :: Maybe a -> Maybe GWindSpeed -> Maybe GWindSpeedType -> Maybe GWindBearingType -> Maybe a
+infoWindBearing _ Nothing _ _ = Nothing
+infoWindBearing _ _ Nothing _ = Nothing
+infoWindBearing _ _ _ Nothing = Nothing
+infoWindBearing a _ _ _       = a
 
 
 ontologyToList :: Ontology -> [(CId, Maybe Expr)]
@@ -428,3 +455,5 @@ ontologyToList (Ontology
 
 toCIdExpr :: Gf a => String -> Maybe a -> (CId, Maybe Expr)
 toCIdExpr s a = (mkCId s, liftM gf a)
+
+
