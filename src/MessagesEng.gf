@@ -74,12 +74,16 @@ concrete MessagesEng of Messages = open WeatherExtraEng, WeatherLexiconEng, Synt
 
     Temperature = NP ;
     ApparentTemperature = NP ;
+    AverageTemperature = NP ;
+    AverageTempType = AP ;
     TempType = AP ;
 
   lin
 
     TemperatureVal v = mkUnitNP v.s "\176C" ;
     ApparentTemperatureVal v = mkUnitNP v.s "\176C" ;
+    AverageTemperatureVal v  = mkUnitNP v.s "\176C" ;
+    AverageTempTypeVal v = v ;
 
     ExtremelyHot = mkAP extremely_AdA hot_A ;
     VeryHot = mkAP very_AdA hot_A ;
@@ -191,22 +195,22 @@ concrete MessagesEng of Messages = open WeatherExtraEng, WeatherLexiconEng, Synt
     Hurricane      = mkVP hurricane_N;
 
     
-    N   = mkAdv "N" ;
-    NNE = mkAdv "NNE" ;
-    NE  = mkAdv "NE" ;
-    ENE = mkAdv "ENE" ;
-    E   = mkAdv "E" ;
-    ESE = mkAdv "ESE" ;
-    SE  = mkAdv "SE" ;
-    SSE = mkAdv "SSE" ;
-    S   = mkAdv "S" ;
-    SSW = mkAdv "SSW" ;
-    SW  = mkAdv "SW" ;
-    WSW = mkAdv "WSW" ;
-    W   = mkAdv "W" ;
-    WNW = mkAdv "WNW" ;
-    NW  = mkAdv "NW" ;
-    NNW = mkAdv "NNW" ;
+    WindN   = mkAdv "N" ;
+    WindNNE = mkAdv "NNE" ;
+    WindNE  = mkAdv "NE" ;
+    WindENE = mkAdv "ENE" ;
+    WindE   = mkAdv "E" ;
+    WindESE = mkAdv "ESE" ;
+    WindSE  = mkAdv "SE" ;
+    WindSSE = mkAdv "SSE" ;
+    WindS   = mkAdv "S" ;
+    WindSSW = mkAdv "SSW" ;
+    WindSW  = mkAdv "SW" ;
+    WindWSW = mkAdv "WSW" ;
+    WindW   = mkAdv "W" ;
+    WindWNW = mkAdv "WNW" ;
+    WindNW  = mkAdv "NW" ;
+    WindNNW = mkAdv "NNW" ;
 
 
 
@@ -229,5 +233,21 @@ concrete MessagesEng of Messages = open WeatherExtraEng, WeatherLexiconEng, Synt
   lin
 
     OzoneVal v = mkUnitNP v.s "DU";
+
+
+
+    {- Averages -}
+
+  lincat Average = AP ;
+
+  lin 
+
+    RemarkablyLess    = mkAP remarkably_low_A (mkNP average_N) ;
+    SlightlyLess      = mkAP slightly_low_A (mkNP average_N)  ;
+    Less              = mkAP low_A (mkNP average_N)  ;
+    Equal             = mkAP equal_to_A2 (mkNP average_N) ; 
+    SlightlyGreater   = mkAP slightly_high_A (mkNP average_N)  ;
+    Greater           = mkAP high_A (mkNP average_N)  ;
+    RemarkablyGreater = mkAP remarkably_high_A (mkNP average_N)  ;
 
 }

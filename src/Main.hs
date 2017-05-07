@@ -31,7 +31,7 @@ main = do
                                      gr <- readPGF "Weather.pgf"
                                      stdGen <- getStdGen
                                      generateText stdGen o gr english summariseDay
-                                     generateText stdGen o gr russian summariseDay
+                                     -- generateText stdGen o gr russian summariseDay
 
 checkCity :: String -> IO (String, String)
 checkCity city = case city of

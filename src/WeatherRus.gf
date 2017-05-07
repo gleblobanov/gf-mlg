@@ -1,4 +1,4 @@
-concrete WeatherRus of Weather = RSTRus, OntologyRus ** open SyntaxRus, WeatherLexiconRus, WeatherExtraRus in {
+concrete WeatherRus of Weather = RSTRus, MessagesRus ** open SyntaxRus, WeatherLexiconRus, WeatherExtraRus in {
 
 
   lin

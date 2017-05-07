@@ -73,13 +73,16 @@ abstract Messages = {
   cat
 
     Temperature ;
+    AverageTemperature ;
     ApparentTemperature ;
     TempType ;
 
   fun
 
     TemperatureVal :         Float -> Temperature ;
+    AverageTemperatureVal :  Float -> AverageTemperature ;
     ApparentTemperatureVal : Float -> ApparentTemperature ;
+
 
     ExtremelyHot : TempType ;
     VeryHot :      TempType ;
@@ -98,14 +101,16 @@ abstract Messages = {
   cat 
 
     PrecipIntensity ;
+    AveragePrecipIntensity ;
     PrecipType ;
     PrecipProbability ;
     PrecipProbabilityType ;
     
   fun
 
-    PrecipIntensityVal :     Float -> PrecipIntensity;
-    PrecipProbabilityVal :   Float -> PrecipProbability;
+    PrecipIntensityVal :     Float -> PrecipIntensity ;
+    AveragePrecipIntensityVal : Float -> AveragePrecipIntensity ;
+    PrecipProbabilityVal :   Float -> PrecipProbability ;
 
     Rain :       PrecipType ;
     Snow :       PrecipType ;
@@ -126,12 +131,14 @@ abstract Messages = {
 
     DewPoint ;
     Humidity ;
+    AverageHumidity ;
     HumidityType ;
-    
+
   fun
 
-    DewPointVal :            Float -> DewPoint;
+    DewPointVal :            Float -> DewPoint ;
     HumidityVal :            Float -> Humidity ;
+    AverageHumidityVal :     Float -> AverageHumidity ;
 
     SeverelyUncomofortableHumid : HumidityType ;
     ExtremelyUncomfortableHumid : HumidityType ;
@@ -189,22 +196,22 @@ abstract Messages = {
     Storm :          WindSpeedType ;
     Hurricane :      WindSpeedType ;
     
-    N :   WindBearingType ;
-    NNE : WindBearingType ;
-    NE :  WindBearingType ;
-    ENE : WindBearingType ;
-    E :   WindBearingType ;
-    ESE : WindBearingType ;
-    SE :  WindBearingType ;
-    SSE : WindBearingType ;
-    S :   WindBearingType ;
-    SSW : WindBearingType ;
-    SW :  WindBearingType ;
-    WSW : WindBearingType ;
-    W :   WindBearingType ;
-    WNW : WindBearingType ;
-    NW :  WindBearingType ;
-    NNW : WindBearingType ;
+    WindN :   WindBearingType ;
+    WindNNE : WindBearingType ;
+    WindNE :  WindBearingType ;
+    WindENE : WindBearingType ;
+    WindE :   WindBearingType ;
+    WindESE : WindBearingType ;
+    WindSE :  WindBearingType ;
+    WindSSE : WindBearingType ;
+    WindS :   WindBearingType ;
+    WindSSW : WindBearingType ;
+    WindSW :  WindBearingType ;
+    WindWSW : WindBearingType ;
+    WindW :   WindBearingType ;
+    WindWNW : WindBearingType ;
+    WindNW :  WindBearingType ;
+    WindNNW : WindBearingType ;
     
 
   {- Pressure -}
@@ -228,4 +235,26 @@ abstract Messages = {
     
     OzoneVal :               Float -> Ozone ;
  
+
+    {- Averages -}
+
+  cat Average ; 
+
+  data RemarkablyLess : Average ;
+       SlightlyLess : Average ;
+       Less : Average ;
+       Equal : Average ;
+       SlightlyGreater : Average ;
+       Greater : Average ;
+       RemarkablyGreater : Average ;
+
+  -- data Average = RemarkablyLess
+  --              | SlightlyLess
+  --              | Less
+  --              | Equal
+  --              | SlightlyGreater
+  --              | Greater
+  --              | RemarkablyGreater ;
+
+
   }

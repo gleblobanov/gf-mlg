@@ -8,6 +8,13 @@ resource WeatherLexiconEng = open LexiconEng, ParadigmsEng in {
     feel_V = mkV "feel" ;
     rain_V0         = LexiconEng.rain_V0 ;
 
+    remarkably_high_A = mkA "remarkably high" ; -- TODO Transform to AP
+    slightly_high_A  = mkA "slightly high" ; -- TODO Transform to AP
+    remarkably_low_A   = mkA "remarkably low" ; -- TODO Transform to AP
+    slightly_low_A     = mkA "slightly low" ; -- TODO Transform to AP
+
+    equal_A         = mkA "equal" ;
+    equal_to_A2     = mkA2 equal_A to_Prep ;
     strong_A        = mkA "strong" ;
     calm_A          = mkA "calm" ;
     whole_A         = mkA "whole" ;
@@ -39,6 +46,7 @@ resource WeatherLexiconEng = open LexiconEng, ParadigmsEng in {
     fresh_A         = mkA "fresh" ;
     relative_A      = mkA "relative" ;
     windy_A         = mkA "windy" ;
+    average_A       = mkN "average" ;
 
     partly_AdA    = mkAdA "partly" ;
     extremely_AdA = mkAdA "extremely" ;
@@ -46,6 +54,8 @@ resource WeatherLexiconEng = open LexiconEng, ParadigmsEng in {
     somewhat_AdA  = mkAdA "somewhat" ;
     scarcely_AdA  = mkAdA "scarcely" ;
 
+    date_N          = mkN "date" ;
+    average_N       = mkN "average" ;
     density_N       = mkN "density" ;
     precipitation_N = mkN "precipitation" ;
     breeze_N        = mkN "breeze" ;
@@ -99,6 +109,7 @@ resource WeatherLexiconEng = open LexiconEng, ParadigmsEng in {
 
     empty_N = mkN "" ;
 
+    to_Prep = mkPrep "to" ;
     of_Prep = mkPrep "of" ;
     at_Prep = mkPrep "at" ;
     like_Prep = mkPrep "like" ;

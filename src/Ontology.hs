@@ -23,16 +23,22 @@ data Ontology = Ontology {
   year :: Maybe GYear,
   timezone :: Maybe GTimezone,
   precipIntensity :: Maybe GPrecipIntensity,
+  averagePrecipIntensity :: Maybe GAveragePrecipIntensity,
   precipProbability :: Maybe GPrecipProbability,
   precipProbabilityType :: Maybe GPrecipProbabilityType,
   precipType :: Maybe GPrecipType,
+  averagePrecipType :: Maybe GAverage,
   icon :: Maybe GIcon,
   temperature :: Maybe GTemperature,
+  averageTemperature :: Maybe GAverageTemperature,
   apparentTemperature :: Maybe GApparentTemperature,
   tempType :: Maybe GTempType,
+  averageTempType :: Maybe GAverage,
   dewPoint :: Maybe GDewPoint,
   humidity :: Maybe GHumidity,
+  averageHumidity :: Maybe GAverageHumidity,
   humidityType :: Maybe GHumidityType,
+  averageHumidityType :: Maybe GAverage,
   windSpeed :: Maybe GWindSpeed,
   windSpeedType :: Maybe GWindSpeedType,
   windBearingType :: Maybe GWindBearingType,
@@ -57,16 +63,22 @@ extractOntology r c = Ontology {
   year = getYear r,
   timezone = getTimezone r,
   precipIntensity = getPrecipIntensity r,
+  averagePrecipIntensity = getAveragePrecipIntensity r,
   precipProbability = getPrecipProbability r,
   precipProbabilityType = getPrecipProbabilityType r,
   precipType = getPrecipType r,
+  averagePrecipType = Nothing,
   icon = getIcon r,
   temperature = getTemperature r,
+  averageTemperature = getAverageTemperature r,
   apparentTemperature = getApparentTemperature r,
   tempType = getTempType r,
+  averageTempType = Nothing,
   dewPoint = getDewPoint r,
   humidity = getHumidity r,
+  averageHumidity = getAverageHumidity r,
   humidityType = getHumidityType r,
+  averageHumidityType = Nothing,
   windSpeed = getWindSpeed r,
   windSpeedType = getWindSpeedType r,
   windBearingType = getWindBearingType r,
@@ -163,6 +175,7 @@ getIcon r = applyToDataPointField r DS.currently DS.icon op
 getPrecipIntensity r = applyToDataPointField r DS.currently DS.precipIntensity op
   where op v = GPrecipIntensityVal $ GFloat $ inch2mm v
 
+getAveragePrecipIntensity r = Just $ GAveragePrecipIntensityVal $ GFloat 0.1 -- TODO provide a value
 
 getPrecipProbability r = applyToDataPointField r DS.currently DS.precipProbability op
   where op v = GPrecipProbabilityVal $ GFloat v
@@ -180,9 +193,12 @@ getPrecipType r = applyToDataPointField r DS.currently DS.precipType op
              | v == "sleet" = GSleet
              | otherwise    = GPrecipNone
 
+
+
 getTemperature r = applyToDataPointField r DS.currently DS.temperature op
   where op v = GTemperatureVal $ GFloat $ f2c v
 
+getAverageTemperature r = Just $ GAverageTemperatureVal $ GFloat 15 -- TODO provide a value
 
 getApparentTemperature r = applyToDataPointField r DS.currently DS.apparentTemperature op
   where op v = GApparentTemperatureVal $ GFloat $ f2c v
@@ -206,6 +222,7 @@ getDewPoint r = applyToDataPointField r DS.currently DS.dewPoint (GDewPointVal .
 
 getHumidity r = applyToDataPointField r DS.currently DS.humidity (GHumidityVal . GFloat . (100 *))
 
+getAverageHumidity r = Just $ GAverageHumidityVal $ GFloat 0.1  -- TODO provide a value
 
 getHumidityType :: DS.Response -> Maybe GHumidityType
 getHumidityType r =
@@ -221,6 +238,7 @@ getHumidityType r =
             Nothing -> Nothing
         Nothing -> Nothing
     Nothing -> Nothing
+
 
 getPerception h d | 26 <= d            && 73 <= h            = GSeverelyUncomofortableHumid
                   | 24 <= d && d <= 26 && 62 <= h && h <= 72 = GExtremelyUncomfortableHumid
@@ -256,22 +274,22 @@ getWindSpeedType r = applyToDataPointField r DS.currently DS.windSpeed op
 getWindBearing r = applyToDataPointField r DS.currently DS.windBearing (GWindBearingVal . GFloat)
 
 getWindBearingType r = applyToDataPointField r DS.currently DS.windBearing op
-  where op v | 348.75 <= v || v <= 11.25 = GN
-             | 11.25 <= v && v <= 33.75 = GNNE
-             | 33.75 <= v && v <= 56.25 = GNE
-             | 56.25 <= v && v <=78.75  = GENE
-             | 78.75 <= v && v <= 101.25 = GE
-             | 101.25 <= v && v <= 123.75 = GESE
-             | 123.75 <= v && v <= 146.25 = GSE
-             | 146.25 <= v && v <= 168.75 = GSSE
-             | 168.75 <= v && v <= 191.25 = GS
-             | 191.25 <= v && v <= 213.75 = GSSW
-             | 213.75 <= v && v <= 236.25 = GSW
-             | 236.25 <= v && v <= 258.75 = GWSW
-             | 258.75 <= v && v <= 281.25 = GW
-             | 281.25 <= v && v <= 303.75 = GWNW
-             | 303.75 <= v && v <= 326.25 = GNW
-             | 326.25 <= v && v <= 348.75 = GNNW
+  where op v | 348.75 <= v || v <= 11.25 = GWindN
+             | 11.25 <= v && v <= 33.75 = GWindNNE
+             | 33.75 <= v && v <= 56.25 = GWindNE
+             | 56.25 <= v && v <=78.75  = GWindENE
+             | 78.75 <= v && v <= 101.25 = GWindE
+             | 101.25 <= v && v <= 123.75 = GWindESE
+             | 123.75 <= v && v <= 146.25 = GWindSE
+             | 146.25 <= v && v <= 168.75 = GWindSSE
+             | 168.75 <= v && v <= 191.25 = GWindS
+             | 191.25 <= v && v <= 213.75 = GWindSSW
+             | 213.75 <= v && v <= 236.25 = GWindSW
+             | 236.25 <= v && v <= 258.75 = GWindWSW
+             | 258.75 <= v && v <= 281.25 = GWindW
+             | 281.25 <= v && v <= 303.75 = GWindWNW
+             | 303.75 <= v && v <= 326.25 = GWindNW
+             | 326.25 <= v && v <= 348.75 = GWindNNW
 
 getCloudCover r = applyToDataPointField r DS.currently DS.cloudCover (GCloudCoverVal . GFloat . (10 *))
 
@@ -304,6 +322,8 @@ applyToDataPointField r f1 f2 op = let datapointMaybe = f1 r in case datapointMa
 applyToResponseField :: DS.Response -> (DS.Response -> Maybe a) -> (a -> b) -> Maybe b
 applyToResponseField r f op = let m = f r in liftM op m
 
+
+
 ontologyApplyRules :: Ontology -> Ontology
 ontologyApplyRules (Ontology
   latitude
@@ -316,16 +336,22 @@ ontologyApplyRules (Ontology
   year
   timezone
   precipIntensity
+  averagePrecipIntensity
   precipProbability
   precipProbabilityType
   precipType
+  averagePrecipType
   icon
   temperature
+  averageTemperature
   apparentTemperature
   tempType
+  averageTempType
   dewPoint
   humidity
+  averageHumidity
   humidityType
+  averageHumidityType
   windSpeed
   windSpeedType
   windBearingType
@@ -344,16 +370,22 @@ ontologyApplyRules (Ontology
   year
   timezone
   (infoPrecipType precipIntensity precipIntensity precipType)
+  averagePrecipIntensity
   (infoPrecipProbability precipProbability precipProbability precipProbabilityType)
   (infoPrecipProbability precipProbabilityType precipProbability precipProbabilityType)
   (infoPrecipType precipType precipIntensity precipType)
+  averagePrecipType'
   icon
   (infoTemperature temperature tempType temperature apparentTemperature)
+  averageTemperature
   (infoTemperature apparentTemperature tempType temperature apparentTemperature)
   (infoTemperature tempType tempType temperature apparentTemperature)
+  averageTempType'
   (infoDewPointHumidity dewPoint humidity dewPoint humidityType)
   (infoDewPointHumidity humidity humidity dewPoint humidityType)
+  averageHumidity
   (infoDewPointHumidity humidityType humidity dewPoint humidityType)
+  averageHumidityType'
   (infoWindBearing windSpeed windSpeed windSpeedType windBearingType)
   (infoWindBearing windSpeedType windSpeed windSpeedType windBearingType)
   (infoWindBearing windBearingType windSpeed windSpeedType windBearingType)
@@ -362,6 +394,51 @@ ontologyApplyRules (Ontology
   cloudCoverType
   pressure
   ozone
+  where averagePrecipType'   = computeAveragePrecipType averagePrecipIntensity precipIntensity
+        averageTempType'     = computeAverageTempType averageTemperature temperature
+        averageHumidityType' = computeAverageHumidityType averageHumidity humidity
+
+-- | Computes a value denoting whether precipitation intencity is greater, less, or equal to average one
+computeAveragePrecipType :: Maybe GAveragePrecipIntensity -> Maybe GPrecipIntensity -> Maybe GAverage
+computeAveragePrecipType Nothing _ = Nothing
+computeAveragePrecipType _ Nothing = Nothing
+computeAveragePrecipType (Just (GAveragePrecipIntensityVal (GFloat avPrcp))) (Just (GPrecipIntensityVal (GFloat prcp)))
+  | ratio == 1 = Just GEqual
+  | ratio < 1 && ratio >= 0.9 = Just GSlightlyGreater
+  | ratio < 0.9 && ratio >= 0.5 = Just GGreater
+  | ratio < 0.5 = Just GRemarkablyGreater
+  | ratio > 1 && ratio <= 1.1 = Just GSlightlyLess
+  | ratio > 1.1 && ratio <= 1.5 = Just GLess
+  | ratio > 1.5 = Just GRemarkablyLess
+  where ratio = avPrcp / prcp
+
+-- | Computes a value denoting whether a temperature is greater, less, or equal to an average temperature
+computeAverageTempType :: Maybe GAverageTemperature -> Maybe GTemperature -> Maybe GAverage
+computeAverageTempType Nothing _ = Nothing
+computeAverageTempType _ Nothing = Nothing
+computeAverageTempType (Just (GAverageTemperatureVal (GFloat avTemp))) (Just (GTemperatureVal (GFloat temp)))
+  | dist == 0  = Just GEqual
+  | dist <= 5  && temp > avTemp  = Just GSlightlyGreater
+  | dist <= 10 && temp > avTemp  = Just GGreater
+  | dist > 10  && temp > avTemp  = Just GRemarkablyGreater
+  | dist <= 5  && temp < avTemp  = Just GSlightlyLess
+  | dist <= 10 && temp < avTemp  = Just GLess
+  | dist > 10  && temp < avTemp  = Just GRemarkablyLess
+  where dist = abs $ avTemp - temp
+
+computeAverageHumidityType :: Maybe GAverageHumidity -> Maybe GHumidity -> Maybe GAverage
+computeAverageHumidityType Nothing _ = Nothing
+computeAverageHumidityType _ Nothing = Nothing
+computeAverageHumidityType (Just (GAverageHumidityVal (GFloat avHmd))) (Just (GHumidityVal (GFloat hmd)))
+  | ratio == 1 = Just GEqual
+  | ratio < 1 && ratio >= 0.9 = Just GSlightlyGreater
+  | ratio < 0.9 && ratio >= 0.5 = Just GGreater
+  | ratio < 0.5 = Just GRemarkablyGreater
+  | ratio > 1 && ratio <= 1.1 = Just GSlightlyLess
+  | ratio > 1.1 && ratio <= 1.5 = Just GLess
+  | ratio > 1.5 = Just GRemarkablyLess
+  where ratio = avHmd / hmd
+
 
 infoPrecipType :: Maybe a -> Maybe GPrecipIntensity -> Maybe GPrecipType -> Maybe a
 infoPrecipType _ Nothing _ = Nothing
@@ -408,16 +485,22 @@ ontologyToList (Ontology
   year
   timezone
   precipIntensity
+  averagePrecipIntensity
   precipProbability
   precipProbabilityType
   precipType
+  averagePrecipType
   icon
   temperature
+  averageTemperature
   apparentTemperature
   tempType
+  averageTempType
   dewPoint
   humidity
+  averageHumidity
   humidityType
+  averageHumidityType
   windSpeed
   windSpeedType
   windBearingType
@@ -435,15 +518,21 @@ ontologyToList (Ontology
   toCIdExpr "Month" month,
   toCIdExpr "Year" year,
   toCIdExpr "Icon" icon,
-  toCIdExpr "PrecipIntensity" precipIntensity,
-  toCIdExpr "PrecipType" precipType,
+  -- toCIdExpr "PrecipIntensity" precipIntensity,
+  -- toCIdExpr "AveragePrecipIntensity" averagePrecipIntensity,
+  -- (mkCId "PrecipType", Nothing),
+  -- toCIdExpr "AveragePrecipType" averagePrecipType,
   toCIdExpr "PrecipProbabilityType" precipProbabilityType,
   toCIdExpr "Temperature" temperature,
+  toCIdExpr "AverageTemperature" averageTemperature,
   toCIdExpr "ApparentTemperature" apparentTemperature,
-  toCIdExpr "TempType" tempType,
-  toCIdExpr "DewPoint" dewPoint,
-  toCIdExpr "Humidity" humidity,
-  toCIdExpr "HumidityType" humidityType,
+  (mkCId "TempType", Nothing),
+  toCIdExpr "AverageTempType" averageTempType,
+  -- toCIdExpr "DewPoint" dewPoint,
+  -- toCIdExpr "Humidity" humidity,
+  -- toCIdExpr "AverageHumidity" averageHumidity,
+  -- (mkCId "HumidityType", Nothing),
+  toCIdExpr "AverageHumidityType" averageHumidityType,
   toCIdExpr "WindSpeed" windSpeed,
   toCIdExpr "WindSpeedType" windSpeedType,
   (mkCId "WindSpeedType", Nothing),
