@@ -9,12 +9,13 @@ concrete WeatherEng of Weather = RSTEng, MessagesEng ** open WeatherLexiconEng, 
           location_NP :      NP  = mkNPNoPunct loc (prnths (mkNPComma lat long));
           location_Adv :     Adv = mkAdv in_Prep location_NP ;
           icon_S :           S   = mkS presentTense simultaneousAnt positivePol (mkCl icon) ;
-          dateLocation_Phr : Phr = mkPhr (mkS date_Adv (mkS location_Adv icon_S))
+          date_S :           S   = mkS presentTense simultaneousAnt positivePol (mkCl (mkVP date_NP)) ;
+          dateLocation_Phr : Phr = mkPhr (mkS date_S location_Adv)
         };
 
 
     -- The temperature is 19 C, which is an average for this date, and it feels like 23 C.
-  lin InfoTemperatureShort temp appTemp = mkPhr (mkS and_Conj (mkListS temp_S appTemp_S))
+  lin InfoTemperatureShort _ _ temp appTemp = mkPhr (mkS and_Conj (mkListS temp_S appTemp_S))
         where
         {
           appTemp_S : S = mkS presentTense simultaneousAnt positivePol (mkCl (mkNP it_Pron) feel_like_V2 appTemp) ;
@@ -26,7 +27,7 @@ concrete WeatherEng of Weather = RSTEng, MessagesEng ** open WeatherLexiconEng, 
       
 
     -- The temperature is 19 C, and it feels like 23 C. For this date, it is higher than average , which is 17 C.
-  lin InfoTemperatureAverage avTempType avTemp temp appTemp = mkPhr (fullstop tempAppTemp_S avrg_S)
+  lin InfoTemperature avTempType avTemp temp appTemp = mkPhr (fullstop tempAppTemp_S avrg_S)
         where
         {
           temp_S        : S = mkS presentTense simultaneousAnt positivePol (mkCl (mkNP theSg_Det temperature_N) temp) ;
@@ -56,7 +57,7 @@ concrete WeatherEng of Weather = RSTEng, MessagesEng ** open WeatherLexiconEng, 
         where
         {
           rltHmdt_S       : S  = mkS presentTense simultaneousAnt positivePol (mkCl (mkNP (mkCN relative_A humidity_N)) hmdt) ;
-          dwPnt_S         : S  = mkS presentTense simultaneousAnt positivePol (mkCl (mkNP dew_point_N) dwPnt) ;
+          dwPnt_S         : S  = mkS presentTense simultaneousAnt positivePol (mkCl (mkNP the_Det dew_point_N) dwPnt) ;
           hmdtDwPnt_S     : S  = mkS and_Conj rltHmdt_S dwPnt_S ;
                 
           hmdtDwPnt_RCl   : RCl = RClAdv (mkRCl which_RP' (mkNP and_Conj avrgHmdt avrgDwPnt)) respectively_Adv ;
@@ -72,7 +73,7 @@ concrete WeatherEng of Weather = RSTEng, MessagesEng ** open WeatherLexiconEng, 
  
 
     -- The air is calm.
-  lin InfoWindCalm = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP the_Det air_N) (mkVP calm_A))) ;
+  lin InfoWindCalm _ _ _ = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP the_Det air_N) (mkVP calm_A))) ;
 
     -- A strong gale blows in NNE at speed 13 km/h.
   lin InfoWindBearing windSpeed windSpeedType windBearingType = mkPhr windBlowsDrctSpd_S

@@ -11,15 +11,13 @@ abstract Weather = RST, Messages, Logic ** {
 
   {- Temperature -}
 
+  -- The temperature is 19 C and it feels like 23 C. It is higher than average for this date, which is 17 C.
   fun InfoTemperature : AverageTempType -> AverageTemperature -> Temperature -> ApparentTemperature -> Satellite ;
-  def InfoTemperature (AverageTempTypeVal Equal) x1 x2 x3 =  InfoTemperatureShort x2 x3 ;
-      InfoTemperature avrg  x1 x2 x3 =  InfoTemperatureAverage avrg x1 x2 x3 ;
+  def InfoTemperature (AverageTempTypeVal Equal) x1 x2 x3 =  InfoTemperatureShort (AverageTempTypeVal Equal) x1 x2 x3 ;
 
   -- The temperature is 19 C, which is normal for this date, and it feels like 23 C.
-  fun InfoTemperatureShort : Temperature -> ApparentTemperature -> Satellite  ;
+  fun InfoTemperatureShort : AverageTempType -> AverageTemperature -> Temperature -> ApparentTemperature -> Satellite  ;
 
-  -- The temperature is 19 C and it feels like 23 C. It is higher than average for this date, which is 17 C.
-  fun InfoTemperatureAverage : AverageTempType -> AverageTemperature -> Temperature -> ApparentTemperature -> Satellite ;
 
 
     -- It is raining, and the precipitation intesity is 22 mm/h.
@@ -37,15 +35,13 @@ abstract Weather = RST, Messages, Logic ** {
 
   {- Wind -}
 
+  -- A strong gale blows in NNE at speed 13 km/h.
   fun InfoWindBearing : WindSpeed -> WindSpeedType -> WindBearingType -> Satellite ;
-  def InfoWindBearing _ Calm _ = InfoWindCalm ;
-      InfoWindBearing x1 x2 x3 = InfoWindBlows x1 x2 x3 ;
+  def InfoWindBearing x1 Calm x3 = InfoWindCalm x1 Calm x3;
 
   -- The air is calm.
-  fun InfoWindCalm : Satellite ;
+  fun InfoWindCalm : WindSpeed -> WindSpeedType -> WindBearingType -> Satellite ;
 
-  -- A strong gale blows in NNE at speed 13 km/h.
-  fun InfoWindBlows : WindSpeed -> WindSpeedType -> WindBearingType -> Satellite ;
 
 
 

@@ -325,22 +325,24 @@ ontologyApplyRules (Ontology
            timezone
            (infoPrecipType precipIntensity precipIntensity precipType)
            averagePrecipIntensity
-           (infoPrecipProbability precipProbability precipProbability precipProbabilityType)
-           (infoPrecipProbability precipProbabilityType precipProbability precipProbabilityType)
+           precipProbability
+           precipProbabilityType
            (infoPrecipType precipType precipIntensity precipType)
            averagePrecipType'
            icon
-           (infoTemperature temperature tempType temperature apparentTemperature)
-           averageTemperature
-           (infoTemperature apparentTemperature tempType temperature apparentTemperature)
-           (infoTemperature tempType tempType temperature apparentTemperature)
-           averageTempType'
-           (infoDewPointHumidity dewPoint humidity dewPoint humidityType)
-           averageDewPoint
-           (infoDewPointHumidity humidity humidity dewPoint humidityType)
-           averageHumidity
-           (infoDewPointHumidity humidityType humidity dewPoint humidityType)
-           averageHumidityType'
+           (infoTemperature temperature averageTempType' averageTemperature temperature apparentTemperature)
+           (infoTemperature averageTemperature averageTempType' averageTemperature temperature apparentTemperature)
+           (infoTemperature apparentTemperature averageTempType' averageTemperature temperature apparentTemperature)
+           (infoTemperature tempType averageTempType' averageTemperature temperature apparentTemperature)
+           (infoTemperature averageTempType' averageTempType' averageTemperature temperature apparentTemperature)
+
+           (infoDewPointHumidity dewPoint averageHumidityType' averageHumidity humidity averageDewPoint dewPoint)
+           (infoDewPointHumidity averageDewPoint averageHumidityType' averageHumidity humidity averageDewPoint dewPoint)
+           (infoDewPointHumidity humidity averageHumidityType' averageHumidity humidity averageDewPoint dewPoint)
+           (infoDewPointHumidity averageHumidity averageHumidityType' averageHumidity humidity averageDewPoint dewPoint)
+           (infoDewPointHumidity humidityType averageHumidityType' averageHumidity humidity averageDewPoint dewPoint)
+           (infoDewPointHumidity averageHumidityType' averageHumidityType' averageHumidity humidity averageDewPoint dewPoint)
+
            (infoWindBearing windSpeed windSpeed windSpeedType windBearingType)
            (infoWindBearing windSpeedType windSpeed windSpeedType windBearingType)
            (infoWindBearing windBearingType windSpeed windSpeedType windBearingType)
@@ -404,31 +406,38 @@ computeAverageHumidityType (Just (GAverageHumidityVal (GFloat avHmd))) (Just (GH
   where ratio = avHmd / hmd
 
 
+
+-- InfoLocation :: Maybe a -> Maybe GWeekday -> Maybe GDay -> Maybe GMonth -> Maybe GYear ->
+--                 Maybe GTime -> Maybe GLocation -> Maybe GLatitude -> Maybe GLongitude -> Maybe GIcon -> Maybe a
+-- InfoLocation _ Nothing _ _ _ _ _ _ _ _ = Nothing
+-- InfoLocation _ _ Nothing _ _ _ _ _ _ _ = Nothing
+-- InfoLocation _ _ _ Nothing _ _ _ _ _ _ = Nothing
+-- InfoLocation _ _ _ _ Nothing _ _ _ _ _ = Nothing
+-- InfoLocation _ _ _ _ _ Nothing _ _ _ _ = Nothing
+-- InfoLocation _ _ _ _ _ _ Nothing _ _ _ = Nothing
+-- InfoLocation _ _ _ _ _ _ _ Nothing _ _ = Nothing
+-- InfoLocation _ _ _ _ _ _ _ _ _ Nothing = Nothing
+-- InfoLocation a _ _ _ _ _ _ _ _ _       = a
+
+infoTemperature :: Maybe a -> Maybe GAverageTempType -> Maybe GAverageTemperature -> Maybe GTemperature -> Maybe GApparentTemperature -> Maybe a
+infoTemperature _ Nothing _ _ _ = Nothing
+infoTemperature _ _ Nothing _ _ = Nothing
+infoTemperature _ _ _ Nothing _ = Nothing
+infoTemperature _ _ _ _ Nothing = Nothing
+infoTemperature a _ _ _ _       = a
+
 infoPrecipType :: Maybe a -> Maybe GPrecipIntensity -> Maybe GPrecipType -> Maybe a
 infoPrecipType _ Nothing _ = Nothing
 infoPrecipType _ _ Nothing = Nothing
 infoPrecipType a _ _ = a
 
-
-infoTemperature :: Maybe a -> Maybe GTempType -> Maybe GTemperature -> Maybe GApparentTemperature -> Maybe a
-infoTemperature _ Nothing _ _ = Nothing
-infoTemperature _ _ Nothing _ = Nothing
-infoTemperature _ _ _ Nothing = Nothing
-infoTemperature a _ _ _       = a
-
-
-infoPrecipProbability :: Maybe a -> Maybe GPrecipProbability -> Maybe GPrecipProbabilityType -> Maybe a
-infoPrecipProbability _ Nothing _ = Nothing
-infoPrecipProbability _ _ Nothing = Nothing
-infoPrecipProbability a _ _       = a
-
-
-infoDewPointHumidity :: Maybe a -> Maybe GHumidity -> Maybe GDewPoint -> Maybe GHumidityType -> Maybe a
-infoDewPointHumidity _ Nothing _ _ = Nothing
-infoDewPointHumidity _ _ Nothing _ = Nothing
-infoDewPointHumidity _ _ _ Nothing = Nothing
-infoDewPointHumidity a _ _ _       = a
-
+infoDewPointHumidity :: Maybe a -> Maybe GAverageHumidityType -> Maybe GAverageHumidity -> Maybe GHumidity -> Maybe GAverageDewPoint -> Maybe GDewPoint -> Maybe a
+infoDewPointHumidity _ Nothing _ _ _ _ = Nothing
+infoDewPointHumidity _ _ Nothing _ _ _ = Nothing
+infoDewPointHumidity _ _ _ Nothing _ _ = Nothing
+infoDewPointHumidity _ _ _ _ Nothing _ = Nothing
+infoDewPointHumidity _ _ _ _ _ Nothing = Nothing
+infoDewPointHumidity a _ _ _ _ _       = a
 
 infoWindBearing :: Maybe a -> Maybe GWindSpeed -> Maybe GWindSpeedType -> Maybe GWindBearingType -> Maybe a
 infoWindBearing _ Nothing _ _ = Nothing
@@ -501,27 +510,33 @@ ontologyToList o =
     addVal ("Month", Just $ month o),
     addVal ("Year", Just $ year o),
     addVal ("Icon", Just $ icon o),
+
     addVal ("PrecipIntensity", Just $ precipIntensity o),
     addVal ("AveragePrecipIntensity", nothing),
-    addVal ("PrecipType", nothing),
+    addVal ("PrecipType", Just $ precipType o),
     addVal ("AveragePrecipType", nothing),
     addVal ("PrecipProbability", Just $ precipProbability o),
-    addVal ("Temperature", Just $ temperature o),
-    addVal ("AverageTemperature", Just $ averageTemperature o),
-    addVal ("ApparentTemperature", Just $ apparentTemperature o),
-    addVal ("TempType", nothing),
+
     addVal ("AverageTempType", Just $ averageTempType o),
+    addVal ("AverageTemperature", Just $ averageTemperature o),
+    addVal ("Temperature", Just $ temperature o),
+    addVal ("ApparentTemperature", Just $ apparentTemperature o),
+
     addVal ("DewPoint", Just $ dewPoint o),
     addVal ("AverageDewPoint", Just $ averageDewPoint o),
     addVal ("Humidity", Just $ humidity o),
     addVal ("AverageHumidity", Just $ averageHumidity o),
     addVal ("HumidityType", nothing),
     addVal ("AverageHumidityType", Just $ averageHumidityType o),
+
     addVal ("WindSpeed", Just $ windSpeed o),
     addVal ("WindSpeedType", Just $ windSpeedType o),
     addVal ("WindBearingType", Just $ windBearingType o),
+
     addVal ("CloudCoverType", Just $ cloudCoverType o),
+
     addVal ("Pressure", Just $ pressure o),
+
     addVal ("Ozone", Just $ ozone o)
   ]
   where addVal :: Gf a => (String, Maybe (Maybe a)) -> (CId, Maybe Expr)

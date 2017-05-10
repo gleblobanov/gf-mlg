@@ -189,11 +189,9 @@ data GSatellite =
  | GInfoPressure GPressure 
  | GInfoSky GCloudCoverType 
  | GInfoTemperature GAverageTempType GAverageTemperature GTemperature GApparentTemperature 
- | GInfoTemperatureAverage GAverageTempType GAverageTemperature GTemperature GApparentTemperature 
- | GInfoTemperatureShort GTemperature GApparentTemperature 
+ | GInfoTemperatureShort GAverageTempType GAverageTemperature GTemperature GApparentTemperature 
  | GInfoWindBearing GWindSpeed GWindSpeedType GWindBearingType 
- | GInfoWindBlows GWindSpeed GWindSpeedType GWindBearingType 
- | GInfoWindCalm 
+ | GInfoWindCalm GWindSpeed GWindSpeedType GWindBearingType 
   deriving Show
 
 data GSatelliteList =
@@ -676,11 +674,9 @@ instance Gf GSatellite where
   gf (GInfoPressure x1) = mkApp (mkCId "InfoPressure") [gf x1]
   gf (GInfoSky x1) = mkApp (mkCId "InfoSky") [gf x1]
   gf (GInfoTemperature x1 x2 x3 x4) = mkApp (mkCId "InfoTemperature") [gf x1, gf x2, gf x3, gf x4]
-  gf (GInfoTemperatureAverage x1 x2 x3 x4) = mkApp (mkCId "InfoTemperatureAverage") [gf x1, gf x2, gf x3, gf x4]
-  gf (GInfoTemperatureShort x1 x2) = mkApp (mkCId "InfoTemperatureShort") [gf x1, gf x2]
+  gf (GInfoTemperatureShort x1 x2 x3 x4) = mkApp (mkCId "InfoTemperatureShort") [gf x1, gf x2, gf x3, gf x4]
   gf (GInfoWindBearing x1 x2 x3) = mkApp (mkCId "InfoWindBearing") [gf x1, gf x2, gf x3]
-  gf (GInfoWindBlows x1 x2 x3) = mkApp (mkCId "InfoWindBlows") [gf x1, gf x2, gf x3]
-  gf GInfoWindCalm = mkApp (mkCId "InfoWindCalm") []
+  gf (GInfoWindCalm x1 x2 x3) = mkApp (mkCId "InfoWindCalm") [gf x1, gf x2, gf x3]
 
   fg t =
     case unApp t of
@@ -691,11 +687,9 @@ instance Gf GSatellite where
       Just (i,[x1]) | i == mkCId "InfoPressure" -> GInfoPressure (fg x1)
       Just (i,[x1]) | i == mkCId "InfoSky" -> GInfoSky (fg x1)
       Just (i,[x1,x2,x3,x4]) | i == mkCId "InfoTemperature" -> GInfoTemperature (fg x1) (fg x2) (fg x3) (fg x4)
-      Just (i,[x1,x2,x3,x4]) | i == mkCId "InfoTemperatureAverage" -> GInfoTemperatureAverage (fg x1) (fg x2) (fg x3) (fg x4)
-      Just (i,[x1,x2]) | i == mkCId "InfoTemperatureShort" -> GInfoTemperatureShort (fg x1) (fg x2)
+      Just (i,[x1,x2,x3,x4]) | i == mkCId "InfoTemperatureShort" -> GInfoTemperatureShort (fg x1) (fg x2) (fg x3) (fg x4)
       Just (i,[x1,x2,x3]) | i == mkCId "InfoWindBearing" -> GInfoWindBearing (fg x1) (fg x2) (fg x3)
-      Just (i,[x1,x2,x3]) | i == mkCId "InfoWindBlows" -> GInfoWindBlows (fg x1) (fg x2) (fg x3)
-      Just (i,[]) | i == mkCId "InfoWindCalm" -> GInfoWindCalm 
+      Just (i,[x1,x2,x3]) | i == mkCId "InfoWindCalm" -> GInfoWindCalm (fg x1) (fg x2) (fg x3)
 
 
       _ -> error ("no Satellite " ++ show t)
