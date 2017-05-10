@@ -2,6 +2,7 @@ resource WeatherLexiconEng = open LexiconEng, ParadigmsEng in {
 
   oper
 
+    blow_V = mkV "blow" ;
     snow_V = mkV "snow" ;
     sleet_V = mkV "sleet" ;
     feel_like_V2 = mkV2 feel_V like_Prep ;
@@ -53,6 +54,12 @@ resource WeatherLexiconEng = open LexiconEng, ParadigmsEng in {
     severely_AdA  = mkAdA "severely" ;
     somewhat_AdA  = mkAdA "somewhat" ;
     scarcely_AdA  = mkAdA "scarcely" ;
+    quite_AdA     = mkAdA "quite" ;
+    moderately_AdA = mkAdA "moderately" ;
+    slightly_AdA = mkAdA "slightly" ;
+    much_AdA = mkAdA "much" ;
+
+    respectively_Adv = mkAdv "respectively" ;
 
     date_N          = mkN "date" ;
     average_N       = mkN "average" ;
@@ -114,6 +121,9 @@ resource WeatherLexiconEng = open LexiconEng, ParadigmsEng in {
     at_Prep = mkPrep "at" ;
     like_Prep = mkPrep "like" ;
     empty_Prep = mkPrep "" ;
+    below_Prep = mkPrep "below" ;
+    above_Prep = mkPrep "above" ;
+    near_Prep = mkPrep "near" ;
 
     empty_Conj = mkConj "" ;
     comma_Conj = mkConj "," ;

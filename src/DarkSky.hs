@@ -2,12 +2,14 @@
 
 module DarkSky where
 
+import Data.Maybe
 import Network.HTTP.Client
 import Network.HTTP.Client.TLS
 import Data.ByteString.Lazy.UTF8 as UTF8
 import Text.JSON as JSON
 import GHC.Generics
 import Data.Aeson
+import Control.Monad
 
 data Response = Response {
   latitude  :: Maybe Double,
@@ -45,13 +47,44 @@ instance FromJSON DarkSky.Response
 instance FromJSON DataPoint
 
 
-request city = "GET https://api.darksky.net/forecast/a270ce9fa3ff87b86cc329482c80e63f/"++ city ++"/?exclude=minutely,hourly,daily,alerts,flags"
+keyDS = "a270ce9fa3ff87b86cc329482c80e63f"
+
+queryCrnt lat long = "GET https://api.darksky.net/forecast/a270ce9fa3ff87b86cc329482c80e63f/"++ loc ++"/?exclude=minutely,hourly,daily,alerts,flags"
+  where loc = show lat ++ "," ++ show long
 
 
 getResponse :: String -> IO (Maybe DarkSky.Response)
-getResponse city =  do req <- parseRequest $ request city
-                       mgr <- getGlobalManager
-                       resp <- httpLbs req mgr
-                       let json =  (responseBody resp)
-                           response = Data.Aeson.decode json :: Maybe DarkSky.Response
-                       return response
+getResponse query =  do req <- parseRequest query
+                        mgr  <- getGlobalManager
+                        resp <- httpLbs req mgr
+                        let json =  (responseBody resp)
+                            response = Data.Aeson.decode json :: Maybe DarkSky.Response
+                        return response
+
+
+getAverage :: (DataPoint -> Maybe Double) -> Float -> Float -> Int -> IO Double
+getAverage acsr lat long ts = print "Average computed" >> liftM  ((/ fromIntegral yrs) . sum . catMaybes) rslt
+  where scndsInYear = 31536000
+        yrs         = 10
+        hTs         = map ((\ x -> ts - x) . (scndsInYear*)) [0..yrs-1]
+        queryHistory lat long ts =
+          "GET https://api.darksky.net/forecast/" ++
+          keyDS     ++ "/" ++
+          show lat  ++ "," ++
+          show long ++ "," ++
+          show ts   ++
+          "?units=si"
+
+        rslt  = mapM (getValue . getResponse . queryHistory lat long) hTs
+        getValue :: IO (Maybe DarkSky.Response) -> IO (Maybe Double)
+        getValue cmnd = do mResp <- cmnd
+                           case mResp of
+                             Nothing -> return Nothing
+                             Just resp -> case currently resp of
+                                            Nothing -> return Nothing
+                                            Just crnt ->  case acsr crnt of
+                                                            Nothing -> return Nothing
+                                                            Just v -> return $ Just v
+
+
+testAvrg = getAverage dewPoint 57.7089 11.9746 1494381850

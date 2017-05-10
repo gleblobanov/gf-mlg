@@ -54,18 +54,28 @@ data GAverage =
  | GSlightlyLess 
   deriving Show
 
+data GAverageDewPoint = GAverageDewPointVal GFloat 
+  deriving Show
+
 data GAverageHumidity = GAverageHumidityVal GFloat 
+  deriving Show
+
+data GAverageHumidityType = GAverageHumidityTypeVal GAverage 
   deriving Show
 
 data GAveragePrecipIntensity = GAveragePrecipIntensityVal GFloat 
   deriving Show
 
+data GAveragePrecipType = GAveragePrecipTypeVal GAverage 
+  deriving Show
+
+data GAverageTempType = GAverageTempTypeVal GAverage 
+  deriving Show
+
 data GAverageTemperature = GAverageTemperatureVal GFloat 
   deriving Show
 
-data GCity =
-   GGothenburg 
- | GOsaka 
+data GCity = GCityVal GString 
   deriving Show
 
 data GCloudCover = GCloudCoverVal GFloat 
@@ -76,6 +86,9 @@ data GCloudCoverType =
  | GClear 
  | GOvercast 
  | GScattered 
+  deriving Show
+
+data GCountry = GCountryVal GString 
   deriving Show
 
 data GDay = GDayVal GString 
@@ -116,6 +129,9 @@ data GIcon =
 data GLatitude = GLatitudeVal GFloat 
   deriving Show
 
+data GLocation = GLocationVal GString 
+  deriving Show
+
 data GLongitude = GLongitudeVal GFloat 
   deriving Show
 
@@ -135,7 +151,7 @@ data GMonth =
  | GSeptember 
   deriving Show
 
-data GNucleus = GInfoLocation GCity GDay GMonth GYear GWeekday GTime GIcon 
+data GNucleus = GInfoLocation GWeekday GDay GMonth GYear GTime GLocation GLatitude GLongitude GIcon 
   deriving Show
 
 data GOzone = GOzoneVal GFloat 
@@ -166,14 +182,18 @@ data GPressure = GPressureVal GFloat
   deriving Show
 
 data GSatellite =
-   GInfoOzone GOzone 
- | GInfoPrecipProbability GPrecipProbabilityType 
+   GInfoDewPointHumidity GAverageHumidityType GAverageHumidity GHumidity GAverageDewPoint GDewPoint 
+ | GInfoOzone GOzone 
+ | GInfoPrecipProbability GPrecipProbability 
+ | GInfoPrecipType GPrecipIntensity GPrecipType 
  | GInfoPressure GPressure 
  | GInfoSky GCloudCoverType 
- | GInfoTemperature GAverage GAverageTemperature GTemperature GApparentTemperature 
- | GInfoTemperatureLong GAverage GAverageTemperature GTemperature GApparentTemperature 
- | GInfoTemperatureShort GAverage GAverageTemperature GTemperature GApparentTemperature 
+ | GInfoTemperature GAverageTempType GAverageTemperature GTemperature GApparentTemperature 
+ | GInfoTemperatureAverage GAverageTempType GAverageTemperature GTemperature GApparentTemperature 
+ | GInfoTemperatureShort GTemperature GApparentTemperature 
  | GInfoWindBearing GWindSpeed GWindSpeedType GWindBearingType 
+ | GInfoWindBlows GWindSpeed GWindSpeedType GWindBearingType 
+ | GInfoWindCalm 
   deriving Show
 
 data GSatelliteList =
@@ -204,6 +224,9 @@ data GTime = GTimeVal GString
   deriving Show
 
 data GTimezone = GTimezoneVal GString 
+  deriving Show
+
+data GTrue = Ge 
   deriving Show
 
 data GWeekday =
@@ -260,6 +283,8 @@ data GWindSpeedType =
 data GYear = GYearVal GString 
   deriving Show
 
+data GFalse
+
 
 instance Gf GApparentTemperature where
   gf (GApparentTemperatureVal x1) = mkApp (mkCId "ApparentTemperatureVal") [gf x1]
@@ -293,6 +318,16 @@ instance Gf GAverage where
 
       _ -> error ("no Average " ++ show t)
 
+instance Gf GAverageDewPoint where
+  gf (GAverageDewPointVal x1) = mkApp (mkCId "AverageDewPointVal") [gf x1]
+
+  fg t =
+    case unApp t of
+      Just (i,[x1]) | i == mkCId "AverageDewPointVal" -> GAverageDewPointVal (fg x1)
+
+
+      _ -> error ("no AverageDewPoint " ++ show t)
+
 instance Gf GAverageHumidity where
   gf (GAverageHumidityVal x1) = mkApp (mkCId "AverageHumidityVal") [gf x1]
 
@@ -303,6 +338,16 @@ instance Gf GAverageHumidity where
 
       _ -> error ("no AverageHumidity " ++ show t)
 
+instance Gf GAverageHumidityType where
+  gf (GAverageHumidityTypeVal x1) = mkApp (mkCId "AverageHumidityTypeVal") [gf x1]
+
+  fg t =
+    case unApp t of
+      Just (i,[x1]) | i == mkCId "AverageHumidityTypeVal" -> GAverageHumidityTypeVal (fg x1)
+
+
+      _ -> error ("no AverageHumidityType " ++ show t)
+
 instance Gf GAveragePrecipIntensity where
   gf (GAveragePrecipIntensityVal x1) = mkApp (mkCId "AveragePrecipIntensityVal") [gf x1]
 
@@ -312,6 +357,26 @@ instance Gf GAveragePrecipIntensity where
 
 
       _ -> error ("no AveragePrecipIntensity " ++ show t)
+
+instance Gf GAveragePrecipType where
+  gf (GAveragePrecipTypeVal x1) = mkApp (mkCId "AveragePrecipTypeVal") [gf x1]
+
+  fg t =
+    case unApp t of
+      Just (i,[x1]) | i == mkCId "AveragePrecipTypeVal" -> GAveragePrecipTypeVal (fg x1)
+
+
+      _ -> error ("no AveragePrecipType " ++ show t)
+
+instance Gf GAverageTempType where
+  gf (GAverageTempTypeVal x1) = mkApp (mkCId "AverageTempTypeVal") [gf x1]
+
+  fg t =
+    case unApp t of
+      Just (i,[x1]) | i == mkCId "AverageTempTypeVal" -> GAverageTempTypeVal (fg x1)
+
+
+      _ -> error ("no AverageTempType " ++ show t)
 
 instance Gf GAverageTemperature where
   gf (GAverageTemperatureVal x1) = mkApp (mkCId "AverageTemperatureVal") [gf x1]
@@ -324,13 +389,11 @@ instance Gf GAverageTemperature where
       _ -> error ("no AverageTemperature " ++ show t)
 
 instance Gf GCity where
-  gf GGothenburg = mkApp (mkCId "Gothenburg") []
-  gf GOsaka = mkApp (mkCId "Osaka") []
+  gf (GCityVal x1) = mkApp (mkCId "CityVal") [gf x1]
 
   fg t =
     case unApp t of
-      Just (i,[]) | i == mkCId "Gothenburg" -> GGothenburg 
-      Just (i,[]) | i == mkCId "Osaka" -> GOsaka 
+      Just (i,[x1]) | i == mkCId "CityVal" -> GCityVal (fg x1)
 
 
       _ -> error ("no City " ++ show t)
@@ -360,6 +423,16 @@ instance Gf GCloudCoverType where
 
 
       _ -> error ("no CloudCoverType " ++ show t)
+
+instance Gf GCountry where
+  gf (GCountryVal x1) = mkApp (mkCId "CountryVal") [gf x1]
+
+  fg t =
+    case unApp t of
+      Just (i,[x1]) | i == mkCId "CountryVal" -> GCountryVal (fg x1)
+
+
+      _ -> error ("no Country " ++ show t)
 
 instance Gf GDay where
   gf (GDayVal x1) = mkApp (mkCId "DayVal") [gf x1]
@@ -457,6 +530,16 @@ instance Gf GLatitude where
 
       _ -> error ("no Latitude " ++ show t)
 
+instance Gf GLocation where
+  gf (GLocationVal x1) = mkApp (mkCId "LocationVal") [gf x1]
+
+  fg t =
+    case unApp t of
+      Just (i,[x1]) | i == mkCId "LocationVal" -> GLocationVal (fg x1)
+
+
+      _ -> error ("no Location " ++ show t)
+
 instance Gf GLongitude where
   gf (GLongitudeVal x1) = mkApp (mkCId "LongitudeVal") [gf x1]
 
@@ -502,11 +585,11 @@ instance Gf GMonth where
       _ -> error ("no Month " ++ show t)
 
 instance Gf GNucleus where
-  gf (GInfoLocation x1 x2 x3 x4 x5 x6 x7) = mkApp (mkCId "InfoLocation") [gf x1, gf x2, gf x3, gf x4, gf x5, gf x6, gf x7]
+  gf (GInfoLocation x1 x2 x3 x4 x5 x6 x7 x8 x9) = mkApp (mkCId "InfoLocation") [gf x1, gf x2, gf x3, gf x4, gf x5, gf x6, gf x7, gf x8, gf x9]
 
   fg t =
     case unApp t of
-      Just (i,[x1,x2,x3,x4,x5,x6,x7]) | i == mkCId "InfoLocation" -> GInfoLocation (fg x1) (fg x2) (fg x3) (fg x4) (fg x5) (fg x6) (fg x7)
+      Just (i,[x1,x2,x3,x4,x5,x6,x7,x8,x9]) | i == mkCId "InfoLocation" -> GInfoLocation (fg x1) (fg x2) (fg x3) (fg x4) (fg x5) (fg x6) (fg x7) (fg x8) (fg x9)
 
 
       _ -> error ("no Nucleus " ++ show t)
@@ -586,25 +669,33 @@ instance Gf GPressure where
       _ -> error ("no Pressure " ++ show t)
 
 instance Gf GSatellite where
+  gf (GInfoDewPointHumidity x1 x2 x3 x4 x5) = mkApp (mkCId "InfoDewPointHumidity") [gf x1, gf x2, gf x3, gf x4, gf x5]
   gf (GInfoOzone x1) = mkApp (mkCId "InfoOzone") [gf x1]
   gf (GInfoPrecipProbability x1) = mkApp (mkCId "InfoPrecipProbability") [gf x1]
+  gf (GInfoPrecipType x1 x2) = mkApp (mkCId "InfoPrecipType") [gf x1, gf x2]
   gf (GInfoPressure x1) = mkApp (mkCId "InfoPressure") [gf x1]
   gf (GInfoSky x1) = mkApp (mkCId "InfoSky") [gf x1]
   gf (GInfoTemperature x1 x2 x3 x4) = mkApp (mkCId "InfoTemperature") [gf x1, gf x2, gf x3, gf x4]
-  gf (GInfoTemperatureLong x1 x2 x3 x4) = mkApp (mkCId "InfoTemperatureLong") [gf x1, gf x2, gf x3, gf x4]
-  gf (GInfoTemperatureShort x1 x2 x3 x4) = mkApp (mkCId "InfoTemperatureShort") [gf x1, gf x2, gf x3, gf x4]
+  gf (GInfoTemperatureAverage x1 x2 x3 x4) = mkApp (mkCId "InfoTemperatureAverage") [gf x1, gf x2, gf x3, gf x4]
+  gf (GInfoTemperatureShort x1 x2) = mkApp (mkCId "InfoTemperatureShort") [gf x1, gf x2]
   gf (GInfoWindBearing x1 x2 x3) = mkApp (mkCId "InfoWindBearing") [gf x1, gf x2, gf x3]
+  gf (GInfoWindBlows x1 x2 x3) = mkApp (mkCId "InfoWindBlows") [gf x1, gf x2, gf x3]
+  gf GInfoWindCalm = mkApp (mkCId "InfoWindCalm") []
 
   fg t =
     case unApp t of
+      Just (i,[x1,x2,x3,x4,x5]) | i == mkCId "InfoDewPointHumidity" -> GInfoDewPointHumidity (fg x1) (fg x2) (fg x3) (fg x4) (fg x5)
       Just (i,[x1]) | i == mkCId "InfoOzone" -> GInfoOzone (fg x1)
       Just (i,[x1]) | i == mkCId "InfoPrecipProbability" -> GInfoPrecipProbability (fg x1)
+      Just (i,[x1,x2]) | i == mkCId "InfoPrecipType" -> GInfoPrecipType (fg x1) (fg x2)
       Just (i,[x1]) | i == mkCId "InfoPressure" -> GInfoPressure (fg x1)
       Just (i,[x1]) | i == mkCId "InfoSky" -> GInfoSky (fg x1)
       Just (i,[x1,x2,x3,x4]) | i == mkCId "InfoTemperature" -> GInfoTemperature (fg x1) (fg x2) (fg x3) (fg x4)
-      Just (i,[x1,x2,x3,x4]) | i == mkCId "InfoTemperatureLong" -> GInfoTemperatureLong (fg x1) (fg x2) (fg x3) (fg x4)
-      Just (i,[x1,x2,x3,x4]) | i == mkCId "InfoTemperatureShort" -> GInfoTemperatureShort (fg x1) (fg x2) (fg x3) (fg x4)
+      Just (i,[x1,x2,x3,x4]) | i == mkCId "InfoTemperatureAverage" -> GInfoTemperatureAverage (fg x1) (fg x2) (fg x3) (fg x4)
+      Just (i,[x1,x2]) | i == mkCId "InfoTemperatureShort" -> GInfoTemperatureShort (fg x1) (fg x2)
       Just (i,[x1,x2,x3]) | i == mkCId "InfoWindBearing" -> GInfoWindBearing (fg x1) (fg x2) (fg x3)
+      Just (i,[x1,x2,x3]) | i == mkCId "InfoWindBlows" -> GInfoWindBlows (fg x1) (fg x2) (fg x3)
+      Just (i,[]) | i == mkCId "InfoWindCalm" -> GInfoWindCalm 
 
 
       _ -> error ("no Satellite " ++ show t)
@@ -688,6 +779,16 @@ instance Gf GTimezone where
 
 
       _ -> error ("no Timezone " ++ show t)
+
+instance Gf GTrue where
+  gf Ge = mkApp (mkCId "e") []
+
+  fg t =
+    case unApp t of
+      Just (i,[]) | i == mkCId "e" -> Ge 
+
+
+      _ -> error ("no True " ++ show t)
 
 instance Gf GWeekday where
   gf GFriday = mkApp (mkCId "Friday") []
@@ -814,5 +915,13 @@ instance Gf GYear where
 
 
       _ -> error ("no Year " ++ show t)
+
+instance Show GFalse
+
+instance Gf GFalse where
+  gf _ = undefined
+  fg _ = undefined
+
+
 
 

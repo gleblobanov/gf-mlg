@@ -5,16 +5,17 @@ concrete MessagesEng of Messages = open WeatherExtraEng, WeatherLexiconEng, Synt
 
   lincat
 
-   
-    City = NP ;
-    Latitude = NP ;
+    Location  = NP ;
+    City      = NP ;
+    Country   = NP ;
+    Latitude  = NP ;
     Longitude = NP ;
 
-    Day = NP ;
-    Weekday = NP ;
-    Month = NP ;
-    Year = NP ;
-    Time = NP ;
+    Day      = NP ;
+    Weekday  = NP ;
+    Month    = NP ;
+    Year     = NP ;
+    Time     = NP ;
     Timezone = NP ;
 
     Icon = VP ;
@@ -23,8 +24,9 @@ concrete MessagesEng of Messages = open WeatherExtraEng, WeatherLexiconEng, Synt
 
   lin
 
-    Gothenburg = mkNP Gothenburg_PN ; 
-    Osaka      = mkNP Osaka_PN ;
+    LocationVal v = mkValueNP v.s ;
+    CityVal v = mkValueNP v.s ;
+    CountryVal v = mkValueNP v.s ;
     
     LatitudeVal v  = mkValueNP v.s;
     LongitudeVal v = mkValueNP v.s;
@@ -75,9 +77,10 @@ concrete MessagesEng of Messages = open WeatherExtraEng, WeatherLexiconEng, Synt
     Temperature = NP ;
     ApparentTemperature = NP ;
     AverageTemperature = NP ;
-    AverageTempType = AP ;
+    AverageTempType = Avrg ;
     TempType = AP ;
 
+    
   lin
 
     TemperatureVal v = mkUnitNP v.s "\176C" ;
@@ -130,23 +133,28 @@ concrete MessagesEng of Messages = open WeatherExtraEng, WeatherLexiconEng, Synt
   lincat
 
     DewPoint = NP ;
+    AverageDewPoint = NP ;
     Humidity = NP ;
-    HumidityType = AP ;
+    AverageHumidity = NP ;
+    AverageHumidityType = Avrg ;
 
   lin
 
    DewPointVal v = mkUnitNP v.s "\176C";
+   AverageDewPointVal v  = mkUnitNP v.s "\176C" ;
    HumidityVal v = mkUnitNP v.s "%";
+   AverageHumidityVal v = mkUnitNP v.s "%";
+   AverageHumidityTypeVal v  = v ;
 
-   SeverelyUncomofortableHumid = mkAP severely_AdA uncomfortable_A ;
-   ExtremelyUncomfortableHumid = mkAP extremely_AdA uncomfortable_A ;
-   QuiteUncomfortableHumid = mkAP quite_Adv uncomfortable_A ; 
-   SomewhatUncomfortableHumid = mkAP somewhat_AdA uncomfortable_A ;
-   ScarcelyUncomfortableHumid = mkAP scarcely_AdA uncomfortable_A;
-   ComfortableHumid =  mkAP comfortable_A; 
-   VeryComfortableHumid = mkAP very_AdA uncomfortable_A;
-   ScarcelyUncomfortableDry = mkAP quite_Adv uncomfortable_A;
-   HumidityNone = mkAP quite_Adv uncomfortable_A;
+   -- SeverelyUncomofortableHumid = mkAP severely_AdA uncomfortable_A ;
+   -- ExtremelyUncomfortableHumid = mkAP extremely_AdA uncomfortable_A ;
+   -- QuiteUncomfortableHumid = mkAP quite_Adv uncomfortable_A ; 
+   -- SomewhatUncomfortableHumid = mkAP somewhat_AdA uncomfortable_A ;
+   -- ScarcelyUncomfortableHumid = mkAP scarcely_AdA uncomfortable_A;
+   -- ComfortableHumid =  mkAP comfortable_A; 
+   -- VeryComfortableHumid = mkAP very_AdA uncomfortable_A;
+   -- ScarcelyUncomfortableDry = mkAP quite_Adv uncomfortable_A;
+   -- HumidityNone = mkAP quite_Adv uncomfortable_A;
     
 
    {- Clouds -}
@@ -171,46 +179,46 @@ concrete MessagesEng of Messages = open WeatherExtraEng, WeatherLexiconEng, Synt
   lincat
 
   
-    WindSpeed = NP ;
-    WindSpeedType = VP ;
+    WindSpeed = Adv ;
+    WindSpeedType = NP ;
     WindBearing = NP ;
     WindBearingType = Adv ;
 
   lin
-    WindSpeedVal v = mkUnitNP v.s "km/h" ;
+    WindSpeedVal v = mkUnitAdv "at " (mkUnitAdv v.s "km/h").s ;
     WindBearingVal v = mkValueNP v.s ;
 
-    Calm           = mkVP calm_A ;
-    LightAir       = mkVP (mkCN light_A air_N) ;
-    LightBreeze    = mkVP (mkCN light_A breeze_N) ;
-    GentleBreeze   = mkVP (mkCN gentle_A breeze_N);
-    ModerateBreeze = mkVP (mkCN moderate_A breeze_N);
-    FreshBreeze    = mkVP (mkCN fresh_A breeze_N);
-    StrongBreeze   = mkVP (mkCN strong_A breeze_N);
-    ModerateGale   = mkVP (mkCN moderate_A gale_N);
-    FreshGale      = mkVP (mkCN fresh_A gale_N);
-    StrongGale     = mkVP (mkCN strong_A gale_N);
-    WholeGale      = mkVP (mkCN whole_A gale_N);
-    Storm          = mkVP storm_N;
-    Hurricane      = mkVP hurricane_N;
+    Calm           = mkNP the_Det (mkCN calm_A air_N) ;
+    LightAir       = mkNP a_Det (mkCN light_A air_N) ;
+    LightBreeze    = mkNP a_Det (mkCN light_A breeze_N) ;
+    GentleBreeze   = mkNP a_Det (mkCN gentle_A breeze_N);
+    ModerateBreeze = mkNP a_Det (mkCN moderate_A breeze_N);
+    FreshBreeze    = mkNP a_Det (mkCN fresh_A breeze_N);
+    StrongBreeze   = mkNP a_Det (mkCN strong_A breeze_N);
+    ModerateGale   = mkNP a_Det (mkCN moderate_A gale_N);
+    FreshGale      = mkNP a_Det (mkCN fresh_A gale_N);
+    StrongGale     = mkNP a_Det (mkCN strong_A gale_N);
+    WholeGale      = mkNP a_Det (mkCN whole_A gale_N);
+    Storm          = mkNP a_Det storm_N;
+    Hurricane      = mkNP a_Det hurricane_N;
 
     
-    WindN   = mkAdv "N" ;
-    WindNNE = mkAdv "NNE" ;
-    WindNE  = mkAdv "NE" ;
-    WindENE = mkAdv "ENE" ;
-    WindE   = mkAdv "E" ;
-    WindESE = mkAdv "ESE" ;
-    WindSE  = mkAdv "SE" ;
-    WindSSE = mkAdv "SSE" ;
-    WindS   = mkAdv "S" ;
-    WindSSW = mkAdv "SSW" ;
-    WindSW  = mkAdv "SW" ;
-    WindWSW = mkAdv "WSW" ;
-    WindW   = mkAdv "W" ;
-    WindWNW = mkAdv "WNW" ;
-    WindNW  = mkAdv "NW" ;
-    WindNNW = mkAdv "NNW" ;
+    WindN   = mkAdv "in N" ;
+    WindNNE = mkAdv "in NNE" ;
+    WindNE  = mkAdv "in NE" ;
+    WindENE = mkAdv "in ENE" ;
+    WindE   = mkAdv "in E" ;
+    WindESE = mkAdv "in ESE" ;
+    WindSE  = mkAdv "in SE" ;
+    WindSSE = mkAdv "in SSE" ;
+    WindS   = mkAdv "in S" ;
+    WindSSW = mkAdv "in SSW" ;
+    WindSW  = mkAdv "in SW" ;
+    WindWSW = mkAdv "in WSW" ;
+    WindW   = mkAdv "in W" ;
+    WindWNW = mkAdv "in WNW" ;
+    WindNW  = mkAdv "in NW" ;
+    WindNNW = mkAdv "in NNW" ;
 
 
 
@@ -236,18 +244,37 @@ concrete MessagesEng of Messages = open WeatherExtraEng, WeatherLexiconEng, Synt
 
 
 
-    {- Averages -}
+  {- Averages -}
 
-  lincat Average = AP ;
+  param Avrg = avrgRL
+             | avrgSL
+             | avrgL
+             | avrgE
+             | avrgSG
+             | avrgG
+             | avrgRG ;
+
+
+  lincat Average = Avrg ;
 
   lin 
+    RemarkablyLess    = avrgRL ;
+    SlightlyLess      = avrgSL ;
+    Less              = avrgL ;
+    Equal             = avrgE ;
+    SlightlyGreater   = avrgSG ;
+    Greater           = avrgG ;
+    RemarkablyGreater = avrgRG ;
 
-    RemarkablyLess    = mkAP remarkably_low_A (mkNP average_N) ;
-    SlightlyLess      = mkAP slightly_low_A (mkNP average_N)  ;
-    Less              = mkAP low_A (mkNP average_N)  ;
-    Equal             = mkAP equal_to_A2 (mkNP average_N) ; 
-    SlightlyGreater   = mkAP slightly_high_A (mkNP average_N)  ;
-    Greater           = mkAP high_A (mkNP average_N)  ;
-    RemarkablyGreater = mkAP remarkably_high_A (mkNP average_N)  ;
+
+  oper mkAvrg : NP -> Avrg -> AP
+         = \ np, avrg -> case avrg of {
+           avrgRL => mkAP much_AdA (mkAP low_A np) ;       -- much lower
+           avrgL  => mkAP low_A np ;                       -- lower
+           avrgSL => mkAP slightly_AdA (mkAP low_A np)  ;  -- slightly lower
+           avrgE  => mkAP equal_to_A2 np ;                 -- equal to
+           avrgSG => mkAP slightly_AdA (mkAP high_A np)  ; -- slightly higher
+           avrgG  => mkAP high_A np  ;                     -- higher
+           avrgRG  => mkAP much_AdA (mkAP high_A np) } ;   -- much higher
 
 }

@@ -5,7 +5,9 @@ abstract Messages = {
 
   cat
 
+    Location ;
     City ;
+    Country ;
     Latitude ;
     Longitude ;
 
@@ -20,8 +22,9 @@ abstract Messages = {
 
   fun
 
-    Osaka      : City ;
-    Gothenburg : City ;
+    LocationVal : String -> Location ;
+    CityVal    : String -> City ;
+    CountryVal : String -> Country ;
 
     LatitudeVal  : Float -> Latitude ;
     LongitudeVal : Float -> Longitude ;
@@ -77,6 +80,10 @@ abstract Messages = {
     ApparentTemperature ;
     TempType ;
 
+
+  cat  AverageTempType ;
+  data AverageTempTypeVal :  Average -> AverageTempType ;
+
   fun
 
     TemperatureVal :         Float -> Temperature ;
@@ -102,15 +109,17 @@ abstract Messages = {
 
     PrecipIntensity ;
     AveragePrecipIntensity ;
+    AveragePrecipType ;
     PrecipType ;
     PrecipProbability ;
     PrecipProbabilityType ;
     
   fun
 
-    PrecipIntensityVal :     Float -> PrecipIntensity ;
+    PrecipIntensityVal :  Float -> PrecipIntensity ;
     AveragePrecipIntensityVal : Float -> AveragePrecipIntensity ;
-    PrecipProbabilityVal :   Float -> PrecipProbability ;
+    AveragePrecipTypeVal : Average -> AveragePrecipType ;
+    PrecipProbabilityVal : Float -> PrecipProbability ;
 
     Rain :       PrecipType ;
     Snow :       PrecipType ;
@@ -130,15 +139,19 @@ abstract Messages = {
   cat
 
     DewPoint ;
+    AverageDewPoint ;
     Humidity ;
     AverageHumidity ;
+    AverageHumidityType ;
     HumidityType ;
 
   fun
 
     DewPointVal :            Float -> DewPoint ;
+    AverageDewPointVal :     Float -> AverageDewPoint ;
     HumidityVal :            Float -> Humidity ;
     AverageHumidityVal :     Float -> AverageHumidity ;
+    AverageHumidityTypeVal : Average -> AverageHumidityType ;
 
     SeverelyUncomofortableHumid : HumidityType ;
     ExtremelyUncomfortableHumid : HumidityType ;
@@ -173,7 +186,6 @@ abstract Messages = {
   cat
     
     WindSpeed ;
-    WindSpeedType ;
     WindBearing ;
     WindBearingType ;
 
@@ -182,20 +194,23 @@ abstract Messages = {
     WindSpeedVal :           Float -> WindSpeed ;
     WindBearingVal :         Float -> WindBearing ;
 
-    Calm :           WindSpeedType ;
-    LightAir :       WindSpeedType ;
-    LightBreeze :    WindSpeedType ;
-    GentleBreeze :   WindSpeedType ;
-    ModerateBreeze : WindSpeedType ;
-    FreshBreeze :    WindSpeedType ;
-    StrongBreeze :   WindSpeedType ;
-    ModerateGale :   WindSpeedType ;
-    FreshGale :      WindSpeedType ;
-    StrongGale :     WindSpeedType ;
-    WholeGale :      WindSpeedType ;
-    Storm :          WindSpeedType ;
-    Hurricane :      WindSpeedType ;
-    
+  cat WindSpeedType ;
+
+  data  Calm :           WindSpeedType ;
+        LightAir :       WindSpeedType ;
+        LightBreeze :    WindSpeedType ;
+        GentleBreeze :   WindSpeedType ;
+        ModerateBreeze : WindSpeedType ;
+        FreshBreeze :    WindSpeedType ;
+        StrongBreeze :   WindSpeedType ;
+        ModerateGale :   WindSpeedType ;
+        FreshGale :      WindSpeedType ;
+        StrongGale :     WindSpeedType ;
+        WholeGale :      WindSpeedType ;
+        Storm :          WindSpeedType ;
+        Hurricane :      WindSpeedType ;
+
+   fun 
     WindN :   WindBearingType ;
     WindNNE : WindBearingType ;
     WindNE :  WindBearingType ;
@@ -247,14 +262,6 @@ abstract Messages = {
        SlightlyGreater : Average ;
        Greater : Average ;
        RemarkablyGreater : Average ;
-
-  -- data Average = RemarkablyLess
-  --              | SlightlyLess
-  --              | Less
-  --              | Equal
-  --              | SlightlyGreater
-  --              | Greater
-  --              | RemarkablyGreater ;
 
 
   }
