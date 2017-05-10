@@ -1,2 +1,2 @@
 # gf-mlg
-A general library for multilingual natural language generation for Haskell and Grammatical Framework
+The weather report demo of multilingual natural language generation by means of Grammatical Framework.
