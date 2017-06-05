@@ -1,115 +1,108 @@
-concrete WeatherRus of Weather = RSTRus, MessagesRus ** open SyntaxRus, WeatherLexiconRus, WeatherExtraRus in {
+concrete WeatherRus of Weather = RSTRus, MessagesRus ** open WeatherLexiconRus, WeatherExtraRus, SyntaxRus  in {
 
 
-  lin
-
-    InfoLocation city day month year weekday time icon = mkPhr (mkS (mkAdv empty_Conj (mkAdv v_Acc_Prep (mkNP comma_Conj weekday (mkNP empty_Conj day (mkNP empty_Conj month year)))) (mkAdv empty_Prep time)) (mkS (mkAdv v_Prepos_Prep city) (mkS presentTense simultaneousAnt positivePol (mkCl icon)))) ;
-
-
-
-    InfoTemperature tempType temp appTemp =
-      mkPhr (colon (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP tempType)))
-               (mkS and_Conj (mkListS (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP temperatura_N) temp))
-                                (mkS presentTense simultaneousAnt positivePol (mkCl appTemp (mkAdv po_Dat_Prep (mkNP aPl_Det oshushenie_N))))))) ;
-    
-
-    InfoPrecipNo = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP (mkAdv net_Gen_Prep (mkNP aPl_Det osadki_N))))) ; 
+  -- Сейчас понедельник, 29 мая, 2017 г. в Гетеборге, Швеция (57.709, 11.975)
+  lin InfoLocation weekday day month year time loc lat long icon = dateLocation_Phr
+        where
+        {
+          date_NP :          NP  = mkNPComma weekday (mkNPComma day (mkNPComma month (mkNPComma year time))) ;
+          date_S :           S   = mkS presentTense simultaneousAnt positivePol (mkCl (mkVP date_NP)) ;
+          location_NP :      NP  = mkNPNoPunct loc (prnths (mkNPComma lat long));
+          location_Adv :     Adv = mkAdv v_Prepos_Prep location_NP ;
+          -- dateLocation_Phr : Phr = mkPhr (mkS seychas_Adv (mkS date_S location_Adv))
+          dateLocation_Phr : Phr = mkPhr (mkS date_S location_Adv)
+        };
 
 
-    InfoPrecipType precipIntencity precipType
+
+
+    -- Температура 19 C, что среднее для этой даты значение . По ощущениям 23 C.
+  lin InfoTemperatureShort _ _ temp appTemp = mkPhr (semicolon temp_S appTemp_S)
+        where
+        {
+          appTemp_S : S = mkS presentTense simultaneousAnt positivePol (mkCl appTemp (mkAdv po_Dat_Prep (mkNP aPl_Det oshushenie_N))) ;
+          data_Adv : Adv = mkAdv for_Prep (mkNP this_Det data_N) ;
+          srednee_AP : AP = mkAP sredniy_dlya_A2 (mkNP this_Det data_N) ;
+          znachenie_CN : CN = mkCN srednee_AP (mkCN znachenie_N) ;
+          avrg_RS : RS = mkRS (mkTemp presentTense simultaneousAnt) positivePol (mkRCl chto_RP znachenie_CN ) ;
+          temp_NP : NP = mkNP temp avrg_RS  ;
+          temp_S : S = mkS presentTense simultaneousAnt positivePol (mkCl (mkNP theSg_Det temperatura_N) temp_NP)
+        } ;
+ 
+
+    -- Температура 19 C, и 23 C по ощущениям. Это выше среднего (17 С) для этой даты.
+  lin InfoTemperature avTempType avTemp temp appTemp = mkPhr (fullstop (conj temp_S i_Conj osh_S) avrg_S)
+        where
+        {
+          temp_S : S = mkS presentTense simultaneousAnt positivePol (mkCl (mkNP theSg_Det temperatura_N) temp) ;
+          osh_S  : S = mkS presentTense simultaneousAnt positivePol (mkCl appTemp (mkAdv po_Dat_Prep (mkNP aPl_Det oshushenie_N))) ;
+
+          avrg_VP : VP = mkVP (mkAP ravno_A2 avTemp) ;
+          avrg_RS : RS = mkRS (mkTemp presentTense simultaneousAnt) positivePol (mkRCl which_RP avrg_VP) ;
+          avrg_NP    : NP  = mkNPNoPunct (mkNP srednee_N) (prnths avTemp) ;
+          avrg_Cl    : Cl  = mkCl (mkNP this_Det) (mkVP (mkAvrg avrg_NP avTempType)) ;
+
+          data_Adv : Adv = mkAdv for_Prep (mkNP this_Det data_N) ;
+          avrg_S     : S   = mkS data_Adv (mkS presentTense simultaneousAnt positivePol avrg_Cl)
+        } ;
+
+
+
+
+  lin  InfoPrecipType precipIntencity precipType
       = mkPhr (mkS and_Conj (mkListS (mkS presentTense simultaneousAnt positivePol precipType)
                                 (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP (mkCN intensivnost_N2 (mkNP aPl_Det osadki_N))) precipIntencity)))) ;
 
 
-    InfoPrecipProbability precipProbability =
+ lin   InfoPrecipProbability precipProbability =
       mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP (mkCN veroyatnost_N2 (mkNP aPl_Det osadki_N))) precipProbability))  ;
 
 
-    InfoDewPointHumidity humidity dewPoint humidityType =
-      mkPhr (colon (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP vlazhnost_N) (mkVP humidityType)))
-               (mkS and_Conj (mkListS (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP (mkCN otnositelnij_A vlazhnost_N)) humidity))
-                                (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP (mkCN tochka_N2 (mkNP rosa_N))) dewPoint))))) ;
+
+    
+
+    -- Относительная влажность 34% и точка росы 34 С. Это выше среднего (43% и 45 С соответственно) для этой даты.
+
+  lin InfoDewPointHumidity avrgType avrgHmdt hmdt avrgDwPnt dwPnt = mkPhr (fullstop (conj rltHmdt_S i_Conj dwPnt_S) avrg_S)
+        where
+        {
+          rltHmdt_S       : S  = mkS presentTense simultaneousAnt positivePol (mkCl (mkNP vlazhnost_N) hmdt) ;
+          dwPnt_S         : S  = mkS presentTense simultaneousAnt positivePol (mkCl (mkNP (mkCN tochka_N2 (mkNP rosa_N))) dwPnt) ;
 
 
-    InfoSky cloudCoverType = mkPhr (mkS presentTense simultaneousAnt positivePol (mkClNP cloudCoverType))  ;
+          avrgVals_NP : NP = mkNP (mkNPConj avrgHmdt i_Conj avrgDwPnt) sootvetstvenno_Adv ;
+          avrg_NP    : NP  = mkNPNoPunct (mkNP srednee_N) (prnths avrgVals_NP) ;
+          avrg_Cl    : Cl  = mkCl (mkNP this_Det) (mkVP (mkAvrg avrg_NP avrgType)) ;
+
+          data_Adv : Adv = mkAdv for_Prep (mkNP this_Det data_N) ;
+          avrg_S     : S   = mkS data_Adv (mkS presentTense simultaneousAnt positivePol avrg_Cl) 
+        } ;
+      
+
+
+   lin InfoSky cloudCoverType = mkPhr (mkS presentTense simultaneousAnt positivePol (mkClNP cloudCoverType))  ;
  
+  lin  InfoWindBearing windSpeed windSpeedType windBearingType =
+         mkPhr  (mkS presentTense simultaneousAnt positivePol
+                   (mkCl
+                      (mkNP
+                            (mkCN (mkN2CN windSpeedType)
+                               (mkNP (mkCN windBearingType napravlenie_N))))
+                      (mkVP
+                         (mkVP dut_V)
+                         (mkAdv
+                            so_Inst_Prep
+                            (mkNP
+                               (mkCN (mkCN skorost_N) windSpeed)))))) ;
 
 
-    InfoWindNo = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP (mkAdv net_Gen_Prep (mkNP veter_N))))) ; 
+  lin  InfoWindCalm _ _ _ = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP (mkAdv net_Gen_Prep (mkNP veter_N))))) ; 
 
-    InfoWindBearing windSpeed windSpeedType windBearingType =
-      mkPhr  (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP aSg_Det (mkCN (mkN2CN windSpeedType) (mkNP (mkCN windBearingType napravlenie_N)))) (mkVP (mkVP dut_V) (mkAdv so_Inst_Prep (mkNP (mkCN (mkCN skorost_N) windSpeed)))))) ;
-
-
-    InfoPressure pressure =
+ lin   InfoPressure pressure =
       mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP (mkCN (mkCN atmosphernij_A davlenie_N) (mkAdv na_PreposVNa_Prep (mkNP (mkCN uroven_N2 (mkNP more_N)))))) pressure)) ;
 
-    InfoOzone ozone =
+  lin  InfoOzone ozone =
       mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkNP (mkCN koncentraciya_N2 (mkNP (mkCN atmosphernij_A ozon_N)))) ozone)) ;
-
-
--- lin
-
---   CityVal v = mkPN "Калининград" masculine singular inanimate ;
-
---   LatitudeVal v = lin NP {s = \\_ => v.s; n = Sg; p = P3;
---                                g = PNoGen; anim=Inanimate; pron=False} ;
---   LongitudeVal v = lin NP {s = \\_ => v.s; n = Sg; p = P3;
---                                g = PNoGen; anim=Inanimate; pron=False} ;
---   TimeVal v = lin NP {s = \\_ => v.s; n = Sg; p = P3;
---                                g = PNoGen; anim=Inanimate; pron=False} ;
---   TimezoneVal v = lin NP {s = \\_ => v.s; n = Sg; p = P3;
---                                g = PNoGen; anim=Inanimate; pron=False} ;
---   PrecipIntensityVal v = lin NP {s = \\_ => v.s ++ "мм/ч"; n = Sg; p = P3;
---                                g = PNoGen; anim=Inanimate; pron=False} ;
---   PrecipProbabilityVal v = lin NP {s = \\_ => v.s; n = Sg; p = P3;
---                                g = PNoGen; anim=Inanimate; pron=False} ;
---   TemperatureVal v = lin NP {s = \\_ => v.s ++ "C"; n = Sg; p = P3;
---                                g = PNoGen; anim=Inanimate; pron=False} ;
---   ApparentTemperatureVal v = lin NP {s = \\_ => v.s ++ "C"; n = Sg; p = P3;
---                                g = PNoGen; anim=Inanimate; pron=False} ;
---   DewPointVal v = lin NP {s = \\_ => v.s ++ "C"; n = Sg; p = P3;
---                                g = PNoGen; anim=Inanimate; pron=False} ;
---   HumidiyVal v = lin NP {s = \\_ => v.s ++ "%"; n = Sg; p = P3;
---                                g = PNoGen; anim=Inanimate; pron=False} ;
---   WindSpeedVal v = lin NP {s = \\_ => v.s ++ "м/с"; n = Sg; p = P3;
---                                g = PNoGen; anim=Inanimate; pron=False} ;
---   WindBearingVal v = lin NP {s = \\_ => v.s; n = Sg; p = P3;
---                                g = PNoGen; anim=Inanimate; pron=False} ;
---   CloudCoverVal v = lin NP {s = \\_ => v.s; n = Sg; p = P3;
---                                g = PNoGen; anim=Inanimate; pron=False} ;
---   PressureVal v = lin NP {s = \\_ => v.s; n = Sg; p = P3;
---                                g = PNoGen; anim=Inanimate; pron=False} ;
---   OzoneVal v = lin NP {s = \\_ => v.s; n = Sg; p = P3;
---                                g = PNoGen; anim=Inanimate; pron=False} ;
-
-
---   CityTemp city temp
---     = mkPhr (mkS (ConstructorsRus.mkAdv in_Prep (SyntaxRus.mkNP city))
---           (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxRus.mkNP theSg_Det temperature_N) temp))) ;
-
---   InCity city = mkPhr (mkUtt (ConstructorsRus.mkAdv in_Prep (SyntaxRus.mkNP city))) ;
-
---   TemperatureIs v              = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxRus.mkNP theSg_Det temperature_N) v)) ;
---   ApparentTemperatureIs v      = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxRus.mkNP theSg_Det (mkCN apparent_A temperature_N)) v)) ;
---   LatitudeIs v          = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxRus.mkNP theSg_Det latitude_N) v)) ;
---   LongitudeIs v         = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxRus.mkNP theSg_Det longitude_N) v)) ;
---   PrecipIntensityIs v   = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxRus.mkNP theSg_Det (mkCN precipitation_N (SyntaxRus.mkNP intensity_N))) v)) ;
---   PrecipProbabilityIs v = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxRus.mkNP theSg_Det (mkCN precipitation_N (SyntaxRus.mkNP probability_N))) v)) ;
---   DewPointIs v          = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxRus.mkNP theSg_Det (mkCN dew_point_N)) v)) ;
---   HumidityIs v           = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxRus.mkNP theSg_Det humidity_N) v)) ;
---   WindSpeedIs v         = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxRus.mkNP theSg_Det (mkCN wind_N (SyntaxRus.mkNP speed_N))) v)) ;
---   WindBearingIs v       = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxRus.mkNP theSg_Det (mkCN wind_N (SyntaxRus.mkNP bearing_N))) v)) ;
---   CloudCoverIs v        = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxRus.mkNP theSg_Det (mkCN cloud_N (SyntaxRus.mkNP cover_N))) v)) ;
---   PressureIs v          = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxRus.mkNP theSg_Det pressure_N) v)) ;
---   OzoneIs v             = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (SyntaxRus.mkNP theSg_Det ozone_N) v)) ;
-
---   Freezing = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP freezing_A))) ;
---   Chilly = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP chilly_A))) ;
---   Warm = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP warm_A))) ; 
---   Hot = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP hot_A))) ;  
---   Boiling = mkPhr (mkS presentTense simultaneousAnt positivePol (mkCl (mkVP (mkAP very_AdA hot_A) ))) ;
-
 
 
 

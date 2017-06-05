@@ -6,26 +6,26 @@ name:                gf-mlg
 
 -- The package version.  See the Haskell package versioning policy (PVP) 
 -- for standards guiding when and how versions should be incremented.
--- http://www.haskell.org/haskellwiki/Package_versioning_policy
+-- https://wiki.haskell.org/Package_versioning_policy
 -- PVP summary:      +-+------- breaking API changes
 --                   | | +----- non-breaking API additions
 --                   | | | +--- code changes with no API change
 version:             0.1.0.0
 
 -- A short (one-line) description of the package.
-synopsis:            The weather report case
+-- synopsis:            
 
 -- A longer description of the package.
 -- description:         
 
 -- The license under which the package is released.
-license:             GPL-3
+license:             BSD3
 
 -- The file containing the license text.
 license-file:        LICENSE
 
 -- The package author(s).
-author:              Gleb Lobanov
+author:              Gleb
 
 -- An email address to which users can send suggestions, bug reports, and 
 -- patches.
@@ -34,13 +34,13 @@ maintainer:          mail@gleblobanov.ru
 -- A copyright notice.
 -- copyright:           
 
-category:            Language
+-- category:            
 
 build-type:          Simple
 
 -- Extra files to be distributed with the package, such as examples or a 
 -- README.
-extra-source-files:  README.md
+extra-source-files:  ChangeLog.md, README.md
 
 -- Constraint on the version of Cabal needed to build this package.
 cabal-version:       >=1.10
@@ -54,10 +54,10 @@ executable gf-mlg
   -- other-modules:       
   
   -- LANGUAGE extensions used by modules in this package.
-  other-extensions:    DeriveGeneric, DeriveDataTypeable
+  other-extensions:    DeriveGeneric
   
   -- Other library packages from which modules are imported.
-  build-depends:       base >=4.8 && <4.9, http-client >=0.5 && <0.6, http-client-tls >=0.3 && <0.4, utf8-string >=1.0 && <1.1, json >=0.9 && <0.10, aeson >=1.1 && <1.2, gf >=3.8 && <3.9, MissingH >=1.3 && <1.4, fullstop >=0.1 && <0.2, time >=1.5 && <1.6, random
+  build-depends:       base >=4.9 && <4.10, gf >=3.8 && <3.9, utf8-string >=1.0 && <1.1, json >=0.9 && <0.10, random >=1.1 && <1.2, time >=1.6 && <1.7, http-client >=0.5.6, http-client-tls >= 0.3, MissingH >=1.4.0.1, aeson >=1.2.0.0, fullstop >=0.1
   
   -- Directories containing source files.
   hs-source-dirs:      src

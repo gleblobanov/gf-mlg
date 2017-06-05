@@ -2,7 +2,7 @@
 
 module GoogleMaps where
 
-import Data.List.Utils (replace)
+import Data.List.Utils
 import Network.HTTP.Client
 import Network.HTTP.Client.TLS
 import Data.ByteString.Lazy.UTF8 as UTF8

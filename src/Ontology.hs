@@ -73,21 +73,21 @@ extractOntology r loc to api at adp ah = Ontology {
   year                   = Nothing,
   timezone               = getTimezone r,
   precipIntensity        = getPrecipIntensity r,
-  averagePrecipIntensity = Just $ GAveragePrecipIntensityVal $ GFloat api,
+  averagePrecipIntensity = Just $ GAveragePrecipIntensityVal $ GFloat $ rnd api,
   precipProbability      = getPrecipProbability r,
   precipProbabilityType  = getPrecipProbabilityType r,
   precipType             = getPrecipType r,
   averagePrecipType      = Nothing,
   icon                   = getIcon r,
   temperature            = getTemperature r,
-  averageTemperature     = Just $ GAverageTemperatureVal $ GFloat at,
+  averageTemperature     = Just $ GAverageTemperatureVal $ GFloat $ rnd at,
   apparentTemperature    = getApparentTemperature r,
   tempType               = getTempType r,
   averageTempType        = Nothing,
   dewPoint               = getDewPoint r,
-  averageDewPoint        = Just $ GAverageDewPointVal $ GFloat adp,
+  averageDewPoint        = Just $ GAverageDewPointVal $ GFloat $ rnd adp,
   humidity               = getHumidity r,
-  averageHumidity        = Just $ GAverageHumidityVal $ GFloat (ah * 100),
+  averageHumidity        = Just $ GAverageHumidityVal $ GFloat $ rnd (ah * 100),
   humidityType           = getHumidityType r,
   averageHumidityType    = Nothing,
   windSpeed              = getWindSpeed r,
@@ -100,8 +100,8 @@ extractOntology r loc to api at adp ah = Ontology {
   ozone                  = getOzone r}
 
 
-getLatitude r  = applyToResponseField r DS.latitude (GLatitudeVal . GFloat)
-getLongitude r = applyToResponseField r DS.longitude (GLongitudeVal . GFloat)
+getLatitude r  = applyToResponseField r DS.latitude (GLatitudeVal . GFloat . rnd)
+getLongitude r = applyToResponseField r DS.longitude (GLongitudeVal . GFloat . rnd)
 getTimezone r  = applyToResponseField r DS.timezone (GTimezoneVal . GString)
 getTimeUnix r  = applyToDataPointField r DS.currently DS.time id
 
@@ -120,11 +120,11 @@ getIcon r = applyToDataPointField r DS.currently DS.icon op
                 | otherwise = GIconNone
 
 getPrecipIntensity r = applyToDataPointField r DS.currently DS.precipIntensity op
-  where op v = GPrecipIntensityVal $ GFloat $ inch2mm v
+  where op v = GPrecipIntensityVal $ GFloat $ rnd $ inch2mm v
 
 
 getPrecipProbability r = applyToDataPointField r DS.currently DS.precipProbability op
-  where op v = GPrecipProbabilityVal $ GFloat v
+  where op v = GPrecipProbabilityVal $ GFloat $ rnd v
 
 getPrecipProbabilityType r = applyToDataPointField r DS.currently DS.precipProbability op
   where op v | v <= 0.2  = GVeryLow
@@ -142,11 +142,11 @@ getPrecipType r = applyToDataPointField r DS.currently DS.precipType op
 
 
 getTemperature r = applyToDataPointField r DS.currently DS.temperature op
-  where op v = GTemperatureVal $ GFloat $ f2c v
+  where op v = GTemperatureVal $ GFloat $ rnd $ f2c v
 
 
 getApparentTemperature r = applyToDataPointField r DS.currently DS.apparentTemperature op
-  where op v = GApparentTemperatureVal $ GFloat $ f2c v
+  where op v = GApparentTemperatureVal $ GFloat $ rnd $ f2c v
 
 getTempType r = applyToDataPointField r DS.currently DS.apparentTemperature op
   where op v | v' >= 40   = GExtremelyHot
@@ -162,11 +162,11 @@ getTempType r = applyToDataPointField r DS.currently DS.apparentTemperature op
           where v' = f2c v
 
 
-getDewPoint r = applyToDataPointField r DS.currently DS.dewPoint (GDewPointVal . GFloat . f2c)
+getDewPoint r = applyToDataPointField r DS.currently DS.dewPoint (GDewPointVal . GFloat . rnd . f2c)
 
 getAverageDewPoint r = Just $ GAverageDewPointVal $ GFloat 0.1 -- TODO provide a value
 
-getHumidity r = applyToDataPointField r DS.currently DS.humidity (GHumidityVal . GFloat . (100 *))
+getHumidity r = applyToDataPointField r DS.currently DS.humidity (GHumidityVal . GFloat . rnd . (100 *))
 
 
 getHumidityType :: DS.Response -> Maybe GHumidityType
@@ -196,7 +196,7 @@ getPerception h d | 26 <= d            && 73 <= h            = GSeverelyUncomofo
                   | otherwise = GHumidityNone
 
 
-getWindSpeed r = applyToDataPointField r DS.currently DS.windSpeed (GWindSpeedVal . GFloat . m2km)
+getWindSpeed r = applyToDataPointField r DS.currently DS.windSpeed (GWindSpeedVal . GFloat . rnd. m2km)
 
 
 getWindSpeedType r = applyToDataPointField r DS.currently DS.windSpeed op
@@ -216,7 +216,7 @@ getWindSpeedType r = applyToDataPointField r DS.currently DS.windSpeed op
           where v' = m2km v
 
 
-getWindBearing r = applyToDataPointField r DS.currently DS.windBearing (GWindBearingVal . GFloat)
+getWindBearing r = applyToDataPointField r DS.currently DS.windBearing (GWindBearingVal . GFloat . rnd)
 
 getWindBearingType r = applyToDataPointField r DS.currently DS.windBearing op
   where op v | 348.75 <= v || v <= 11.25 = GWindN
@@ -236,7 +236,7 @@ getWindBearingType r = applyToDataPointField r DS.currently DS.windBearing op
              | 303.75 <= v && v <= 326.25 = GWindNW
              | 326.25 <= v && v <= 348.75 = GWindNNW
 
-getCloudCover r = applyToDataPointField r DS.currently DS.cloudCover (GCloudCoverVal . GFloat . (10 *))
+getCloudCover r = applyToDataPointField r DS.currently DS.cloudCover (GCloudCoverVal . GFloat . rnd . (10 *))
 
 getCloudCoverType r = applyToDataPointField r DS.currently DS.cloudCover op
   where op v | v <= 0.1  = GClear
@@ -245,8 +245,8 @@ getCloudCoverType r = applyToDataPointField r DS.currently DS.cloudCover op
              | otherwise = GOvercast
 
 
-getPressure r = applyToDataPointField r DS.currently DS.pressure (GPressureVal . GFloat)
-getOzone r = applyToDataPointField r DS.currently DS.ozone (GOzoneVal . GFloat)
+getPressure r = applyToDataPointField r DS.currently DS.pressure (GPressureVal . GFloat . rnd)
+getOzone r = applyToDataPointField r DS.currently DS.ozone (GOzoneVal . GFloat . rnd)
 
 
 
@@ -258,6 +258,9 @@ m2km m = fromIntegral (floor  $ m * 1.6 * 100) / 100
 
 inch2mm :: Double -> Double
 inch2mm i = fromIntegral (floor  $ i * 25.4 * 100) / 100
+
+rnd :: Double -> Double
+rnd d = (fromInteger $ round $ d * (10^3)) / (10.0^^3)
 
 applyToDataPointField :: DS.Response -> (DS.Response -> Maybe DS.DataPoint) -> (DS.DataPoint -> Maybe a) -> (a -> b) -> Maybe b
 applyToDataPointField r f1 f2 op = let datapointMaybe = f1 r in case datapointMaybe of

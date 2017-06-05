@@ -3,6 +3,7 @@ resource WeatherLexiconRus = open LexiconRus, ParadigmsRus, ResRus, WeatherExtra
   oper
 
 
+
     dut_V = mkV
       Imperfective
       "дую"
@@ -40,6 +41,14 @@ resource WeatherLexiconRus = open LexiconRus, ParadigmsRus, ResRus, WeatherExtra
     -- calm_A          = mkA "calm" ;
     -- whole_A         = mkA "whole" ;
 
+
+    ravno_A  = mkA "равно" ;
+    ravno_A2 = mkA2 ravno_A "" Dat ;
+
+    sredniy_A = mkA "средний" ;
+    sredniy_dlya_A2 = mkA2 sredniy_A "для" Gen ;
+
+
     moroznij_A = mkA "морозный" ;
     holodnij_A = mkA "холодный" ;
     prohladnij_A = mkA "прохладный" ; 
@@ -59,6 +68,9 @@ resource WeatherLexiconRus = open LexiconRus, ParadigmsRus, ResRus, WeatherExtra
     vetrenno_Adv  = mkAdv "ветренно" ;
     tumanno_Adv   = mkAdv "туманно" ;
     oblachno_Adv  = mkAdv "облачно" ;
+    sootvetstvenno_Adv  = mkAdv "соответственно" ;
+
+    seychas_Adv  = mkAdv "сейчас" ;
 
     chastichno_AdA = mkAdA "частично" ;
     chrezvychajno_AdA = mkAdA "чрезвычайно" ;
@@ -67,8 +79,8 @@ resource WeatherLexiconRus = open LexiconRus, ParadigmsRus, ResRus, WeatherExtra
     yasnyj_A         = mkA "ясный" ;
     
     neizvestniy_A  = mkA "неизвестный" ;
-    visokij_A      = mkA "высокий" ;
-    nizkij_A       = mkA "низкий" ;
+    visokij_A      = mkA "высокий" "выше" ;
+    nizkij_A       = mkA "низкий" "ниже" ;
     umerennij_A    = mkA "умеренный" ;
     nekomfortnij_A = mkA "некомфортный" ;
     komfortnij_A   = mkA "комфортный" ;
@@ -113,9 +125,34 @@ resource WeatherLexiconRus = open LexiconRus, ParadigmsRus, ResRus, WeatherExtra
     otchasti_AdA  = mkAdA "отчасти" ;
     edva_AdA  = mkAdA "едва" ;
     dovolno_AdA = mkAdA "довольно" ;
+    gorazdo_AdA = mkAdA "гораздо" ;
+    nemnogo_AdA = mkAdA "немного" ;
+
 
 
     oshushenie_N = mkN "ощущение" ;
+
+
+
+    data_N = mkN
+      "дата" -- nomSg
+      "даты" -- genSg
+      "дате" -- datSg
+      "дату" -- accSg
+      "датой" -- instSg
+      "дате" -- preposSg
+      "дате" -- prepos2Sg
+      "даты" -- nomPl
+      "дат" -- genPl
+      "датам" -- datPl
+      "даты" -- accPl
+      "датами" -- instPl
+      "датах" -- preposPl
+      Fem 
+      Inanimate ;
+
+
+
 
 
     storm_N = mkN
@@ -136,6 +173,27 @@ resource WeatherLexiconRus = open LexiconRus, ParadigmsRus, ResRus, WeatherExtra
       Inanimate ;
 
 
+    znachenie_N = mkN
+      "значение" -- nomSg
+      "значение" -- genSg
+      "значению" -- datSg
+      "значение" -- accSg
+      "значением" -- instSg
+      "значении" -- preposSg
+      "значении" -- prepos2Sg
+      "значения" -- nomPl
+      "значения" -- genPl
+      "значениям" -- datPl
+      "значения" -- accPl
+      "значениями" -- instPl
+      "значениях" -- preposPl
+      Neut
+      Inanimate ;
+
+
+
+
+
 
     shtil_N = mkN
       "штиль" -- nomSg
@@ -152,6 +210,24 @@ resource WeatherLexiconRus = open LexiconRus, ParadigmsRus, ResRus, WeatherExtra
       "штилями" -- instPl
       "штилях" -- preposPl
       Masc 
+      Inanimate ;
+
+
+    srednee_N = mkN
+      "среднее" -- nomSg
+      "среднего" -- genSg
+      "среднему" -- datSg
+      "среднее" -- accSg
+      "средним" -- instSg
+      "среднем" -- preposSg
+      "среднем" -- prepos2Sg
+      "средние" -- nomPl
+      "средних" -- genPl
+      "средним" -- datPl
+      "средние" -- accPl
+      "средними" -- instPl
+      "средних" -- preposPl
+      Neut 
       Inanimate ;
 
 
@@ -487,7 +563,7 @@ resource WeatherLexiconRus = open LexiconRus, ParadigmsRus, ResRus, WeatherExtra
     Fem
     Inanimate ;
 
-   vlazhnost_N= mkN
+   vlazhnost_N = mkN
       "влажность" -- nomSg
       "влажности" -- genSg
       "влажности" -- datSg
@@ -1075,6 +1151,7 @@ resource WeatherLexiconRus = open LexiconRus, ParadigmsRus, ResRus, WeatherExtra
     empty_N = mkN "" ;
     empty_Conj = mkConj "" "" Sg ;
     comma_Conj = mkConj "" "," Sg ;
+    i_Conj = mkConj "и" "" Sg ;
 
     s_Gen_Prep  = mkPrep "с" Gen ;
     s_Acc_Prep  = mkPrep "с" Acc ;

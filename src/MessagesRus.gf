@@ -1,30 +1,30 @@
-concrete MessagesRus of Messages = open WeatherExtraRus, WeatherLexiconRus, SyntaxRus in {
+concrete MessagesRus of Messages = open WeatherLexiconRus, WeatherExtraRus, SyntaxRus in {
 
 
   {- Location & Time & Icon -}
 
   lincat
 
-   
-    City = NP ;
-    Latitude = NP ;
+    Location  = NP ;
+    City      = NP ;
+    Country   = NP ;
+    Latitude  = NP ;
     Longitude = NP ;
 
-    Day = NP ;
-    Weekday = NP ;
-    Month = NP ;
-    Year = NP ;
-    Time = NP ;
+    Day      = NP ;
+    Weekday  = NP ;
+    Month    = NP ;
+    Year     = NP ;
+    Time     = NP ;
     Timezone = NP ;
 
     Icon = VP ;
-    
 
+   lin
 
-  lin
-
-    Gothenburg = mkNP Gothenburg_PN ; 
-    Osaka      = mkNP Osaka_PN ;
+    LocationVal v = mkValueNP v.s ;
+    CityVal v = mkValueNP v.s ;
+    CountryVal v = mkValueNP v.s ;
     
     LatitudeVal v  = mkValueNP v.s;
     LongitudeVal v = mkValueNP v.s;
@@ -74,12 +74,16 @@ concrete MessagesRus of Messages = open WeatherExtraRus, WeatherLexiconRus, Synt
 
     Temperature = NP ;
     ApparentTemperature = NP ;
+    AverageTemperature = NP ;
+    AverageTempType = Avrg ;
     TempType = AP ;
 
   lin
 
     TemperatureVal v = mkUnitNP v.s "\176C" ;
     ApparentTemperatureVal v = mkUnitNP v.s "\176C" ;
+    AverageTemperatureVal v  = mkUnitNP v.s "\176C" ;
+    AverageTempTypeVal v = v ;
 
     ExtremelyHot = mkAP chrezvychajno_AdA zharkij_A ;
     VeryHot = mkAP ochen_AdA zharkij_A ;
@@ -126,23 +130,28 @@ concrete MessagesRus of Messages = open WeatherExtraRus, WeatherLexiconRus, Synt
   lincat
 
     DewPoint = NP ;
+    AverageDewPoint = NP ;
     Humidity = NP ;
-    HumidityType = AP ;
+    AverageHumidity = NP ;
+    AverageHumidityType = Avrg ;
 
   lin
 
    DewPointVal v = mkUnitNP v.s "\176C";
+   AverageDewPointVal v  = mkUnitNP v.s "\176C" ;
    HumidityVal v = mkUnitNP v.s "%";
+   AverageHumidityVal v = mkUnitNP v.s "%";
+   AverageHumidityTypeVal v  = v ;
 
-   SeverelyUncomofortableHumid = mkAP opasno_AdA nekomfortnij_A ;
-   ExtremelyUncomfortableHumid = mkAP krajne_AdA nekomfortnij_A ;
-   QuiteUncomfortableHumid = mkAP dovolno_AdA nekomfortnij_A; 
-   SomewhatUncomfortableHumid = mkAP otchasti_AdA nekomfortnij_A;
-   ScarcelyUncomfortableHumid = mkAP edva_AdA nekomfortnij_A;
-   ComfortableHumid =  mkAP komfortnij_A; 
-   VeryComfortableHumid = mkAP ochen_AdA komfortnij_A;
-   ScarcelyUncomfortableDry = mkAP dovolno_AdA nekomfortnij_A;
-   HumidityNone = mkAP dovolno_AdA nekomfortnij_A;
+   -- SeverelyUncomofortableHumid = mkAP opasno_AdA nekomfortnij_A ;
+   -- ExtremelyUncomfortableHumid = mkAP krajne_AdA nekomfortnij_A ;
+   -- QuiteUncomfortableHumid = mkAP dovolno_AdA nekomfortnij_A; 
+   -- SomewhatUncomfortableHumid = mkAP otchasti_AdA nekomfortnij_A;
+   -- ScarcelyUncomfortableHumid = mkAP edva_AdA nekomfortnij_A;
+   -- ComfortableHumid =  mkAP komfortnij_A; 
+   -- VeryComfortableHumid = mkAP ochen_AdA komfortnij_A;
+   -- ScarcelyUncomfortableDry = mkAP dovolno_AdA nekomfortnij_A;
+   -- HumidityNone = mkAP dovolno_AdA nekomfortnij_A;
     
 
    {- Clouds -}
@@ -162,7 +171,7 @@ concrete MessagesRus of Messages = open WeatherExtraRus, WeatherLexiconRus, Synt
     Overcast  = mkNP aPl_Det (mkCN sploshnoj_A oblako_N) ;
 
     
-  {- Wind -}
+ --  {- Wind -}
    
   lincat
 
@@ -191,22 +200,22 @@ concrete MessagesRus of Messages = open WeatherExtraRus, WeatherLexiconRus, Synt
     Hurricane      = mkCN uragan_N ;
 
     
-    N   = mkAP N_A ;
-    NNE = mkAP NNE_A ;
-    NE  = mkAP NE_A ;
-    ENE = mkAP ENE_A ;
-    E   = mkAP E_A ;
-    ESE = mkAP ESE_A ;
-    SE  = mkAP SE_A ;
-    SSE = mkAP SSE_A ;
-    S   = mkAP S_A ;
-    SSW = mkAP SSW_A ;
-    SW  = mkAP SW_A ;
-    WSW = mkAP WSW_A ;
-    W   = mkAP W_A ;
-    WNW = mkAP WNW_A ;
-    NW  = mkAP NW_A ;
-    NNW = mkAP NNW_A ;
+    WindN   = mkAP N_A ;
+    WindNNE = mkAP NNE_A ;
+    WindNE  = mkAP NE_A ;
+    WindENE = mkAP ENE_A ;
+    WindE   = mkAP E_A ;
+    WindESE = mkAP ESE_A ;
+    WindSE  = mkAP SE_A ;
+    WindSSE = mkAP SSE_A ;
+    WindS   = mkAP S_A ;
+    WindSSW = mkAP SSW_A ;
+    WindSW  = mkAP SW_A ;
+    WindWSW = mkAP WSW_A ;
+    WindW   = mkAP W_A ;
+    WindWNW = mkAP WNW_A ;
+    WindNW  = mkAP NW_A ;
+    WindNNW = mkAP NNW_A ;
 
 
 
@@ -229,5 +238,39 @@ concrete MessagesRus of Messages = open WeatherExtraRus, WeatherLexiconRus, Synt
   lin
 
     OzoneVal v = mkUnitNP v.s "DU";
+
+
+  {- Averages -}
+
+  param Avrg = avrgRL
+             | avrgSL
+             | avrgL
+             | avrgE
+             | avrgSG
+             | avrgG
+             | avrgRG ;
+
+
+  lincat Average = Avrg ;
+
+  lin 
+    RemarkablyLess    = avrgRL ;
+    SlightlyLess      = avrgSL ;
+    Less              = avrgL ;
+    Equal             = avrgE ;
+    SlightlyGreater   = avrgSG ;
+    Greater           = avrgG ;
+    RemarkablyGreater = avrgRG ;
+
+
+  oper mkAvrg : NP -> Avrg -> AP
+         = \ np, avrg -> case avrg of {
+           avrgRL => mkAP gorazdo_AdA (mkAP' (comparAP nizkij_A) np) ;       -- гораздо ниже
+           avrgL  => mkAP' (comparAP nizkij_A) np ;                       -- ниже
+           avrgSL => mkAP nemnogo_AdA (mkAP' (comparAP nizkij_A) np)  ;  -- немного ниже
+           avrgE  => mkAP ravno_A2 np ;                 -- равно
+           avrgSG => mkAP nemnogo_AdA (mkAP' (comparAP visokij_A) np)  ; -- немного выше
+           avrgG  => mkAP' (comparAP visokij_A) np  ;                     -- выше
+           avrgRG  => mkAP gorazdo_AdA (mkAP' (comparAP visokij_A) np) } ;   -- гораздо выше
 
 }

@@ -52,6 +52,9 @@ keyDS = "a270ce9fa3ff87b86cc329482c80e63f"
 queryCrnt lat long = "GET https://api.darksky.net/forecast/a270ce9fa3ff87b86cc329482c80e63f/"++ loc ++"/?exclude=minutely,hourly,daily,alerts,flags"
   where loc = show lat ++ "," ++ show long
 
+queryFtr lat long time = "GET https://api.darksky.net/forecast/a270ce9fa3ff87b86cc329482c80e63f/"++ loc ++"/?exclude=minutely,hourly,daily,alerts,flags"
+  where loc = show lat ++ "," ++ show long ++ "," ++ show time
+
 
 getResponse :: String -> IO (Maybe DarkSky.Response)
 getResponse query =  do req <- parseRequest query

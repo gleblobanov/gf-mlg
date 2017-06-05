@@ -1,6 +1,6 @@
 concrete WeatherEng of Weather = RSTEng, MessagesEng ** open WeatherLexiconEng, WeatherExtraEng, SyntaxEng in {
 
-  -- On Friday, 8 May, 2017, 14:07 in Gothenburg, Sweden (57.7089° N, 11.9746° E), it is sunny.
+  -- It is Monday, 29, May, 2017, 16:58 in Gothenburg, Sweden (57.709, 11.975).
   lin InfoLocation weekday day month year time loc lat long icon = dateLocation_Phr
         where
         {
@@ -8,7 +8,7 @@ concrete WeatherEng of Weather = RSTEng, MessagesEng ** open WeatherLexiconEng, 
           date_Adv :         Adv = mkAdv on_Prep date_NP ;
           location_NP :      NP  = mkNPNoPunct loc (prnths (mkNPComma lat long));
           location_Adv :     Adv = mkAdv in_Prep location_NP ;
-          icon_S :           S   = mkS presentTense simultaneousAnt positivePol (mkCl icon) ;
+          -- icon_S :           S   = mkS presentTense simultaneousAnt positivePol (mkCl icon) ;
           date_S :           S   = mkS presentTense simultaneousAnt positivePol (mkCl (mkVP date_NP)) ;
           dateLocation_Phr : Phr = mkPhr (mkS date_S location_Adv)
         };
