@@ -181,6 +181,9 @@ data GPrecipType =
 data GPressure = GPressureVal GFloat 
   deriving Show
 
+data GReport = GMakeReport GTense GSchema 
+  deriving Show
+
 data GSatellite =
    GInfoDewPointHumidity GAverageHumidityType GAverageHumidity GHumidity GAverageDewPoint GDewPoint 
  | GInfoOzone GOzone 
@@ -216,6 +219,11 @@ data GTempType =
   deriving Show
 
 data GTemperature = GTemperatureVal GFloat 
+  deriving Show
+
+data GTense =
+   GFuture 
+ | GPresent 
   deriving Show
 
 data GTime = GTimeVal GString 
@@ -666,6 +674,16 @@ instance Gf GPressure where
 
       _ -> error ("no Pressure " ++ show t)
 
+instance Gf GReport where
+  gf (GMakeReport x1 x2) = mkApp (mkCId "MakeReport") [gf x1, gf x2]
+
+  fg t =
+    case unApp t of
+      Just (i,[x1,x2]) | i == mkCId "MakeReport" -> GMakeReport (fg x1) (fg x2)
+
+
+      _ -> error ("no Report " ++ show t)
+
 instance Gf GSatellite where
   gf (GInfoDewPointHumidity x1 x2 x3 x4 x5) = mkApp (mkCId "InfoDewPointHumidity") [gf x1, gf x2, gf x3, gf x4, gf x5]
   gf (GInfoOzone x1) = mkApp (mkCId "InfoOzone") [gf x1]
@@ -753,6 +771,18 @@ instance Gf GTemperature where
 
 
       _ -> error ("no Temperature " ++ show t)
+
+instance Gf GTense where
+  gf GFuture = mkApp (mkCId "Future") []
+  gf GPresent = mkApp (mkCId "Present") []
+
+  fg t =
+    case unApp t of
+      Just (i,[]) | i == mkCId "Future" -> GFuture 
+      Just (i,[]) | i == mkCId "Present" -> GPresent 
+
+
+      _ -> error ("no Tense " ++ show t)
 
 instance Gf GTime where
   gf (GTimeVal x1) = mkApp (mkCId "TimeVal") [gf x1]

@@ -51,8 +51,8 @@ main = do
                     Just to -> do let o = extractOntology resp loc to api at adp ah
                                   gr <- readPGF pathPGF
                                   stdGen <- getStdGen
-                                  generateText stdGen o gr english summariseDay
-                                  generateText stdGen o gr russian summariseDay
+                                  generateText stdGen o gr english summariseDay Present
+                                  generateText stdGen o gr russian summariseDay Present
     [query, timeStr] -> let mzt = parseTime defaultTimeLocale "%Y-%m-%d" timeStr :: Maybe ZonedTime
                             lt :: LocalTime
                             lt = case mzt of
@@ -63,7 +63,7 @@ main = do
                               Nothing -> error "Wrong time format"
                               Just zt -> zonedTimeZone zt
                             ltUTC = localTimeToUTC tz lt
-                            ts = floor $ toRational $ utcTimeToPOSIXSeconds ltUTC 
+                            ts = floor $ toRational $ utcTimeToPOSIXSeconds ltUTC
                         in do
       mLocation <- geocode query
       case mLocation of
@@ -83,24 +83,32 @@ main = do
                 Just to -> do let o = extractOntology resp loc to api at adp ah
                               gr <- readPGF pathPGF
                               stdGen <- getStdGen
-                              generateText stdGen o gr english summariseDay
-                              generateText stdGen o gr russian summariseDay
+                              generateText stdGen o gr english summariseDay Future
+                              generateText stdGen o gr russian summariseDay Future
 
+
+
+data Tense = Present | Future
 generateText :: StdGen ->
                 Ontology ->
                 PGF ->
                 LanguageName ->
                 (Ontology -> GSchema) ->
+                Tense ->
                 IO ()
 
-generateText stdGen o gr lang goal =
+generateText stdGen o gr lang goal tense =
   let out = case readLanguage lang of
-        Just lng -> concatMap (linearize gr lng) $ [compute gr $ head exps]
+        Just lng -> concatMap (linearize gr lng) $ [ exp ]
         -- Just lng -> showExpr [] $ head exps
         Nothing  -> lang ++ " is not found."
       ont  = (ontologyToList . ontologyApplyRules) o
       -- ont  = (ontologyToList . id) o
       exps = generateFromOntology stdGen gr (startCat gr) ont
+      cmptd = fg $ compute gr $ head exps
+      exp = case tense of
+              Present -> gf $ GMakeReport GPresent cmptd
+              Future  -> gf $ GMakeReport GFuture cmptd
   in putStrLn $ prettify out
 
 prettify :: String -> String

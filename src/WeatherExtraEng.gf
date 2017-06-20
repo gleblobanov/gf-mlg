@@ -13,4 +13,7 @@ resource WeatherExtraEng = open CatEng, ResEng, SyntaxEng in {
     -- mkAdv : Prep -> NP -> Adv = \ prep, np = lin Adv {s = prep.s ++ np.s} ;
     mkNPComma : NP -> NP -> NP = \ np1, np2 -> lin NP { s = table {c => np1.s ! c ++ "," ++ np2.s ! c} ; a = AgP1 Pl } ; -- TODO what is AgP1 ? 
     mkNPNoPunct : NP -> NP -> NP = \ np1, np2 -> lin NP { s = table {c => np1.s ! c ++ " " ++ np2.s ! c} ; a = AgP1 Pl } ; -- TODO what is AgP1 ? 
+
+
+
 }

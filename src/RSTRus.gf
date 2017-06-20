@@ -1,21 +1,29 @@
-concrete RSTRus of RST = open Prelude, ParadigmsRus, SyntaxRus, ResRus in {
+concrete RSTRus of RST = open Prelude, ParadigmsRus, WeatherParams, SyntaxRus, ResRus in {
 
 
   lincat
-    Nucleus = Phr ;
-    Satellite = Phr ;
-    SatelliteList = Text ;
-    Schema = Text ;
+    Nucleus = Tns => Phr ;
+    Satellite = Tns => Phr ;
+    SatelliteList = Tns => Text ;
+    Schema = Tns => Text ;
+    Tense = Tns ;
+
+    Report = Text ;
 
 
   lin
-    BSat s = mkText s fullStopPunct emptyText ;
-    CSat s' sl = mkText s' fullStopPunct sl ;
+    BSat s = table { PrsnTns => mkText (s ! PrsnTns) fullStopPunct emptyText ; FtrTns => mkText (s ! FtrTns) fullStopPunct emptyText } ;
+    CSat s' sl = table { PrsnTns => mkText (s' ! PrsnTns) fullStopPunct (sl ! PrsnTns) ; FtrTns => mkText (s' ! FtrTns) fullStopPunct (sl ! FtrTns) } ;
 
-    Background n sl = mkText n fullStopPunct sl ;
-    EmptySchema = emptyText ;
+    Background n sl = table { PrsnTns => mkText (n ! PrsnTns) fullStopPunct (sl ! PrsnTns) ; FtrTns => mkText (n ! FtrTns) fullStopPunct (sl ! FtrTns) } ;
+    EmptySchema = table { PrsnTns => emptyText ; FtrTns => emptyText } ;
 
-    EmptySatellite = lin Phr { s = "" } ;
-    EmptyNucleus = lin Phr { s = "" } ;
-   
+    EmptySatellite = table { PrsnTns => lin Phr { s = "" } ; FtrTns => lin Phr { s = "" } } ;
+    EmptyNucleus = table { PrsnTns => lin Phr { s = "" } ; FtrTns => lin Phr { s = "" } } ;
+
+    MakeReport t s = s ! t ;
+
+
+    Present = PrsnTns ;
+    Future = FtrTns ;
 }
